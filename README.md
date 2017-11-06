@@ -1,7 +1,7 @@
 # DBProject
 Development of database-based system on Django
 
-#Team Members
+# Team Members
 Bryan Phua
 Jonathan Bei Qi Yang
 Loh Wei Quan
