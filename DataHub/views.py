@@ -2,7 +2,8 @@ from django.shortcuts import render
 
 # Create your views here.
 def index(request):
-    return render(request, 'index.pug', context)
+    context = {}
+    return render(request, 'index.html', context)
 
 def profile(request):
     context = {}
