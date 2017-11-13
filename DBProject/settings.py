@@ -88,7 +88,10 @@ DATABASES = {
         'USER': 'member',
         'PASSWORD': 'password098',
         'HOST': 'database-project.crqw7gce6pgf.ap-southeast-1.rds.amazonaws.com',
-        'PORT': '3306'
+        'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+        },
     }
 }
 
@@ -117,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Singapore'
 
 USE_I18N = True
 
