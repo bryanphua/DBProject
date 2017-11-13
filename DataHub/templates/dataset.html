@@ -1,3 +1,57 @@
-{% include "nav_bar.html" %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/dataset.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+	<div class="container" id="everything">
+		<div id="dataset">
+			<div>
+				<input type="button" value="Follow" class="btn btn-success" style="float: right;">
+				<h1>Dataset-1</h1>
+				<hr>
+				<p>Created by: Big_Shaq</p>
+				<p>Approved by: TransportGuru</p>
+				<p>Rating: 8/10</p>
+				<p>Followed by: 999</p>
+				<br>
+				<p>Dataset description goes here</p>	
+			</div>
 
-Dataset details here
+			<div id="comments">
+				<h4>Comments</h4>
+				<textarea rows="10" class="form-control">
+					
+				</textarea>
+			</div>
+			
+		</div>
+
+		<div id="recommendation">
+			<h5>Recommendations</h5>
+			<ul id="recommendationList">
+				<li>
+					<div class="recommended-item">Dataset-2</div>
+				</li>
+				<li>
+					<div class="recommended-item">Dataset-2</div>
+				</li>
+				<li>
+					<div class="recommended-item">Dataset-2</div>
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	{% include "foot.html" %}
+
+	<script type="text/javascript">
+	    $("#navSignIn").hide();
+	    $("#navSignUp").hide();
+	 </script>
+
+</body>
+</html>

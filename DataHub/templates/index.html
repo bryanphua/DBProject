@@ -1,4 +1,127 @@
-{% include "nav_bar.html" %}
-<body>
-Landing page
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/index.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+
+	<div class="container" id="everything">
+		<h1>Most Popular Datasets</h1>
+		<br/>
+		<ul id="mostPopularList">
+			<li>
+				<div class="grid-container">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b>username00</b> This is title of the dataset</p>
+						<p>Rating 8/10</p>
+						<p>&nbsp;</p>
+						<p>Category</p>
+					</div>
+					<div class="listFollowStatus">
+						<input class="btn btn-success" type="button" value="Follow"/>
+					</div>
+				</div>
+				<hr/>
+			</li>
+			<li>
+				<div class="grid-container">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b>username00</b> This is title of the dataset</p>
+						<p>Rating 8/10</p>
+						<p>&nbsp;</p>
+						<p>Category</p>
+					</div>
+					<div class="listFollowStatus">
+						<input class="btn btn-success" type="button" value="Follow"/>
+					</div>
+				</div>
+				<hr/>
+			</li>
+			<li>
+				<div class="grid-container">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b>username00</b> This is title of the dataset</p>
+						<p>Rating 8/10</p>
+						<p>&nbsp;</p>
+						<p>Category</p>
+					</div>
+					<div class="listFollowStatus">
+						<input class="btn btn-success" type="button" value="Follow"/>
+					</div>
+				</div>
+				<hr/>
+			</li>
+			<li>
+				<div class="grid-container">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b>username00</b> This is title of the dataset</p>
+						<p>Rating 8/10</p>
+						<p>&nbsp;</p>
+						<p>Category</p>
+					</div>
+					<div class="listFollowStatus">
+						<input class="btn btn-success" type="button" value="Follow"/>
+					</div>
+				</div>
+				<hr/>
+			</li>
+			<li>
+				<div class="grid-container">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b>username00</b> This is title of the dataset</p>
+						<p>Rating 8/10</p>
+						<p>&nbsp;</p>
+						<p>Category</p>
+					</div>
+					<div class="listFollowStatus">
+						<input class="btn btn-success" type="button" value="Follow"/>
+					</div>
+				</div>
+				<hr/>
+			</li>
+			<li>
+				<div class="grid-container">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b>username00</b> This is title of the dataset</p>
+						<p>Rating 8/10</p>
+						<p>&nbsp;</p>
+						<p>Category</p>
+					</div>
+					<div class="listFollowStatus">
+						<input class="btn btn-success" type="button" value="Follow"/>
+					</div>
+				</div>
+				<hr/>
+			</li>
+		</ul>
+	</div>
+
+	{% include "foot.html" %}
+
+	<script type="text/javascript">
+		$("#navProfilePic").hide();
+	</script>
+
 </body>
+</html>

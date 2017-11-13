@@ -1,0 +1,42 @@
+#everything {
+	padding-top: 150px;
+	display: grid;
+	grid-template-columns: 65% 28%;
+	grid-template-areas: 
+		"dataset recommendation";
+	justify-content: space-between;
+}
+
+#dataset {
+	grid-area: dataset;
+}
+
+#recommendation {
+	grid-area: recommendation;
+}
+
+#recommendationList {
+	list-style-type: none;
+	padding: 0 0 0 0;
+}
+
+#recommendationList li {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.recommended-item {
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 10px;
+	height: 100px;
+	padding: 10px 10px 10px 10px;
+}
+
+.recommended-item:hover {
+	background-color: #e0e0e2;
+}
+
+#comments {
+	margin-top: 50px;
+}
