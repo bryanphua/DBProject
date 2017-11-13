@@ -82,10 +82,17 @@ WSGI_APPLICATION = 'DBProject.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'db',
+    #     'USER': 'member',
+    #     'PASSWORD': 'password098',
+    #     'HOST': 'database-project.crqw7gce6pgf.ap-southeast-1.rds.amazonaws.com',
+    #     'PORT': '3306',
+    #     'OPTIONS': {
+    #         'sql_mode': 'STRICT_TRANS_TABLES',
+    #     },
+    # }
 }
 
 
@@ -113,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Singapore'
 
 USE_I18N = True
 
