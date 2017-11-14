@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^profile/$', views.profile, name = 'profile'),
     url(r'^dataset/$', views.dataset, name = 'dataset'),
     url(r'^new/$', views.new_dataset, name = 'new'),
+    url(r'^signup/$', views.sign_up, name = 'sign_up'),
 ]

@@ -1,0 +1,11 @@
+
+<form class="signup" action="/signup/" method="post">{% csrf_token %}
+  username: <input type="text" name="username" value=""><br>
+  password: <input type="password" name="password" value=""><br>
+  email: <input type="text" name="email" value=""><br>
+  <input type="submit" value="submit">
+</form>
+
+{% if duplicate_username %}
+  <p>Username already taken</p>
+{% endif %}
