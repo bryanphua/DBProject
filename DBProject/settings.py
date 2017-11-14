@@ -81,20 +81,20 @@ WSGI_APPLICATION = 'DBProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-if 'RDS_HOSTNAME' in os.environ:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.mysql',
-            'NAME': 'db',
-            'USER': 'member',
-            'PASSWORD': 'password098',
-            'HOST': 'database-project.crqw7gce6pgf.ap-southeast-1.rds.amazonaws.com',
-            'PORT': '3306',
-            'OPTIONS': {
-                'sql_mode': 'STRICT_TRANS_TABLES',
-            },
-        }
+# if 'RDS_HOSTNAME' in os.environ:
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'db',
+        'USER': 'member',
+        'PASSWORD': 'password098',
+        'HOST': 'database-project.crqw7gce6pgf.ap-southeast-1.rds.amazonaws.com',
+        'PORT': '3306',
+        'OPTIONS': {
+            'sql_mode': 'STRICT_TRANS_TABLES',
+        },
     }
+}
 
 
 # Password validation
