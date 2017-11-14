@@ -1,14 +1,149 @@
+{% load static %}
+
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Profile </title>
-    {% load static %}
-    <link rel="stylesheet" type="text/css" href="{% static 'profile.css' %}"/>
-  </head>
-  <body>
-    {% include "nav_bar.html" %}
-    <p>Profile here</p>
-    <img src="{% static 'test.png' %}" alt="test">
-  </body>
+<html lang="en"> 
+<head>
+  {% include "head.html" %}
+  <link href="{% static 'css/profile.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+  {% include "nav_bar.html" %}
+  <div class="container" id="everything">
+    <div id="user-details">
+      <img src="{% static 'img/ProfilePicBig.png' %}"/>
+      <h3>Alan Bordeaux</h3>
+      <p>AlanB99</p>
+      <hr/>
+      <i class="fa fa-envelope-o">&nbsp;AlanB99@gmail.com</i>
+    </div>
+
+    <div class="container-fluid" id="user-content">
+      <ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#following">Following</a></li>
+        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#created">Created</a></li>
+        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#comments">Comments</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div role="tabpanel" class="tab-pane fade in active show" id="following">
+          <div id="datasetContainer">
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-1</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description Mock data set description Mock data set description Mock data set description Mock data set description Mock data set description </p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-2</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description</p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-3</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description</p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-4</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description</p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-5</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description</p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-6</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description</p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+            <div class="dataset">
+              <div class="dataset-title">
+                <h3>Dataset-7</h3>
+              </div>
+              <div class="dataset-menu">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>Mock data set description</p>
+              </div>
+              <div class="dataset-category">
+                <p>Transportation</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div role="tabpanel" class="tab-pane fade" id="created">
+          <h3>Created</h3>
+        </div>
+        <div role="tabpanel" class="tab-pane fade" id="comments">
+          <h3>Comments</h3>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% include "foot.html" %}
+
+  <script type="text/javascript">
+    $("#navSignIn").hide();
+    $("#navSignUp").hide();
+  </script>
+
+</body>
 </html>

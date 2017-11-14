@@ -1,0 +1,22 @@
+#mainNav {
+	background: #3E3D5A;
+}
+
+#mainNav .searchBar {
+	background: #303045;
+	border: none;
+	color: #FFFFFF;
+	height: 45px;
+}
+
+input:focus{
+    outline: none;
+}
+
+#logo {
+	width: 70%;
+}
+
+#navProfilePic {
+	width: 50%;
+}
