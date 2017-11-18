@@ -22,6 +22,7 @@ def new_dataset(request):
 def sign_up(request):
     context = {}
     if request.method == 'GET':
+        context = {}
         return render(request, 'sign_up.html', context)
     elif request.method == 'POST':
         params = request.POST
@@ -29,4 +30,4 @@ def sign_up(request):
             user = User.objects.create_user(params['username'], params['password'])
         except IntegrityError:
             context['duplicate_username'] = True
-        return render(request, 'sign_up.html', context)
+        return render(request, 'index.html', context)
