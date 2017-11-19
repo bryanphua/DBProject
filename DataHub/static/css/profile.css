@@ -27,8 +27,7 @@
 	margin-right: 20px;
 	margin-top: 30px;
 	padding: 10px 10px 10px 10px;
-	grid-template-columns: 90% 4%;
-	grid-column-gap: 6%;
+	grid-template-columns: 90% 10%;
 	grid-template-rows: 25% 55% 20%;
 	grid-template-areas: 
 		"datasetTitle menuButton"
@@ -44,8 +43,9 @@
 	grid-area: datasetTitle;
 }
 
-.menu-button {
+.dataset-menu {
 	grid-area: menuButton;
+	text-align: center;
 }
 
 .dataset-description {
@@ -58,4 +58,110 @@
 
 .dataset-category {
 	grid-area: datasetCategory;	
+}
+
+#commentList {
+	list-style-type: none;
+	padding: 0 0 0 0;
+	margin-top: 20px;
+}
+
+#commentList li {
+	border-radius: 10px;
+}
+
+#commentList li:hover {
+	background-color: #e0e0e2;
+}
+
+.comment-container {
+	display: grid;
+	grid-template-columns: 15% 75% 10%;
+	grid-template-rows: auto;
+	grid-template-areas: 
+		"userPic details voteStatus";
+	padding: 5px 5px 5px 5px;
+}
+
+.comment-user-pic {
+	grid-area: userPic;
+}
+
+.comment-user-pic img {
+	width: 80%;
+}
+
+.comment-content {
+	grid-area: details;
+}
+
+.comment-vote-status {
+	grid-area: voteStatus;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: auto; 
+	grid-template-areas: 
+		"thumbsUp thumbsDown"
+		"totalVotes totalVotes";
+}
+
+.total-votes {
+	grid-area: totalVotes;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+.total-votes p {
+	font-size: 10pt;
+}
+
+.thumbs-up {
+	grid-area: thumbsUp;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+.thumbs-up:hover {
+	color: #52D017;
+}
+
+.thumbs-up-on {
+	color: #52D017;
+	grid-area: thumbsUp;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+/*.thumbs-up-on:hover {
+	color: #000;
+}*/
+
+.thumbs-down {
+	grid-area: thumbsDown;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+.thumbs-down:hover {
+	color: red;
+}
+
+.thumbs-down-on {
+	color: red;
+	grid-area: thumbsDown;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+/*.thumbs-down-on:hover {
+	color: #000;
+}*/
+
+.hover:hover {
+	color: #3BB9FF;
 }

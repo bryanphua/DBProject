@@ -1,0 +1,31 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/sign_in.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+	<div id="everything" class="container">
+		<div id="centerDiv">
+			<h1>Sign in to DataHub</h1>
+			<br>
+			<div id="signInForm">
+				<!-- put the form here -->
+				<!-- and remove the button below -->
+				<a href="/profile"><input type="button" value="Sign In" class="btn btn-success form-control"></a>
+			</div>	
+		</div>
+		
+	</div>
+	
+	{% include "foot.html" %}
+
+	<script type="text/javascript">
+	    $("#navProfilePic").hide();
+	</script>
+
+
+</body>
+</html>

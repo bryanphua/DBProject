@@ -30,3 +30,7 @@ def sign_up(request):
         except IntegrityError:
             context['duplicate_username'] = True
         return render(request, 'sign_up.html', context)
+
+def sign_in(request):
+    context = {}
+    return render(request, 'sign_in.html', context)
