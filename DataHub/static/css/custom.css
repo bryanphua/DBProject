@@ -1,37 +1,37 @@
-#everything {
-	padding-top: 175px;
+.btn-follow {
+ 	font-weight: 700;
+ 	color: #18BC9C;
+ 	border-color: #18BC9C;
+ 	background-color: white;
+ 	outline: none;
+}
+  
+.btn-follow:hover {
+    color: white;
+    border-color: #18BC9C;
+    background-color: #18BC9C;
 }
 
-.listUserPic {
-	grid-area: userPic;
+.btn-following {
+ 	font-weight: 700;
+ 	color: white;
+ 	border-color: #18BC9C;
+ 	background-color: #18BC9C;
+ 	outline: none;
+}
+  
+.btn-following:hover {
+    color: white;
+    border-color: red;
+    background-color: red;
 }
 
-.listDetails {
-	grid-area: details;
+.btn {
+	box-shadow: none;
+	outline: none;
 }
 
-.listFollowStatus {
-	grid-area: followStatus;
-}
-
-.grid-container {
-	display: grid;
-	grid-template-columns: 15% 75% 10%;
-	grid-template-rows: auto;
-	grid-template-areas: 
-		"userPic details followStatus";
-	padding: 5px 5px 5px 5px;
-}
-
-#mostPopularList {
-	list-style-type: none;
-	padding: 0 0 0 0;
-}
-
-#mostPopularList li {
-	border-radius: 10px;
-}
-
-#mostPopularList li:hover {
-	background-color: #e0e0e2;
+.btn:focus {
+	box-shadow: none;
+	outline: none;
 }

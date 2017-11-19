@@ -1,11 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en"> 
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/sign_up.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+	<div id="everything" class="container">
+		<div id="introText">
+			<h1>Sign up for DataHub</h1>
+			<br>
+			<br>
+			<p>A dataset repository for data scientists. Upon signing up you will be granted access to create and manage your own datasets, commend on other datasets and get recommendations on data according to your interests.</p>
+		</div>
 
-<form class="signup" action="/signup/" method="post">{% csrf_token %}
-  username: <input type="text" name="username" value=""><br>
-  password: <input type="password" name="password" value=""><br>
-  email: <input type="text" name="email" value=""><br>
-  <input type="submit" value="submit">
-</form>
+		<div id="signUpForm">
+			<form class="signup" action="/signup/" method="post">{% csrf_token %}
+			  <label><b>Username</b></label> 
+			  <input type="text" class="form-control" name="username" value="">
+			  <br>
+			  <label><b>Password</b></label>
+			  <input type="password" class="form-control" name="password" value="">
+			  <br>
+			  <label><b>Email</b></label>
+			  <input type="email" class="form-control" name="email" value="">
+			  <br>
+			  <br>
+			  <input type="submit" value="Sign Up" class="btn btn-success form-control">
+			</form>
 
-{% if duplicate_username %}
-  <p>Username already taken</p>
-{% endif %}
+			{% if duplicate_username %}
+			  <p>Username already taken</p>
+			{% endif %}
+		</div>
+	</div>
+	
+	{% include "foot.html" %}
+
+	<script type="text/javascript">
+	    $("#navProfilePic").hide();
+	</script>
+
+
+</body>
+</html>

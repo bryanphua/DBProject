@@ -1,0 +1,28 @@
+body {
+	background-color: #4B4B4B;
+}
+
+#everything {
+	padding-top: 250px;
+	display: grid;
+	grid-template-columns: 45% 45%;
+	grid-template-areas: 
+		"introText signUpForm";
+	justify-content: space-between;
+}
+
+#introText {
+	grid-area: introText;
+	color: #FFFFFF;
+}
+
+#introText p {
+	font-size: 20pt;
+}
+
+#signUpForm {
+	grid-area: signUpForm;
+	padding: 60px 90px 60px 90px;
+	background-color: #E5E5E5;
+	border-radius: 10px;
+}

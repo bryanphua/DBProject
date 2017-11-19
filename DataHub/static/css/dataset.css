@@ -37,6 +37,104 @@
 	background-color: #e0e0e2;
 }
 
-#comments {
+#comment {
 	margin-top: 50px;
 }
+
+#commentListContainer {
+	background-color: #e0e0e2;
+	border-radius: 10px;
+	padding: 20px 20px 20px 20px;
+}
+
+#commentList {
+	list-style-type: none;
+	padding: 0 0 0 0;
+}
+
+.comment-container {
+	display: grid;
+	grid-template-columns: 15% 75% 10%;
+	grid-template-rows: auto;
+	grid-template-areas: 
+		"userPic details voteStatus";
+	padding: 5px 5px 5px 5px;
+}
+
+.comment-user-pic {
+	grid-area: userPic;
+}
+
+.comment-user-pic img {
+	width: 80%;
+}
+
+.comment-content {
+	grid-area: details;
+}
+
+.comment-vote-status {
+	grid-area: voteStatus;
+	display: grid;
+	grid-template-columns: 50% 50%;
+	grid-template-rows: auto; 
+	grid-template-areas: 
+		"thumbsUp thumbsDown"
+		"totalVotes totalVotes";
+}
+
+.total-votes {
+	grid-area: totalVotes;
+	justify-self: center;
+	align-self: center;
+}
+
+.total-votes p {
+	font-size: 10pt;
+}
+
+.thumbs-up {
+	grid-area: thumbsUp;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+.thumbs-up:hover {
+	color: #52D017;
+}
+
+.thumbs-up-on {
+	color: #52D017;
+	grid-area: thumbsUp;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+/*.thumbs-up-on:hover {
+	color: #000;
+}*/
+
+.thumbs-down {
+	grid-area: thumbsDown;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+.thumbs-down:hover {
+	color: red;
+}
+
+.thumbs-down-on {
+	color: red;
+	grid-area: thumbsDown;
+	justify-self: stretch;
+	align-self: stretch;
+	text-align: center;
+}
+
+/*.thumbs-down-on:hover {
+	color: #000;
+}*/
