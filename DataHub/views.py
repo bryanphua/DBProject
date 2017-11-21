@@ -78,7 +78,7 @@ def sign_in(request):
             messages.success(request, 'Login success')
             return redirect('/')
         else:
-            context = { 'error': 'Invalid login credentials' }
+            messages.error(request, 'Invalid login credentials')
             return render(request, 'sign_in.html', context)
 
 def sign_out(request):
