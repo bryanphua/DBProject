@@ -39,7 +39,7 @@ def dataset(request):
 
 def new_dataset(request):
     if not request.user.is_authenticated:
-        messages.info(request, 'Please login to view your profile')
+        messages.info(request, 'Please login to create a dataset')
         return redirect('/')
     context = {
         'auth': True,
