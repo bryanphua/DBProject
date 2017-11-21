@@ -21,15 +21,18 @@
 			</form>
 
 			<ul class="navbar-nav ml-auto">
-				<li class="nav-item">
-					<a href="/signin" class="nav-link js-scroll-trigger" id="navSignIn">Sign In</a>
-				</li>
-				<li class="nav-item">
-					<a href="/signup" class="nav-link js-scroll-trigger" id="navSignUp">Sign Up</a>
-				</li>
-				<li>
-					<img src="{% static 'img/ProfilePic.png' %}" id="navProfilePic" data-dropdown="#userMenu" data-add-anchor-x="-10">
-				</li>
+				{% if auth %}
+					<li>
+						<img src="{% static 'img/ProfilePic.png' %}" id="navProfilePic" data-dropdown="#userMenu" data-add-anchor-x="-10">
+					</li>
+				{% else %}
+					<li class="nav-item">
+						<a href="/signin" class="nav-link js-scroll-trigger" id="navSignIn">Sign In</a>
+					</li>
+					<li class="nav-item">
+						<a href="/signup" class="nav-link js-scroll-trigger" id="navSignUp">Sign Up</a>
+					</li>
+				{% endif %}
 			</ul>
 		</div>
 	</div>

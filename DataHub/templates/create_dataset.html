@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
 	{% include "head.html" %}
 	<link href="{% static 'css/create_dataset.css' %}" rel="stylesheet"/>
@@ -20,17 +20,11 @@
 			<textarea class="form-control" rows="4"></textarea>
 		</div>
 		<div align="right">
-			<input type="button" class="btn btn-success" value="Confirm" id="confirmCreate">	
+			<input type="button" class="btn btn-success" value="Confirm" id="confirmCreate">
 		</div>
 	</div>
-	
+
 	{% include "foot.html" %}
-
-	<script type="text/javascript">
-	    $("#navSignIn").hide();
-	    $("#navSignUp").hide();
-	</script>
-
 
 </body>
 </html>
