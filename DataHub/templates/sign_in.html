@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
 	{% include "head.html" %}
 	<link href="{% static 'css/sign_in.css' %}" rel="stylesheet"/>
@@ -13,13 +13,22 @@
 			<br>
 			<div id="signInForm">
 				<!-- put the form here -->
-				<!-- and remove the button below -->
-				<a href="/profile"><input type="button" value="Sign In" class="btn btn-success form-control"></a>
-			</div>	
+				<form class="" action="/signin/" method="post">{% csrf_token %}
+				  <label><b>Username</b></label>
+				  <input type="text" class="form-control" name="username" value="">
+				  <br>
+				  <label><b>Password</b></label>
+				  <input type="password" class="form-control" name="password" value="">
+				  <br>
+				  <br>
+				  <input type="submit" value="Sign In" class="btn btn-success form-control">
+				</form>
+				{{ error }}
+			</div>
 		</div>
-		
+
 	</div>
-	
+
 	{% include "foot.html" %}
 
 	<script type="text/javascript">

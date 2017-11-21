@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en"> 
+<html lang="en">
 <head>
 	{% include "head.html" %}
 	<link href="{% static 'css/sign_up.css' %}" rel="stylesheet"/>
@@ -17,7 +17,7 @@
 
 		<div id="signUpForm">
 			<form class="signup" action="/signup/" method="post">{% csrf_token %}
-			  <label><b>Username</b></label> 
+			  <label><b>Username</b></label>
 			  <input type="text" class="form-control" name="username" value="">
 			  <br>
 			  <label><b>Password</b></label>
@@ -35,7 +35,7 @@
 			{% endif %}
 		</div>
 	</div>
-	
+
 	{% include "foot.html" %}
 
 	<script type="text/javascript">
