@@ -3,15 +3,16 @@ from django.db import connection, IntegrityError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
+from DataHub.models import users
 
 # Create your views here.
 def index(request):
     context = { 'auth': False }
+    print (users.get_entries(column_list=['email']))
     if request.user.is_authenticated:
         context = {
             'auth': True,
-            'id': request.user.id,
-            'username': request.user.username
+            'user': request.user
         }
     return render(request, 'index.html', context)
 
@@ -21,8 +22,7 @@ def profile(request):
         return redirect('/')
     context = {
         'auth': True,
-        'id': request.user.id,
-        'username': request.user.username
+        'user': request.user
     }
     return render(request, 'profile.html', context)
 
@@ -32,8 +32,7 @@ def dataset(request):
     else:
         context = {
             'auth': True,
-            'id': request.user.id,
-            'username': request.user.username
+            'user': request.user
         }
     return render(request, 'dataset.html', context)
 
@@ -43,8 +42,7 @@ def new_dataset(request):
         return redirect('/')
     context = {
         'auth': True,
-        'id': request.user.id,
-        'username': request.user.username
+        'user': request.user
     }
     return render(request, 'create_dataset.html', context)
 
@@ -60,6 +58,9 @@ def sign_up(request):
             user = User.objects.create_user(params['username'], params['email'], params['password'])
         except IntegrityError:
             context['duplicate_username'] = True
+            return render(request, 'sign_up.html', context)
+        except ValueError:
+            context['missing_fields'] = True
             return render(request, 'sign_up.html', context)
         return redirect('/')
 

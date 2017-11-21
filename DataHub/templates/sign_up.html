@@ -31,7 +31,10 @@
 			</form>
 
 			{% if duplicate_username %}
-			  <p>Username already taken</p>
+			<p>Username already taken</p>
+			{% endif %}
+			{% if missing_fields %}
+			<p>Please make sure all field are filled</p>
 			{% endif %}
 		</div>
 	</div>
