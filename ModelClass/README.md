@@ -1,15 +1,15 @@
 # Model Class Documentation
 ## Directory
 
-1. [Defining a Model](##1-defining-a-model)
-2. [Methods](##2-methods)
-3. [Examples](##3-examples)
-    - [Getting Entries](####getting-entries)
-    - [Getting number of rows](####getting-number-of-rows)
-    - [Inserting a single entry](####inserting-a-single-entry)
-    - [Updating Entry/Entries](####updating-entryentries)
-    - [Deleting Entries](####deleting-entries)
-4. [Exceptions](##4-exceptions)
+1. [Defining a Model](#1-defining-a-model)
+2. [Methods](#2-methods)
+3. [Examples](#3-examples)
+    - [Getting Entries](#getting-entries)
+    - [Getting number of rows](#getting-number-of-rows)
+    - [Inserting a single entry](#inserting-a-single-entry)
+    - [Updating Entry/Entries](#updating-entryentries)
+    - [Deleting Entries](#deleting-entries)
+4. [Exceptions](#4-exceptions)
 5. [ :collision::collision: Important Notes :collision::collision: ](#important)
 
 ## 1. Defining a Model
