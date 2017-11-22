@@ -23,27 +23,27 @@ class users(Model):
 
 ## Methods
 * **get_entries(column_list=None, cond_dict=None, max_rows=5, row_numbers=False):**
-    * column_list(list/None): list of column names to select in query. If None, select all columns defined in class
-    * cond_dict(dict/None): dictionary that specifies the equals condition of the sql query (e.g key=value)
-    * max_rows(int/None): maximum number of rows to be returned. Default max_rows=5. If None, return all rows
-    * row_numbers: boolean
-    * return(tuple): tuple(tuple of column names, tuple of query results) if row_numbers=False
-    * return(int): row count of the query if row_numbers=True
+    * column_list (list/None): list of column names to select in query. If None, select all columns defined in class
+    * cond_dict (dict/None): dictionary that specifies the equals condition of the sql query (e.g key=value)
+    * max_rows (int/None): maximum number of rows to be returned. Default max_rows=5. If None, return all rows
+    * row_numbers (bool): set True to obtain row count only
+    * return (tuple): tuple(tuple of column names, tuple of query results) if row_numbers=False
+    * return (int): row count of the query if row_numbers=True
 
 * **check_exists(cond_dict):**
-    * cond_dict(dict/None): a dictionary {column:column_value} to be searched in sql query
-    * return(bool): True if 1 or more row is returned from the query, False otherwise
+    * cond_dict (dict/None): a dictionary {column:column_value} to be searched in sql query
+    * return (bool): True if 1 or more row is returned from the query, False otherwise
 
 * **insert_new_entry(value_dict)**
-    * value_dict(dict): {column:column_value} of new entry
+    * value_dict (dict): {column:column_value} of new entry
     * return: None
 
 * **delete_entries(cond_dict)**
-    * cond_dict(dict): condition {column:column_value} to delete entries
+    * cond_dict (dict): condition {column:column_value} to delete entries
 
 * **update_entries(value_dict,cond_dict=None)**
-    * value_dict(dict): {column:column_value} to set
-    * cond_dict(dict): condition {column:column_value} to update entries
+    * value_dict (dict): {column:column_value} to set
+    * cond_dict (dict): condition {column:column_value} to update entries
     *return: None
 
 ## Examples
@@ -51,17 +51,15 @@ class users(Model):
 
 ```
 >> users.get_entries(column_list = ['display_name','email'],
-                     cond_dict = {'admin':1}
+                     cond_dict = {'admin':1,'password':'password'}
                      max_rows=2
                      )
-```
-is equivalent to
-```SELECT display_name,email FROM users WHERE admin=1```
- and returns a nested tuple
-in the form ( (column names), (query results) ) with a maximum of 2 rows
-```
 >> (('display_name','email'),(('bob','bob@email.com),('Sally','sally@email.com')))
+
 ```
+returns a nested tuple in the form ( (column names), (query results) ) with a maximum of 2 rows
+and is equivalent to               
+```SELECT display_name,email FROM users WHERE admin=1 AND password='password'```
 
 #### Getting number of rows
 Find out the number of admins in users table (e.g 5 admins)
@@ -94,10 +92,11 @@ is equivalent to
 
 #### Updating Entry/Entries
 ```
->> users.update_entries({'admin':0},cond_dict={'display_name':'tan'})
+>> users.update_entries({'admin':0},cond_dict={'display_name':'tan',
+                                               'email':'tan@tan.com'})
 ```
 is equivalent to
-```UPDATE users SET admin=0 WHERE display_name='tan'```
+```UPDATE users SET admin=0 WHERE display_name='tan' AND email='tan@tan.com'```
 
 #### Deleting Entries
 ```
