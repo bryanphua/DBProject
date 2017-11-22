@@ -19,16 +19,21 @@
 			<form class="signup" action="/signup/" method="post">{% csrf_token %}
 			  <label><b>Username</b></label>
 			  <input type="text" class="form-control" name="username" value="">
+				{{ form.username.errors }}
 			  <br>
 			  <label><b>Password</b></label>
 			  <input type="password" class="form-control" name="password" value="">
-			  <br>
+				{{ form.password.errors }}
+				<br>
 			  <label><b>Email</b></label>
 			  <input type="email" class="form-control" name="email" value="">
-			  <br>
+			  {{ form.email.errors }}
+				<br>
 			  <br>
 			  <input type="submit" value="Sign Up" class="btn btn-success form-control">
 			</form>
+
+			{% include "messages.html" %}
 
 			{% if duplicate_username %}
 			<p>Username already taken</p>

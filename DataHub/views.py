@@ -3,12 +3,13 @@ from django.db import connection, IntegrityError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from DataHub.models import users
+from DataHub.models import auth_user
+from .forms import sign_in_form, sign_up_form
 
 # Create your views here.
 def index(request):
     context = { 'auth': False }
-    print (users.get_entries(column_list=['email']))
+    print ('test', auth_user.get_entries(column_list=['email']))
     if request.user.is_authenticated:
         context = {
             'auth': True,
@@ -49,20 +50,22 @@ def new_dataset(request):
 def sign_up(request):
     if request.user.is_authenticated:
         return redirect('/')
-    context = {}
     if request.method == 'GET':
+        context = {}
         return render(request, 'sign_up.html', context)
     elif request.method == 'POST':
         params = request.POST
-        try:
-            user = User.objects.create_user(params['username'], params['email'], params['password'])
-        except IntegrityError:
-            context['duplicate_username'] = True
+        form = sign_up_form(request.POST)
+        if form.is_valid():
+            try:
+                user = User.objects.create_user(params['username'], params['email'], params['password'])
+                return redirect('/')
+            except IntegrityError:
+                context = { 'duplicate_username': True }
+                return render(request, 'sign_up.html', context)
+        else:
+            context = { 'form': form }
             return render(request, 'sign_up.html', context)
-        except ValueError:
-            context['missing_fields'] = True
-            return render(request, 'sign_up.html', context)
-        return redirect('/')
 
 def sign_in(request):
     if request.user.is_authenticated:
