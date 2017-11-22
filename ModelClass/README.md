@@ -1,6 +1,18 @@
 # Model Class Documentation
-## Defining a Model/Table Class
+## Directory
 
+1. [Defining a Model](##1-defining-a-model)
+2. [Methods](##2-methods)
+3. [Examples](##3-examples)
+    - [Getting Entries](####getting-entries)
+    - [Getting number of rows](####getting-number-of-rows)
+    - [Inserting a single entry](####inserting-a-single-entry)
+    - [Updating Entry/Entries](####updating-entryentries)
+    - [Deleting Entries](####deleting-entries)
+4. [Exceptions](##4-exceptions)
+5. [ :collision::collision: Important Notes :collision::collision: ](#important)
+
+## 1. Defining a Model
 We will first be defining a class to represent an existing table in our database and store the metadata of that table.
 The Column object is used to store the data type and constraints of a particular column
 
@@ -21,7 +33,7 @@ class users(Model):
     admin = Column('admin','int', not_null=True)
 ```
 
-## Methods
+## 2. Methods
 * **get_entries(column_list=None, cond_dict=None, max_rows=5, row_numbers=False):**
     * column_list (list/None): list of column names to select in query. If None, select all columns defined in class
     * cond_dict (dict/None): dictionary that specifies the equals condition of the sql query (e.g key=value)
@@ -46,7 +58,7 @@ class users(Model):
     * cond_dict (dict): condition {column:column_value} to update entries
     *return: None
 
-## Examples
+## 3. Examples
 #### Getting Entries
 
 ```
@@ -58,7 +70,7 @@ class users(Model):
 
 ```
 returns a nested tuple in the form ( (column names), (query results) ) with a maximum of 2 rows
-and is equivalent to               
+and is equivalent to
 ```SELECT display_name,email FROM users WHERE admin=1 AND password='password'```
 
 #### Getting number of rows
@@ -105,7 +117,7 @@ users.delete_entries({'admin':0})
 is equivalent to
 ```DELETE FROM users WHERE admin=0```
 
-## Exceptions
+## 4. Exceptions
 - **InvalidColumnNameException**
     - raised when invalid keys for table, most likely fault of the programmer
 
@@ -137,7 +149,7 @@ except:
 ```
 
 
-## :collision::collision: **Important** :collision::collision:
+## <a name="important"></a>5. :collision::collision:Important:collision::collision:
 
 - Validity of foreign keys is NOT checked
     (You have to check if it exists first using Model functions)
