@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user
-from .forms import sign_in_form, sign_up_form
+from .forms import sign_up_form
 
 # Create your views here.
 def index(request):
@@ -58,11 +58,20 @@ def sign_up(request):
         form = sign_up_form(request.POST)
         if form.is_valid():
             try:
-                user = User.objects.create_user(params['username'], params['email'], params['password'])
-                return redirect('/')
+                user = User.objects.create_user(
+                    username=params['username'],
+                    email=params['email'],
+                    password=params['password']
+                )
+                user.first_name = params['first_name']
+                user.last_name = params['last_name']
+                user.save()
             except IntegrityError:
                 context = { 'duplicate_username': True }
                 return render(request, 'sign_up.html', context)
+            login(request, user)
+            messages.success(request, 'Account successfully created')
+            return redirect('/')
         else:
             context = { 'form': form }
             return render(request, 'sign_up.html', context)

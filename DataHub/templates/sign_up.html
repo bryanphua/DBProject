@@ -17,6 +17,14 @@
 
 		<div id="signUpForm">
 			<form class="signup" action="/signup/" method="post">{% csrf_token %}
+				<label><b>First name</b></label>
+			  <input type="text" class="form-control" name="first_name" value="">
+				{{ form.first_name.errors }}
+			  <br>
+				<label><b>Last name</b></label>
+			  <input type="text" class="form-control" name="last_name" value="">
+				{{ form.last_name.errors }}
+			  <br>
 			  <label><b>Username</b></label>
 			  <input type="text" class="form-control" name="username" value="">
 				{{ form.username.errors }}

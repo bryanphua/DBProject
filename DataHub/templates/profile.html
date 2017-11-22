@@ -11,10 +11,10 @@
   <div class="container" id="everything">
     <div id="user-details">
       <img src="{% static 'img/ProfilePicBig.png' %}"/>
-      <h3>Alan Bordeaux</h3>
-      <p>AlanB99</p>
+      <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+      <p>{{ user.username }}</p>
       <hr/>
-      <i class="fa fa-envelope-o">&nbsp;AlanB99@gmail.com</i>
+      <i class="fa fa-envelope-o">&nbsp;{{ user.email }}</i>
     </div>
 
     <div class="container-fluid" id="user-content">
