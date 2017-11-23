@@ -10,17 +10,21 @@
 	<div id="everything" class="container">
 		<h1>Create a new Dataset</h1>
 		<hr>
-		<div class="create-info">
-			Dataset Title:
-			<input type="text" class="form-control">
-		</div>
+		<form class="" action="/new/" method="post">
+			{% csrf_token %}
+			<div class="create-info">
+				Dataset Title:
+				<input type="text" class="form-control" name="title">
+			</div>
+			<div class="create-info">
+				Dataset Description:
+				<textarea class="form-control" rows="4" name="description"></textarea>
+			</div>
+			<input type="submit" class="btn btn-success" value="Confirm" id="confirmCreate">
+		</form>
 
-		<div class="create-info">
-			Dataset Description:
-			<textarea class="form-control" rows="4"></textarea>
-		</div>
 		<div align="right">
-			<input type="button" class="btn btn-success" value="Confirm" id="confirmCreate">
+
 		</div>
 	</div>
 

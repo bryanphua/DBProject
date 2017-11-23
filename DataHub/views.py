@@ -40,11 +40,16 @@ def new_dataset(request):
     if not request.user.is_authenticated:
         messages.info(request, 'Please login to create a dataset')
         return redirect('/')
+    if request.method == 'POST':
+        params = request.POST
+        print(params)
+
     context = {
         'auth': True,
         'user': request.user
     }
     return render(request, 'create_dataset.html', context)
+
 
 def sign_up(request):
     context = {}
