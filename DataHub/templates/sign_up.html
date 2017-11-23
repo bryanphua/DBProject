@@ -19,19 +19,19 @@
 			{% include "messages.html" %}
 			<form class="signup" action="/signup/" method="post">{% csrf_token %}
 				<label><b>First name*</b></label>
-			  <input type="text" class="form-control" name="first_name" value="">
+			  <input type="text" class="form-control" name="first_name" value="" maxlength="30">
 			  <br>
 				<label><b>Last name</b></label>
-			  <input type="text" class="form-control" name="last_name" value="">
+			  <input type="text" class="form-control" name="last_name" value="" maxlength="30">
 			  <br>
 			  <label><b>Username*</b></label>
-			  <input type="text" class="form-control" name="username" value="">
+			  <input type="text" class="form-control" name="username" value="" maxlength="150">
 			  <br>
 			  <label><b>Password*</b></label>
-			  <input type="password" class="form-control" name="password" value="">
+			  <input type="password" class="form-control" name="password" value="" maxlength="128">
 				<br>
 			  <label><b>Email*</b></label>
-			  <input type="email" class="form-control" name="email" value="">
+			  <input type="email" class="form-control" name="email" value="" maxlength="254">
 				<br>
 			  <br>
 			  <input type="submit" value="Sign Up" class="btn btn-success form-control">
