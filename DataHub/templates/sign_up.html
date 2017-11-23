@@ -18,19 +18,19 @@
 		<div id="signUpForm">
 			{% include "messages.html" %}
 			<form class="signup" action="/signup/" method="post">{% csrf_token %}
-				<label><b>First name</b></label>
+				<label><b>First name*</b></label>
 			  <input type="text" class="form-control" name="first_name" value="">
 			  <br>
 				<label><b>Last name</b></label>
 			  <input type="text" class="form-control" name="last_name" value="">
 			  <br>
-			  <label><b>Username</b></label>
+			  <label><b>Username*</b></label>
 			  <input type="text" class="form-control" name="username" value="">
 			  <br>
-			  <label><b>Password</b></label>
+			  <label><b>Password*</b></label>
 			  <input type="password" class="form-control" name="password" value="">
 				<br>
-			  <label><b>Email</b></label>
+			  <label><b>Email*</b></label>
 			  <input type="email" class="form-control" name="email" value="">
 				<br>
 			  <br>

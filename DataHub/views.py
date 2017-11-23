@@ -54,6 +54,9 @@ def sign_up(request):
         return render(request, 'sign_up.html', context)
     elif request.method == 'POST':
         params = request.POST
+        if (not params['username']) or (not params['email']) or (not params['password']) or (not params['first_name']):
+            messages.error(request, 'Required fields cannot be blank!')
+            return render(request, 'sign_up.html', context)
         try:
             user = User.objects.create_user(
                 username=params['username'],
@@ -65,9 +68,6 @@ def sign_up(request):
             user.save()
         except IntegrityError:
             messages.error(request, 'Username already taken :(')
-            return render(request, 'sign_up.html', context)
-        except ValueError:
-            messages.error(request, 'Username field must not be blank!')
             return render(request, 'sign_up.html', context)
         login(request, user)
         messages.success(request, 'Account successfully created')
