@@ -1,69 +1,38 @@
-import os
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "DBProject.settings")
+from ModelClass import Column
+from ModelClass.custom_exceptions import *
 from django.db import connection
 from functools import reduce
-import sys
-
-# @TODO document
-
-class Column():
-    """
-    name should be the column name in the existing table
-    type can only be int,float,datetime and char (for now)
-    """
-    valid_types = ['int','float','datetime','char']
-
-    def __init__(self,name,col_type,unique=False):
-        if col_type not in Column.valid_types:
-            raise TypeError("invalid column types")
-        if type(unique) is not bool:
-             raise TypeError('unique must be a boolean')
-        self.name = str(name)
-        self.col_type = col_type
-        self.unique = unique
-
-    def wrap_value(self,value):
-        """return the value as a string to be palced into sql statement"""
-        if self.col_type == 'int':
-            return str(int(value))
-
-        elif self.col_type == 'float':
-            return str(float(value))
-
-        elif self.col_type == 'char':
-            return "'{}'".format(value)
-
-        elif self.col_type == 'datetime':
-            # to do
-            assert False
-
-    def unwrap_value(self,value):
-        """unwrap it from database query result to python type"""
-        # @TODO isit even required? how is int,float,datetime returned in python
-        pass
-
-    def __str__(self):
-        return 'Column-Object<\'{}\'>'.format(self.name)
-
-    def __repr__(self):
-        return self.__str__()
 
 class Model():
     column_list = None
     column_names = None
-    # class functions
+
+    # sql templates
     select_sql = "SELECT {} FROM {} "
     insert_sql = "INSERT INTO {} ({}) VALUES {}"
     update_sql = "UPDATE {} SET {} "
-    cond = "WHERE {}"
+    delete_sql = "DELETE FROM {} "
+    cond_sql = "WHERE {}"
 
     @classmethod
     def get_columns(cls):
         """returns a list of column objects of the defined class/table"""
         if cls.column_list is None:
-            cls.column_list = [v for k,v in cls.__dict__.items() if k[0] != '_']
+            var_list = [v for k,v in cls.__dict__.items() if k[0] != '_']
+            cls.column_list = [var for var in var_list if type(var) == Column]
         return cls.column_list
+
+    @classmethod
+    def get_unique_columns(cls):
+        """returns a list of columns that has unique constraints (column.unique=True)"""
+        column_list = cls.get_columns()
+        return [column for column in column_list if column.unique]
+
+    @classmethod
+    def get_not_null_columns(cls):
+        """returns a list of columns that has not null constraints (column.not_null=True)"""
+        column_list = cls.get_columns()
+        return [column for column in column_list if column.not_null]
 
     @classmethod
     def get_table_name(cls):
@@ -89,6 +58,8 @@ class Model():
     def is_full_dict(cls, value_dict):
         """returns True if the dictionary contain keys that matches all the columns of a table, False otherwise"""
         return set(value_dict.keys()) == set(cls.get_column_names())
+
+    # String formatting functions
 
     @staticmethod
     def key_string(value_dict):
@@ -143,11 +114,12 @@ class Model():
         value_string = reduce(lambda x,y: str(x)+','+str(y),values)
         return column_string,value_string
 
+    # Database Methods ##############################################################################################
 
     @classmethod
     def get_entries(cls, column_list=None, cond_dict=None, max_rows=5, row_numbers=False):
         """
-        :param column_list: list of column names to select in sql statement. If None, select all columns defined in class
+        :param column_list: list of column names to select in query. If None, select all columns defined in class
         :param cond_dict: dictionary that specifies the equals condition of the sql query (e.g key=value)
         :param max_rows: maximum number of rows to be returned. Default max_rows=5. If None, return all rows
         :param row_numbers: boolean
@@ -177,12 +149,12 @@ class Model():
         if cond_dict is not None:
             if not cls.is_valid_dict(cond_dict):
                 raise InvalidColumnNameException()
-            cond_string = cls.cond.format(cls.key_value_string(cond_dict, 'AND'))
+            cond_string = cls.cond_sql.format(cls.key_value_string(cond_dict, 'AND'))
         else:
             cond_string = ''
 
         query = select_string + cond_string
-        print(query)
+        #print(query)
 
         # execute sql statement
         cursor = connection.cursor()
@@ -217,23 +189,32 @@ class Model():
 
     @classmethod
     def insert_new_entry(cls,value_dict):
+        """
+        :param value_dict: dictionary containing values to add
+        """
         # check validity of keys
         if not cls.is_valid_dict(value_dict):
             raise InvalidColumnNameException()
 
         # check if values fulfils unique constraints
-        unique_dict = {}
-        for column in cls.column_list:
-            if column.unique and column.name in value_dict.keys():
-                unique_dict[column.name] = value_dict[column.name]
-        if unique_dict != {}:
-            for key,value in unique_dict.items():
-                if cls.check_exists(cond_dict={key:value}):
+        unique_cols = [column for column in cls.get_unique_columns() if column.name in value_dict.keys()]
+
+        if len(unique_cols)>0:
+            for column in unique_cols:
+                key,value = column.name,value_dict[column.name]
+                if cls.check_exists({key:value}):
                     raise UniqueConstraintException('{}={} is not unique'.format(key,value))
+
+        # check if values for not_null columns present
+        not_null_cols = cls.get_not_null_columns()
+        if len(not_null_cols)>0:
+            for col in not_null_cols:
+                if col.name not in value_dict.keys():
+                    raise NotNullException('Value for {} not specified'.format(col.name))
 
         columns,values = cls.key_value_tuple(value_dict)
         statement = cls.insert_sql.format(cls.get_table_name(),columns,'('+values+')')
-        print(statement)
+        #print(statement)
 
         # execute sql
         cursor = connection.cursor()
@@ -243,9 +224,22 @@ class Model():
 
 
     @classmethod
-    def delete_entry(cls,cond_dict):
-        # @TODO
-        pass
+    def delete_entries(cls,cond_dict):
+        """
+        Deletes entries that fulfil the conditions specified in cond_dict.
+        Does not allow no conditions, to prevent deletion of entire table
+        :param cond_dict:
+        :return:
+        """
+        if not cls.is_valid_dict(cond_dict):
+            raise InvalidColumnNameException()
+        cond_string = cls.cond_sql.format(cls.key_value_string(cond_dict, 'AND'))
+        statement = cls.delete_sql.format(cls.get_table_name()) + cond_string
+        #print(statement)
+
+        # execute sql
+        cursor = connection.cursor()
+        cursor.execute(statement)
 
 
     @classmethod
@@ -256,7 +250,7 @@ class Model():
         if cond_dict is not None:
             if not cls.is_valid_dict(cond_dict):
                 raise InvalidColumnNameException()
-            cond_string = cls.cond.format(cls.key_value_string(cond_dict, 'AND'))
+            cond_string = cls.cond_sql.format(cls.key_value_string(cond_dict, 'AND'))
         else:
             cond_string = ''
 
@@ -272,39 +266,12 @@ class Model():
 
             # check if each value is unique
             for key, value in unique_dict.items():
-                if cls.check_exists(cond_dict={key: value}):
+                if cls.check_exists({key: value}):
                     raise UniqueConstraintException('{}={} already exists'.format(key, value))
 
-        set_string = cls.key_value_string(cond_dict, ',')
+        set_string = cls.key_value_string(value_dict, ',')
         update_statement = cls.update_sql.format(cls.get_table_name(),set_string) + cond_string
-        print(update_statement)
+        #print(update_statement)
 
         cursor = connection.cursor()
         cursor.execute(update_statement)
-
-
-
-    @classmethod
-    def my_custom_sql(cls):
-        try:
-            cursor = connection.cursor()
-            cursor.execute("INSERT INTO users (password,email,display_name,admin) VALUE (102010,'email3@email.com','user 3',0)")
-        except:
-            print("Unexpected error:", sys.exc_info()[0])
-            #row = cursor.fetchone()
-            #print(row)
-
-        return 'ok'
-
-
-class InvalidColumnNameException(Exception):
-    """raised when invalid keys for table, most likely fault of the programmer"""
-    pass
-
-class UniqueConstraintException(Exception):
-    """raised when attempt to insert an entry that fails unique constraints"""
-    pass
-
-class NotNullException(Exception):
-    # @TODO add not null checks for all model functions
-    pass
