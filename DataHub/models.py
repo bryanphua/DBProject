@@ -13,6 +13,8 @@ class dataset_list(Model):
     name = Column('name','char',not_null=True)
     creator_user_id = Column('creator_user_id','int',not_null=True)
     endorsed_by = Column('endorsed_by','char',not_null=True)
+    description = Column('description','char')
+    genre = Column('genre','char',not_null=True)
 
 class user_dataset_following(Model):
     user_id = Column('user_id','int',not_null=True)
