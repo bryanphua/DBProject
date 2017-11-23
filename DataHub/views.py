@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list
+from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
 def index(request):
@@ -46,15 +47,17 @@ def new_dataset(request):
         return redirect('/')
     if request.method == 'POST':
         params = request.POST
-        try:
-            dataset_list.insert_new_entry({
-                'name':params['title'],
-                'creator_user_id':1,
-                'endorsed_by':'placeholder'
-            })
-        except NotNullException:
-            messages.error(request, 'Required fields must not be blank!')
-            context['name'] = params['title']
+        if not (params['title']):
+            messages.info(request, 'Did you forget to fill in any fields?')
+            # context['name'] = params['title']
+            return render(request, 'create_dataset.html', context)
+
+        dataset_list.insert_new_entry({
+            'name':params['title'],
+            'creator_user_id':request.user.id,
+            'endorsed_by':'placeholder'
+        })
+        messages.success(request, 'Dataset created successfully')
     return render(request, 'create_dataset.html', context)
 
 
@@ -67,7 +70,7 @@ def sign_up(request):
     elif request.method == 'POST':
         params = request.POST
         if (not params['username']) or (not params['email']) or (not params['password']) or (not params['first_name']):
-            messages.error(request, 'Required fields cannot be blank!')
+            messages.info(request, 'Required fields cannot be blank!')
             return render(request, 'sign_up.html', context)
         try:
             user = User.objects.create_user(
@@ -79,7 +82,7 @@ def sign_up(request):
             user.last_name = params['last_name']
             user.save()
         except IntegrityError:
-            messages.error(request, 'Username already taken :(')
+            messages.info(request, 'Username already taken :(')
             return render(request, 'sign_up.html', context)
         login(request, user)
         messages.success(request, 'Account successfully created')
@@ -100,7 +103,7 @@ def sign_in(request):
             messages.success(request, 'Login success')
             return redirect('/')
         else:
-            messages.error(request, 'Invalid login credentials')
+            messages.info(request, 'Invalid login credentials')
             return render(request, 'sign_in.html', context)
 
 def sign_out(request):
