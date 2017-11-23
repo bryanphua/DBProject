@@ -4,8 +4,9 @@ class auth_user(Model):
     id = Column('id','int',unique=True)
     password = Column('password','char',not_null=True)
     email = Column('email','char',unique=True,not_null=True)
-    display_name = Column('display_name','char', not_null=True)
-    admin = Column('admin','int', not_null=True)
+    first_name = Column('first_name','char', not_null=True)
+    last_name = Column('first_name','char', not_null=False)
+    is_staff = Column('is_staff','int', not_null=True)
 
 class dataset_list(Model):
     id = Column('id','int',unique=True)

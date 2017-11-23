@@ -16,39 +16,26 @@
 		</div>
 
 		<div id="signUpForm">
+			{% include "messages.html" %}
 			<form class="signup" action="/signup/" method="post">{% csrf_token %}
 				<label><b>First name</b></label>
 			  <input type="text" class="form-control" name="first_name" value="">
-				{{ form.first_name.errors }}
 			  <br>
 				<label><b>Last name</b></label>
 			  <input type="text" class="form-control" name="last_name" value="">
-				{{ form.last_name.errors }}
 			  <br>
 			  <label><b>Username</b></label>
 			  <input type="text" class="form-control" name="username" value="">
-				{{ form.username.errors }}
 			  <br>
 			  <label><b>Password</b></label>
 			  <input type="password" class="form-control" name="password" value="">
-				{{ form.password.errors }}
 				<br>
 			  <label><b>Email</b></label>
 			  <input type="email" class="form-control" name="email" value="">
-			  {{ form.email.errors }}
 				<br>
 			  <br>
 			  <input type="submit" value="Sign Up" class="btn btn-success form-control">
 			</form>
-
-			{% include "messages.html" %}
-
-			{% if duplicate_username %}
-			<p>Username already taken</p>
-			{% endif %}
-			{% if missing_fields %}
-			<p>Please make sure all field are filled</p>
-			{% endif %}
 		</div>
 	</div>
 

@@ -4,7 +4,6 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user
-from .forms import sign_up_form
 
 # Create your views here.
 def index(request):
@@ -48,33 +47,31 @@ def new_dataset(request):
     return render(request, 'create_dataset.html', context)
 
 def sign_up(request):
+    context = {}
     if request.user.is_authenticated:
         return redirect('/')
     if request.method == 'GET':
-        context = {}
         return render(request, 'sign_up.html', context)
     elif request.method == 'POST':
         params = request.POST
-        form = sign_up_form(request.POST)
-        if form.is_valid():
-            try:
-                user = User.objects.create_user(
-                    username=params['username'],
-                    email=params['email'],
-                    password=params['password']
-                )
-                user.first_name = params['first_name']
-                user.last_name = params['last_name']
-                user.save()
-            except IntegrityError:
-                context = { 'duplicate_username': True }
-                return render(request, 'sign_up.html', context)
-            login(request, user)
-            messages.success(request, 'Account successfully created')
-            return redirect('/')
-        else:
-            context = { 'form': form }
+        try:
+            user = User.objects.create_user(
+                username=params['username'],
+                email=params['email'],
+                password=params['password']
+            )
+            user.first_name = params['first_name']
+            user.last_name = params['last_name']
+            user.save()
+        except IntegrityError:
+            messages.error(request, 'Username already taken :(')
             return render(request, 'sign_up.html', context)
+        except ValueError:
+            messages.error(request, 'Username field must not be blank!')
+            return render(request, 'sign_up.html', context)
+        login(request, user)
+        messages.success(request, 'Account successfully created')
+        return redirect('/')
 
 def sign_in(request):
     if request.user.is_authenticated:
