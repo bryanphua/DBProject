@@ -47,7 +47,7 @@ def new_dataset(request):
         return redirect('/')
     if request.method == 'POST':
         params = request.POST
-        if not (params['title']):
+        if (not params['title']) or (not params['genre']):
             messages.info(request, 'Did you forget to fill in any fields?')
             # context['name'] = params['title']
             return render(request, 'create_dataset.html', context)
@@ -55,7 +55,9 @@ def new_dataset(request):
         dataset_list.insert_new_entry({
             'name':params['title'],
             'creator_user_id':request.user.id,
-            'endorsed_by':'placeholder'
+            'endorsed_by':'placeholder',
+            'description':params['description'],
+            'genre':params['genre']
         })
         messages.success(request, 'Dataset created successfully')
     return render(request, 'create_dataset.html', context)
