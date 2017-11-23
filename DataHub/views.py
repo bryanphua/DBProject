@@ -3,7 +3,7 @@ from django.db import connection, IntegrityError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from DataHub.models import auth_user
+from DataHub.models import auth_user, dataset_list
 
 # Create your views here.
 def index(request):
@@ -37,17 +37,24 @@ def dataset(request):
     return render(request, 'dataset.html', context)
 
 def new_dataset(request):
+    context = {
+        'auth': True,
+        'user': request.user
+    }
     if not request.user.is_authenticated:
         messages.info(request, 'Please login to create a dataset')
         return redirect('/')
     if request.method == 'POST':
         params = request.POST
-        print(params)
-
-    context = {
-        'auth': True,
-        'user': request.user
-    }
+        try:
+            dataset_list.insert_new_entry({
+                'name':params['title'],
+                'creator_user_id':1,
+                'endorsed_by':'placeholder'
+            })
+        except NotNullException:
+            messages.error(request, 'Required fields must not be blank!')
+            context['name'] = params['title']
     return render(request, 'create_dataset.html', context)
 
 
