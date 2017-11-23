@@ -15,10 +15,10 @@
 				<!-- put the form here -->
 				<form class="" action="/signin/" method="post">{% csrf_token %}
 				  <label><b>Username</b></label>
-				  <input type="text" class="form-control" name="username" value="">
+				  <input type="text" class="form-control" name="username" value="" maxlength="150">
 				  <br>
 				  <label><b>Password</b></label>
-				  <input type="password" class="form-control" name="password" value="">
+				  <input type="password" class="form-control" name="password" value="" maxlength="128">
 				  <br>
 				  <br>
 				  <input type="submit" value="Sign In" class="btn btn-success form-control">
