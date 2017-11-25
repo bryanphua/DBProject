@@ -132,7 +132,7 @@ def follow(request, id, origin):
             'user_id': request.user.id,
             'dataset_id': id
         })
-        print("success")
+        messages.success(request, "You are now following the dataset")
     except IntegrityError:
         messages.info(request, "You are already following this dataset!")
     
