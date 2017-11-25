@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.db import connection, IntegrityError
+from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
@@ -7,14 +7,15 @@ from DataHub.models import auth_user, dataset_list
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
-def index(request):
-    context = { 'auth': False }
-    print ('test', auth_user.get_entries(column_list=['email']))
+def index(request):    
+    popular_datasets = dataset_list.get_entries(column_list=['id','creator_user_id','name', 'description', 'genre'], max_rows=None, row_numbers=False)
+    context = { 
+        'auth': False, 
+        'popular_datasets': reversed(popular_datasets[1])
+     }
     if request.user.is_authenticated:
-        context = {
-            'auth': True,
-            'user': request.user
-        }
+        context['auth'] = True
+        context['user'] = request.user
     return render(request, 'index.html', context)
 
 def profile(request):
@@ -55,15 +56,17 @@ def new_dataset(request):
             messages.info(request, 'Did you forget to fill in any fields?')
             # context['name'] = params['title']
             return render(request, 'create_dataset.html', context)
-
-        dataset_list.insert_new_entry({
-            'name':params['title'],
-            'creator_user_id':request.user.id,
-            'endorsed_by':'placeholder',
-            'description':params['description'],
-            'genre':params['genre']
-        })
-        messages.success(request, 'Dataset created successfully')
+        try:
+            dataset_list.insert_new_entry({
+                'name':params['title'],
+                'creator_user_id':request.user.id,
+                'endorsed_by':'placeholder',
+                'description':params['description'],
+                'genre':params['genre']
+            })
+            messages.success(request, 'Dataset created successfully')
+        except ProgrammingError:
+            messages.info(request, 'Invalid characters used')
     return render(request, 'create_dataset.html', context)
 
 

@@ -10,19 +10,20 @@
 
 	<div class="container" id="everything">
 		{% include "messages.html" %}
-		<h1>Most Popular Datasets</h1>
+		<h1>New Datasets</h1>
 		<br/>
 		<ul id="mostPopularList">
+			{% for dataset in popular_datasets %}
 			<li>
 				<div class="dataset">
 					<div class="listUserPic">
 						<img src="{% static 'img/ProfilePic.png' %}"/>
 					</div>
 					<div class="listDetails">
-						<p><b>username00</b> This is title of the dataset</p>
+						<p><b>{{ dataset.1 }}</b> {{ dataset.2 }} </p>
 						<p>Rating 8/10</p>
 						<p>&nbsp;</p>
-						<p>Category</p>
+						<p>{{ dataset.4 }}</p>
 					</div>
 					<div class="listFollowStatus">
 						<input class="btn btn-follow" type="button" value="Follow"/>
@@ -30,91 +31,7 @@
 				</div>
 				<hr/>
 			</li>
-			<li>
-				<div class="dataset">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><b>username00</b> This is title of the dataset</p>
-						<p>Rating 8/10</p>
-						<p>&nbsp;</p>
-						<p>Category</p>
-					</div>
-					<div class="listFollowStatus">
-						<input class="btn btn-follow" type="button" value="Follow"/>
-					</div>
-				</div>
-				<hr/>
-			</li>
-			<li>
-				<div class="dataset">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><b>username00</b> This is title of the dataset</p>
-						<p>Rating 8/10</p>
-						<p>&nbsp;</p>
-						<p>Category</p>
-					</div>
-					<div class="listFollowStatus">
-						<input class="btn btn-follow" type="button" value="Follow"/>
-					</div>
-				</div>
-				<hr/>
-			</li>
-			<li>
-				<div class="dataset">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><b>username00</b> This is title of the dataset</p>
-						<p>Rating 8/10</p>
-						<p>&nbsp;</p>
-						<p>Category</p>
-					</div>
-					<div class="listFollowStatus">
-						<input class="btn btn-follow" type="button" value="Follow"/>
-					</div>
-				</div>
-				<hr/>
-			</li>
-			<li>
-				<div class="dataset">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><b>username00</b> This is title of the dataset</p>
-						<p>Rating 8/10</p>
-						<p>&nbsp;</p>
-						<p>Category</p>
-					</div>
-					<div class="listFollowStatus">
-						<input class="btn btn-follow" type="button" value="Follow"/>
-					</div>
-				</div>
-				<hr/>
-			</li>
-			<li>
-				<div class="dataset">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><b>username00</b> This is title of the dataset</p>
-						<p>Rating 8/10</p>
-						<p>&nbsp;</p>
-						<p>Category</p>
-					</div>
-					<div class="listFollowStatus">
-						<input class="btn btn-follow" type="button" value="Follow"/>
-					</div>
-				</div>
-				<hr/>
-			</li>
+			{% endfor %}
 		</ul>
 	</div>
 
