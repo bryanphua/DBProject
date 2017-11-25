@@ -12,13 +12,16 @@ def index(request):
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
         max_rows=None, 
         row_numbers=False)[1]
+        
     popular_datasets = []
     for dataset in popular_datasets_get:
-        creator_name = auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset[1] }, row_numbers=False)[1][0]
+        creator_name = auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset[1] }, row_numbers=False)[1][0][0]
         following = user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset[0], 'user_id': request.user.id }, row_numbers=True)
+        
         dataset = list(dataset)
         dataset.append(creator_name)
         dataset.append(following)
+        
         popular_datasets.append(dataset)
     context = { 
         'auth': False, 
@@ -141,6 +144,21 @@ def follow(request, id, origin):
         messages.success(request, "You are now following the dataset")
     except IntegrityError:
         messages.info(request, "You are already following this dataset!")
+    
+    if origin == 'index':
+        return redirect('/')
+    else:
+        return redirect('/')
+    
+def unfollow(request, id, origin):
+    try:
+        user_dataset_following.delete_entries({
+            'user_id': request.user.id,
+            'dataset_id': id
+        })
+        messages.success(request, "You have unfollowed the dataset")
+    except IntegrityError:
+        messages.info(request, "You have not followed this dataset!")
     
     if origin == 'index':
         return redirect('/')

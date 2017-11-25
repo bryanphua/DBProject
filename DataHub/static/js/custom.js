@@ -73,3 +73,8 @@ function follow(id, origin) {
 	event.stopPropagation();
 	window.location = "/follow/" + id + "/" + origin
 }
+
+function unfollow(id, origin) {
+	event.stopPropagation();
+	window.location = "/unfollow/" + id + "/" + origin
+}

@@ -28,4 +28,5 @@ urlpatterns = [
     url(r'^signin/$', views.sign_in, name = 'sign_in'),
     url(r'^signout/$', views.sign_out, name = 'sign_out'),
     url(r'^follow/(?P<id>[0-9]{1,11})/(?P<origin>.*)/$', views.follow, name = 'follow'),
+    url(r'^unfollow/(?P<id>[0-9]{1,11})/(?P<origin>.*)/$', views.unfollow, name = 'unfollow'),
 ]

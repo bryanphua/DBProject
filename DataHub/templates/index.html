@@ -26,8 +26,11 @@
 						<p>{{ dataset.4 }}</p>
 					</div>
 					<div class="listFollowStatus">
-						<p>{{ dataset.6 }}</p>
+						{% if dataset.6 == 1 %}
+						<input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.0 }},'index')" />
+						{% else %}
 						<input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.0 }},'index')" />
+						{% endif %}
 					</div>
 				</div>
 				<hr/>
