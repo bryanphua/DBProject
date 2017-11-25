@@ -68,3 +68,8 @@ $(function(){
 function toDataset(id) {
 	window.location = "/dataset/" + id;
 };
+
+function follow(id, origin) {
+	event.stopPropagation();
+	window.location = "/follow/" + id + "/" + origin
+}

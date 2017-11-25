@@ -3,7 +3,7 @@ from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from DataHub.models import auth_user, dataset_list
+from DataHub.models import auth_user, dataset_list, user_dataset_following
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
@@ -125,3 +125,19 @@ def sign_out(request):
     logout(request)
     messages.success(request, 'You have signed out successfully')
     return redirect('/')
+
+def follow(request, id, origin):
+    try:
+        user_dataset_following.insert_new_entry({
+            'user_id': request.user.id,
+            'dataset_id': id
+        })
+        print("success")
+    except IntegrityError:
+        messages.info(request, "You are already following this dataset!")
+    
+    if origin == 'index':
+        return redirect('/')
+    else:
+        return redirect('/')
+    
