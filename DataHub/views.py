@@ -8,7 +8,12 @@ from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintEx
 
 # Create your views here.
 def index(request):    
-    popular_datasets = dataset_list.get_entries(column_list=['id','creator_user_id','name', 'description', 'genre'], max_rows=None, row_numbers=False)[1]
+    popular_datasets_get = dataset_list.get_entries(column_list=['id','creator_user_id','name', 'description', 'genre'], max_rows=None, row_numbers=False)[1]
+    popular_datasets = []
+    for dataset in popular_datasets_get:
+        creator_name = auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset[1] }, row_numbers=False)[1][0]
+        dataset += creator_name
+        popular_datasets.append(dataset)
     context = { 
         'auth': False, 
         'popular_datasets': reversed(popular_datasets)
@@ -34,7 +39,7 @@ def profile(request):
 
 def dataset(request, dataset):
     dataset_info = dataset_list.get_entries(column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], cond_dict={'id': dataset }, max_rows=1, row_numbers=False)[1][0]
-    print(dataset_info)
+    dataset_info += auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset_info[2] }, row_numbers=False)[1][0]
     context = { 'dataset_info': dataset_info }
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False

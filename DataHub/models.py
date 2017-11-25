@@ -2,6 +2,7 @@ from ModelClass import Model,Column
 
 class auth_user(Model):
     id = Column('id','int',unique=True)
+    username = Column('username','char',unique=True)
     password = Column('password','char',not_null=True)
     email = Column('email','char',unique=True,not_null=True)
     first_name = Column('first_name','char', not_null=True)
