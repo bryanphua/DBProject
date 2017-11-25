@@ -48,8 +48,15 @@ def profile(request):
 
 def dataset(request, dataset):
     dataset_info = dataset_list.get_entries(column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], cond_dict={'id': dataset }, max_rows=1, row_numbers=False)[1][0]
-    dataset_info += auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset_info[2] }, row_numbers=False)[1][0]
+    
+    dataset_info = list(dataset_info)
+    
+    dataset_info.append(auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset_info[2] }, row_numbers=False)[1][0])
+    
+    dataset_info.append(user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset_info[0], 'user_id': request.user.id }, row_numbers=True))
+    
     context = { 'dataset_info': dataset_info }
+    
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
     else:
@@ -147,8 +154,8 @@ def follow(request, id, origin):
     
     if origin == 'index':
         return redirect('/')
-    else:
-        return redirect('/')
+    elif origin == 'dataset':
+        return redirect('/dataset/' + id)
     
 def unfollow(request, id, origin):
     try:
@@ -162,6 +169,6 @@ def unfollow(request, id, origin):
     
     if origin == 'index':
         return redirect('/')
-    else:
-        return redirect('/')
+    elif origin == 'dataset':
+        return redirect('/dataset/' + id)
     
