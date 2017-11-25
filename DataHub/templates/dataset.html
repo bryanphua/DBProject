@@ -11,14 +11,14 @@
 		<div id="dataset">
 			<div>
 				<input type="button" value="Follow" class="btn btn-follow" style="float: right;">
-				<h1>Dataset-1</h1>
+				<h1>{{ dataset_info.1 }}</h1>
 				<hr>
-				<p>Created by: Big_Shaq</p>
-				<p>Approved by: TransportGuru</p>
+				<p>Created by: {{ dataset_info.2 }}</p>
+				<p>Approved by: {{ dataset_info.3 }} </p>
 				<p>Rating: 8/10</p>
 				<p>Followed by: 999</p>
 				<br>
-				<p>Dataset description goes here</p>
+				<p>{{ dataset_info.4 }}</p>
 			</div>
 
 			<div id="comment">

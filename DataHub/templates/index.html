@@ -15,7 +15,7 @@
 		<ul id="mostPopularList">
 			{% for dataset in popular_datasets %}
 			<li>
-				<div class="dataset">
+				<div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
 					<div class="listUserPic">
 						<img src="{% static 'img/ProfilePic.png' %}"/>
 					</div>

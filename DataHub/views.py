@@ -8,10 +8,10 @@ from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintEx
 
 # Create your views here.
 def index(request):    
-    popular_datasets = dataset_list.get_entries(column_list=['id','creator_user_id','name', 'description', 'genre'], max_rows=None, row_numbers=False)
+    popular_datasets = dataset_list.get_entries(column_list=['id','creator_user_id','name', 'description', 'genre'], max_rows=None, row_numbers=False)[1]
     context = { 
         'auth': False, 
-        'popular_datasets': reversed(popular_datasets[1])
+        'popular_datasets': reversed(popular_datasets)
      }
     if request.user.is_authenticated:
         context['auth'] = True
@@ -23,23 +23,24 @@ def profile(request):
         messages.info(request, 'Please login to view your profile')
         return redirect('/')
     
-    created_datasets = dataset_list.get_entries(column_list=['id','name', 'description', 'genre'], cond_dict={'creator_user_id': request.user.id}, max_rows=None, row_numbers=False)
+    created_datasets = dataset_list.get_entries(column_list=['id','name', 'description', 'genre'], cond_dict={'creator_user_id': request.user.id}, max_rows=None, row_numbers=False)[1]
 
     context = {
         'auth': True,
         'user': request.user,
-        'created_datasets': created_datasets[1]
+        'created_datasets': created_datasets
     }
     return render(request, 'profile.html', context)
 
 def dataset(request, dataset):
+    dataset_info = dataset_list.get_entries(column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], cond_dict={'id': dataset }, max_rows=1, row_numbers=False)[1][0]
+    print(dataset_info)
+    context = { 'dataset_info': dataset_info }
     if not request.user.is_authenticated or not dataset:
-        context = {}
+        context['auth'] = False
     else:
-        context = {
-            'auth': True,
-            'user': request.user
-        }
+        context['auth'] = True
+        context['user'] = request.user
     return render(request, 'dataset.html', context)
 
 def new_dataset(request):
