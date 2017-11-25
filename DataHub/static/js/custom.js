@@ -47,9 +47,9 @@ $(function(){
 	    }
 	}, ".btn-following");
 
-	$(document).on('click', '.dataset', function() {
-		window.location = "/dataset";
-	});
+	// $(document).on('click', '.dataset', function() {
+	// 	window.location = "/dataset";
+	// });
 
 	$('.dataset-menu').click(function() {
 		index = $('.dataset-menu').index(this);
@@ -64,3 +64,7 @@ $(function(){
 	});
 
 });
+
+function toDataset(id) {
+	console.log(id);
+};

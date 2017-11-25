@@ -127,34 +127,24 @@
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="created">
-          <div class="dataset">
+          
+          {% for dataset in created_datasets %}
+          <div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
             <div class="dataset-title">
-              <h3>Dataset-1</h3>
+              <h3>{{ dataset.1 }}</h3>
             </div>
             <div class="dataset-menu hover" data-dropdown="#createdMenu">
               <i class="fa fa-ellipsis-v"></i>
             </div>
             <div class="dataset-description">
-              <p>Mock data set description Mock data set description Mock data set description Mock data set description Mock data set description Mock data set description </p>
+              <p>{{ dataset.2 }}</p>
             </div>
             <div class="dataset-category">
-              <p>Transportation</p>
+              <p>{{ dataset.3 }}</p>
             </div>
           </div>
-          <div class="dataset">
-            <div class="dataset-title">
-              <h3>Dataset-2</h3>
-            </div>
-            <div class="dataset-menu hover" data-dropdown="#createdMenu">
-              <i class="fa fa-ellipsis-v"></i>
-            </div>
-            <div class="dataset-description">
-              <p>Mock data set description</p>
-            </div>
-            <div class="dataset-category">
-              <p>Education</p>
-            </div>
-          </div>
+          {% endfor %}
+          
         </div>
         <div role="tabpanel" class="tab-pane fade" id="comments">
           <ul id="commentList">

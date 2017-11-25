@@ -21,9 +21,13 @@ def profile(request):
     if not request.user.is_authenticated:
         messages.info(request, 'Please login to view your profile')
         return redirect('/')
+    
+    created_datasets = dataset_list.get_entries(column_list=['id','name', 'description', 'genre'], cond_dict={'creator_user_id': request.user.id}, max_rows=None, row_numbers=False)
+
     context = {
         'auth': True,
-        'user': request.user
+        'user': request.user,
+        'created_datasets': created_datasets[1]
     }
     return render(request, 'profile.html', context)
 
