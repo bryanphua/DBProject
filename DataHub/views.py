@@ -8,11 +8,17 @@ from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintEx
 
 # Create your views here.
 def index(request):    
-    popular_datasets_get = dataset_list.get_entries(column_list=['id','creator_user_id','name', 'description', 'genre'], max_rows=None, row_numbers=False)[1]
+    popular_datasets_get = dataset_list.get_entries(
+        column_list=['id','creator_user_id','name', 'description', 'genre'], 
+        max_rows=None, 
+        row_numbers=False)[1]
     popular_datasets = []
     for dataset in popular_datasets_get:
         creator_name = auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset[1] }, row_numbers=False)[1][0]
-        dataset += creator_name
+        following = user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset[0], 'user_id': request.user.id }, row_numbers=True)
+        dataset = list(dataset)
+        dataset.append(creator_name)
+        dataset.append(following)
         popular_datasets.append(dataset)
     context = { 
         'auth': False, 

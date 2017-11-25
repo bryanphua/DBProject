@@ -169,7 +169,7 @@ class Model():
                 raise InvalidColumnNameException()
         else:
             column_list = cls.get_column_names()
-        column_list = tuple(column_list)
+        column_list = list(column_list)
         column_string = reduce(lambda x, y: str(x) + ',' + str(y), column_list)
         select_string = cls.select_sql.format(column_string, cls.get_table_name())
 
@@ -194,7 +194,7 @@ class Model():
                 return column_list,cursor.fetchall()
             else:
                 if cursor.rowcount == 0:
-                    return column_list,tuple()
+                    return column_list,list()
                 else:
                     return column_list, cursor.fetchmany(min(cursor.rowcount, max_rows))
 

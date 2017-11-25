@@ -21,7 +21,3 @@ class user_dataset_following(Model):
     user_id = Column('user_id','int',not_null=True)
     dataset_id = Column('dataset_id','int',not_null=True)
     datetime_followed = Column('datetime_followed','datetime') # not_null=False as default=current_timestamp
-    password = Column('password','char')
-    email = Column('email','char',unique=True)
-    username = Column('username','char')
-    is_staff = Column('is_staff','int')
