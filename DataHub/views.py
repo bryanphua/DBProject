@@ -32,8 +32,8 @@ def profile(request):
     }
     return render(request, 'profile.html', context)
 
-def dataset(request):
-    if not request.user.is_authenticated:
+def dataset(request, dataset):
+    if not request.user.is_authenticated or not dataset:
         context = {}
     else:
         context = {

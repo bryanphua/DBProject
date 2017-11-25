@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.views.generic.base import RedirectView
 from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name = 'index'),
     url(r'^profile/$', views.profile, name = 'profile'),
-    url(r'^dataset/$', views.dataset, name = 'dataset'),
+    url(r'^dataset/$', RedirectView.as_view(url='/', permanent=False), name = 'r_dataset'),
+    url(r'^dataset/(?P<dataset>[0-9]{1,11})/$', views.dataset, name = 'dataset'),
     url(r'^new/$', views.new_dataset, name = 'new'),
     url(r'^signup/$', views.sign_up, name = 'sign_up'),
     url(r'^signin/$', views.sign_in, name = 'sign_in'),

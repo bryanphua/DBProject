@@ -66,5 +66,5 @@ $(function(){
 });
 
 function toDataset(id) {
-	console.log(id);
+	window.location = "/dataset/" + id;
 };
