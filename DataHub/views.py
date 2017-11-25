@@ -16,18 +16,19 @@ def index(request):
     popular_datasets = []
     for dataset in popular_datasets_get:
         creator_name = auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset[1] }, row_numbers=False)[1][0][0]
-        following = user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset[0], 'user_id': request.user.id }, row_numbers=True)
         
         dataset = list(dataset)
         dataset.append(creator_name)
-        dataset.append(following)
-        
         popular_datasets.append(dataset)
+        
     context = { 
         'auth': False, 
         'popular_datasets': reversed(popular_datasets)
      }
     if request.user.is_authenticated:
+        for dataset in popular_datasets:
+            following = user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset[0], 'user_id': request.user.id }, row_numbers=True)
+            dataset.append(following)
         context['auth'] = True
         context['user'] = request.user
     return render(request, 'index.html', context)
@@ -69,15 +70,15 @@ def dataset(request, dataset):
     
     dataset_info.append(auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset_info[2] }, row_numbers=False)[1][0][0])
     
-    dataset_info.append(user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset_info[0], 'user_id': request.user.id }, row_numbers=True))
-    
     context = { 'dataset_info': dataset_info }
     
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
     else:
+        dataset_info.append(user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset_info[0], 'user_id': request.user.id }, row_numbers=True))
         context['auth'] = True
         context['user'] = request.user
+        context['dataset_info'] = dataset_info
     return render(request, 'dataset.html', context)
 
 def new_dataset(request):

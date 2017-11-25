@@ -25,13 +25,15 @@
 						<p>&nbsp;</p>
 						<p>{{ dataset.4 }}</p>
 					</div>
-					<div class="listFollowStatus">
-					  {% if dataset.6 == 1 %}
-					  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.0 }},'index')" />
-					  {% else %}
-					  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.0 }},'index')" />
-					  {% endif %}
-					</div>
+					{% if auth %}
+						<div class="listFollowStatus">
+						  {% if dataset.6 == 1 %}
+						  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.0 }},'index')" />
+						  {% else %}
+						  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.0 }},'index')" />
+						  {% endif %}
+						</div>
+					{% endif %}
 				</div>
 				<hr/>
 			</li>

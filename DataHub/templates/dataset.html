@@ -11,10 +11,12 @@
 		<div id="dataset">
 			<div>
 				{% include "messages.html" %}
-				{% if dataset_info.7 == 1 %}
-				<input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset_info.0 }},'dataset')" style="float: right"/>
-				{% else %}
-				<input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset_info.0 }},'dataset')" style="float: right"/>
+				{% if auth %}
+					{% if dataset_info.7 == 1 %}
+					<input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset_info.0 }},'dataset')" style="float: right"/>
+					{% else %}
+					<input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset_info.0 }},'dataset')" style="float: right"/>
+					{% endif %}
 				{% endif %}
 				<h1>{{ dataset_info.1 }}</h1>
 				<hr>
