@@ -45,7 +45,11 @@
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="created">
-          
+          <div class="dataset" onclick="location.href='/new/'">
+            <div class="dataset-title">
+              <h3>Create new dataset</h3>
+            </div>
+          </div>
           {% for dataset in created_datasets %}
           <div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
             <div class="dataset-title">
