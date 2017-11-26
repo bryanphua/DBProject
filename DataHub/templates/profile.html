@@ -110,23 +110,7 @@
 						</li>
 						{% endif %}
             {% for comment in comments  %}
-            <li>
-              <div class="comment-container">
-                <div class="comment-user-pic">
-                  <img src="{% static 'img/ProfilePic.png' %}"/>
-                </div>
-                <div class="comment-content">
-                  <p><b>{{ comment.dataset_name }}</b></p>
-                  <p>{{ comment.content }}</p>
-                </div>
-                {% if user_info.username == user.username %}
-                <div class="comment-vote-status">
-                  <a href="/comment/delete/{{ comment.id }}/">delete</a>
-                </div>
-                {% endif %}
-              </div>
-              <hr/>
-            </li>
+            {% include "comments.html" %}
             {% endfor %}    
           </ul>
         </div>

@@ -45,29 +45,7 @@
 						</li>
 						{% endif %}
 						{% for comment in comments %}
-						<li>
-							<div class="comment-container">
-								<div class="comment-user-pic">
-									<img src="{% static 'img/ProfilePic.png' %}"/>
-								</div>
-								<div class="comment-content">
-									<p><b>{{ comment.username }}</b></p>
-									<p>{{ comment.content }}</p>
-								</div>
-								<div class="comment-vote-status">
-									<div class="thumbs-up">
-										<i class="fa fa-thumbs-up"></i>
-									</div>
-									<div class="thumbs-down">
-										<i class="fa fa-thumbs-down"></i>
-									</div>
-									<div class="total-votes">
-										<p>+1 votes</p>
-									</div>
-								</div>
-							</div>
-							<hr/>
-						</li>
+						{% include "comments.html" %}
 						{% endfor %}
 					</ul>
 				</div>
