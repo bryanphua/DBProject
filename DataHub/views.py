@@ -3,7 +3,7 @@ from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from DataHub.models import auth_user, dataset_list, user_dataset_following, comments
+from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
@@ -329,3 +329,23 @@ def delete_comment(request, comment):
     comments.delete_entries({'id':comment})
     messages.success(request, 'Comment deleted')
     return redirect('/profile/')
+
+def rate_dataset(request, dataset):
+    rating = request.POST['rating']
+    try:
+        dataset_rating.insert_new_entry({
+            'user_id':request.user.id,
+            'dataset_id':dataset,
+            'rating':rating
+        })
+    except IntegrityError:
+        dataset_rating.delete_entries({
+            'user_id':request.user.id,
+            'dataset_id':dataset
+        })
+        dataset_rating.insert_new_entry({
+            'user_id':request.user.id,
+            'dataset_id':dataset,
+            'rating':rating
+        })
+    return redirect('/dataset/' + dataset)
