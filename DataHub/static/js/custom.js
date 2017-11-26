@@ -53,6 +53,12 @@ $(function(){
 
 	$('.dataset-menu').click(function() {
 		index = $('.dataset-menu').index(this);
+		userId = $(this).attr("data-user-id");
+		datasetId = $(this).attr("data-dataset-id");
+		datasetName = $(this).attr("data-dataset-name");
+		$("#popupDatasetName").html(datasetName);
+		alert("User id: " + userId);
+		alert("Dataset id: " + datasetId);
 	});
 
 	$('.action-unfollow').click(function() {
