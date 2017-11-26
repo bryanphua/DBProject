@@ -11,7 +11,7 @@
 		<div id="dataset">
 			<div>
 				{% include "messages.html" %}
-				{% if auth %}
+				{% if auth and user.id != dataset_info.creator_user_id %}
 					{% if dataset_info.following == 1 %}
 					<input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset_info.id }},'dataset')" style="float: right"/>
 					{% else %}
