@@ -201,6 +201,8 @@ def unfollow(request, id, origin):
         return redirect('/')
     elif origin == 'dataset':
         return redirect('/dataset/' + id)
+    elif origin == 'profile':
+        return redirect('/profile/')
     
 def comment(request):
     content = request.POST['content'].strip()
