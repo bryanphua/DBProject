@@ -33,7 +33,7 @@
 				<div id="commentListContainer">
 					<form class="" action="/comment/" method="post">
 						{% csrf_token %}
-						<textarea class="form-control" rows="4" name="description"></textarea>
+						<textarea class="form-control" rows="4" name="content"></textarea>
 						<input type="submit" class="btn btn-success" value="Comment">
 					</form>
 					<ul id="commentList">

@@ -21,3 +21,11 @@ class user_dataset_following(Model):
     user_id = Column('user_id','int',not_null=True)
     dataset_id = Column('dataset_id','int',not_null=True)
     datetime_followed = Column('datetime_followed','datetime') # not_null=False as default=current_timestamp
+    
+class comments(Model):
+    id = Column('id', 'int', unique=True)
+    created = Column('created', 'datetime')
+    user_id = Column('user_id', 'int', not_null=True)
+    content = Column('content', 'char', not_null=True)
+    dataset_id = Column('dataset_id', 'int', not_null=True)
+    last_modified = Column('last_modified', 'datetime')

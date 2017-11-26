@@ -3,7 +3,7 @@ from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from DataHub.models import auth_user, dataset_list, user_dataset_following
+from DataHub.models import auth_user, dataset_list, user_dataset_following, comments
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
@@ -203,6 +203,7 @@ def unfollow(request, id, origin):
         return redirect('/dataset/' + id)
     
 def comment(request):
-    params = request.POST
+    content = request.POST['content'].strip()
+    # comments.insert_new_entry()
     return redirect('/')
     
