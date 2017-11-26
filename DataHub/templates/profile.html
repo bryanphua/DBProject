@@ -99,38 +99,15 @@
         </div>
         <div role="tabpanel" class="tab-pane fade" id="comments">
           <ul id="commentList">
+            {% for comment in comments  %}
             <li>
               <div class="comment-container">
                 <div class="comment-user-pic">
                   <img src="{% static 'img/ProfilePic.png' %}"/>
                 </div>
                 <div class="comment-content">
-                  <p><b>username00</b> This is title of the dataset</p>
-                  <p>Comment goes here</p>
-                </div>
-                <div class="comment-vote-status">
-                  <div class="thumbs-up-on">
-                    <i class="fa fa-thumbs-o-up"></i>
-                  </div>
-                  <div class="thumbs-down">
-                    <i class="fa fa-thumbs-o-down"></i>
-                  </div>
-                  <div class="total-votes">
-                    <p>+999 votes</p>
-                  </div>
-                </div>
-              </div>
-              <hr/>
-            </li>
-
-            <li>
-              <div class="comment-container">
-                <div class="comment-user-pic">
-                  <img src="{% static 'img/ProfilePic.png' %}"/>
-                </div>
-                <div class="comment-content">
-                  <p><b>username00</b> This is title of the dataset</p>
-                  <p>Comment goes here</p>
+                  <p><b>{{ comment.dataset_name }}</b></p>
+                  <p>{{ comment.content }}</p>
                 </div>
                 <div class="comment-vote-status">
                   <div class="thumbs-up">
@@ -146,6 +123,7 @@
               </div>
               <hr/>
             </li>
+            {% endfor %}    
           </ul>
         </div>
       </div>

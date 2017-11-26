@@ -63,6 +63,19 @@ def profile(request):
         row_numbers=False)
         dataset['creator_name'] = creator_name['username']
         dataset.update(dataset_info)
+        
+    user_comments = comments.get_entries_dictionary(
+    column_list=['id','dataset_id','content'],
+    cond_dict={'user_id':request.user.id},
+    max_rows=None, row_numbers=False)
+    
+    for comment in user_comments:
+        dataset = dataset_list.get_entries_dictionary(
+        column_list=['name'],
+        cond_dict={'id': comment['dataset_id']},
+        max_rows=1,
+        row_numbers=False)
+        comment['dataset_name'] = dataset['name']
     
     context = {
         'auth': True,
@@ -70,6 +83,7 @@ def profile(request):
         'user_info': request.user,
         'created_datasets': created_datasets, 
         'following_datasets': following_datasets,
+        'comments': user_comments,
     }
     return render(request, 'profile.html', context)
 

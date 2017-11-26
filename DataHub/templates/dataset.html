@@ -37,6 +37,11 @@
 						<input type="submit" class="btn btn-success" value="Comment">
 					</form>
 					<ul id="commentList">
+						{% if not comments %}
+						<li>
+							<p>No comments yet</p>
+						</li>
+						{% endif %}
 						{% for comment in comments %}
 						<li>
 							<div class="comment-container">
