@@ -150,6 +150,13 @@
     if (e !== void 0) {
       e.preventDefault();
       e.stopPropagation();
+      index = $('.dataset-menu').index(this);
+      var userId = $(this).attr("data-user-id");
+      var datasetId = $(this).attr("data-dataset-id");
+      var datasetName = $(this).attr("data-dataset-name");
+      $("#popupDatasetName").html(datasetName);
+      console.log("User id: " + userId);
+      console.log("Dataset id: " + datasetId);
     }
     if (isOpen || isDisabled) {
       return false;
