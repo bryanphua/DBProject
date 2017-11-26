@@ -87,6 +87,12 @@ def dataset(request, dataset):
         row_numbers=False)
     dataset_info['username'] = user_info['username']
     
+    dataset_comments = comments.get_entries_dictionary(
+        column_list=['user_id','content'],
+        max_rows=None,
+        cond_dict={ 'dataset_id':dataset },
+        row_numbers=False)
+    context['comments'] = dataset_comments
     
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
@@ -213,10 +219,12 @@ def unfollow(request, id, origin):
     
 def comment(request, dataset):
     content = request.POST['content'].strip()
-    print(content)
-    print(dataset)
-    # comments.insert_new_entry()
-    return redirect('/')
+    comments.insert_new_entry({
+        'user_id': request.user.id, 
+        'content': content,
+        'dataset_id': dataset
+    })
+    return redirect('/dataset/' + dataset)
     
 def user(request, username):
     if request.user.username == username:
