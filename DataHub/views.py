@@ -263,3 +263,19 @@ def user(request, username):
     if request.user.is_authenticated:
         context['auth'] = True
     return render(request, 'profile.html', context)
+
+def delete_dataset(request, dataset):
+    creator_user_id = dataset_list.get_entries_dictionary(
+    column_list=['creator_user_id'],
+    cond_dict={'id':dataset}, 
+    max_rows=1,
+    row_numbers=False)
+
+    if not (creator_user_id['creator_user_id'] == request.user.id):
+        messages.info(request, 'You cannot delete that dataset')
+        return redirect('/')
+    user_dataset_following.delete_entries({'dataset_id':dataset})
+    dataset_list.delete_entries({'id':dataset})
+
+    messages.success(request, 'Dataset deleted')
+    return redirect('/profile/')

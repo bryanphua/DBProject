@@ -27,32 +27,41 @@
 
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active show" id="following">
-          {% for dataset in following_datasets %}
-          <div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="followingMenu-{{ dataset.dataset_id }}">
-            <ul>
-              <li><a href="/user/{{ dataset.creator_name }}/">View User</a></li>
-              {% if user.username == user_info.username %}
-              <li class="divider"></li>
-              <li><a href="/unfollow/{{ dataset.dataset_id }}/profile" class="action-unfollow">Unfollow</a></li>
-              {% endif %}
-              
-            </ul>
+          {% if following_datasets %}
+            {% for dataset in following_datasets %}
+            <div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="followingMenu-{{ dataset.dataset_id }}">
+              <ul>
+                <li><a href="/user/{{ dataset.creator_name }}/">View User</a></li>
+                {% if user.username == user_info.username %}
+                <li class="divider"></li>
+                <li><a href="/unfollow/{{ dataset.dataset_id }}/profile" class="action-unfollow">Unfollow</a></li>
+                {% endif %}
+              </ul>
+            </div>
+            <div class="dataset" onclick="toDataset('{{ dataset.dataset_id }}')">
+              <div class="dataset-title">
+                <h3>{{ dataset.name }}</h3>
+              </div>
+              <div class="dataset-menu hover" data-dropdown="#followingMenu-{{ dataset.dataset_id }}" data-user-id="user-id" data-dataset-id="{{ dataset.dataset_id }}" data-dataset-name="{{ dataset.name }}">
+                <i class="fa fa-ellipsis-v"></i>
+              </div>
+              <div class="dataset-description">
+                <p>{{ dataset.description }}</p>
+              </div>
+              <div class="dataset-category">
+                <p>{{ dataset.genre }}</p>
+              </div>
+            </div>
+            {% endfor %}
+          {% elif user_info.id != user.id %}
+          <div class="dataset">
+            <p>This user isn't following any datasets currently</p>
           </div>
-          <div class="dataset" onclick="toDataset('{{ dataset.dataset_id }}')">
-            <div class="dataset-title">
-              <h3>{{ dataset.name }}</h3>
-            </div>
-            <div class="dataset-menu hover" data-dropdown="#followingMenu-{{ dataset.dataset_id }}" data-user-id="user-id" data-dataset-id="{{ dataset.dataset_id }}" data-dataset-name="{{ dataset.name }}">
-              <i class="fa fa-ellipsis-v"></i>
-            </div>
-            <div class="dataset-description">
-              <p>{{ dataset.description }}</p>
-            </div>
-            <div class="dataset-category">
-              <p>{{ dataset.genre }}</p>
-            </div>
+          {% else %}
+          <div class="dataset">
+            <p>You are not following any datasets yet. Why not go discover them now?</p>
           </div>
-          {% endfor %}
+          {% endif %}
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="created">
@@ -64,13 +73,20 @@
           </div>
           {% endif %}
           {% for dataset in created_datasets %}
-          <div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
+          <div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="createdMenu-{{ dataset.id }}">
+            <ul>
+              <li><a href="/dataset/delete/{{ dataset.id }}/" class="action-delete">Delete</a></li>
+            </ul>
+          </div>
+          <div class="dataset" onclick="toDataset('{{ dataset.id }}')">
             <div class="dataset-title">
               <h3>{{ dataset.name }}</h3>
             </div>
-            <div class="dataset-menu hover" data-dropdown="#createdMenu">
+            {% if user.username == user_info.username %}
+            <div class="dataset-menu hover" data-dropdown="#createdMenu-{{ dataset.id }}">
               <i class="fa fa-ellipsis-v"></i>
             </div>
+            {% endif %}
             <div class="dataset-description">
               <p>{{ dataset.description }}</p>
             </div>

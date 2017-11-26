@@ -29,6 +29,8 @@
 						<div class="listFollowStatus">
 						  {% if dataset.following == 1 %}
 						  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.id }},'index')" />
+							{% elif dataset.creator_user_id == user.id %}
+							<input class="btn btn-follow disabled" type="button" value="Follow" disabled />
 						  {% else %}
 						  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.id }},'index')" />
 						  {% endif %}
