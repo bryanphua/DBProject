@@ -72,6 +72,11 @@
             </div>
           </div>
           {% endif %}
+          {% if not create_dataset %}
+          <div class="dataset">
+            <p>No datasets created</p>
+          </div>
+          {% endif %}
           {% for dataset in created_datasets %}
           <div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="createdMenu-{{ dataset.id }}">
             <ul>
@@ -99,6 +104,11 @@
         </div>
         <div role="tabpanel" class="tab-pane fade" id="comments">
           <ul id="commentList">
+            {% if not comments %}
+						<li>
+						  <p>No comments yet</p>
+						</li>
+						{% endif %}
             {% for comment in comments  %}
             <li>
               <div class="comment-container">
