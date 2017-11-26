@@ -108,6 +108,13 @@ def dataset(request, dataset):
         row_numbers=False)
     context['comments'] = dataset_comments
     
+    followers = user_dataset_following.get_entries(
+        column_list=None,
+        max_rows=None,
+        cond_dict={ 'dataset_id':dataset },
+        row_numbers=True)
+    context['followers'] = followers
+    
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
     else:
@@ -275,11 +282,25 @@ def user(request, username):
         dataset['creator_name'] = creator_name['username']
         dataset.update(dataset_info)
     
+    user_comments = comments.get_entries_dictionary(
+    column_list=['id','dataset_id','content'],
+    cond_dict={'user_id':user_info['id']},
+    max_rows=None, row_numbers=False)
+    
+    for comment in user_comments:
+        dataset = dataset_list.get_entries_dictionary(
+        column_list=['name'],
+        cond_dict={'id': comment['dataset_id']},
+        max_rows=1,
+        row_numbers=False)
+        comment['dataset_name'] = dataset['name']
+    
     context = {
         'auth': False,
         'user_info': user_info,
         'created_datasets': created_datasets, 
         'following_datasets': following_datasets,
+        'comments': user_comments,
     }
     
     if request.user.is_authenticated:
@@ -301,3 +322,6 @@ def delete_dataset(request, dataset):
 
     messages.success(request, 'Dataset deleted')
     return redirect('/profile/')
+
+# def delete_comment(request, comment):
+    
