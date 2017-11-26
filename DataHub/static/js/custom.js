@@ -51,16 +51,26 @@ $(function(){
 	// 	window.location = "/dataset";
 	// });
 
+	// $('.dataset-menu').click(function() {
+	// 	index = $('.dataset-menu').index(this);
+	//     var userId = $(this).attr("data-user-id");
+	//     var datasetId = $(this).attr("data-dataset-id");
+	//     var datasetName = $(this).attr("data-dataset-name");
+	//     $("#popupDatasetName").html(datasetName);
+	//     console.log("User id: " + userId);
+	//     console.log("Dataset id: " + datasetId);
+	// });
 
-	$(document).on('click', '.dataset-menu', function(event) {
-    index = $('.dataset-menu').index(this);
-    var userId = $(this).attr("data-user-id");
-    var datasetId = $(this).attr("data-dataset-id");
-    var datasetName = $(this).attr("data-dataset-name");
-    $("#popupDatasetName").html(datasetName);
-    alert("User id: " + userId);
-    alert("Dataset id: " + datasetId);
-  });
+	// $(document).on('click', '.dataset-menu', function(event) {
+	//     index = $('.dataset-menu').index(this);
+	//     alert(index);
+	//     var userId = $(this).attr("data-user-id");
+	//     var datasetId = $(this).attr("data-dataset-id");
+	//     var datasetName = $(this).attr("data-dataset-name");
+	//     $("#popupDatasetName").html(datasetName);
+	//     console.log("User id: " + userId);
+	//     console.log("Dataset id: " + datasetId);
+	// });
 
 	$('.action-unfollow').click(function() {
 		$('.dataset:eq('+index+')').remove();
