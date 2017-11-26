@@ -12,20 +12,20 @@
 			<div>
 				{% include "messages.html" %}
 				{% if auth %}
-					{% if dataset_info.7 == 1 %}
-					<input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset_info.0 }},'dataset')" style="float: right"/>
+					{% if dataset_info.following == 1 %}
+					<input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset_info.id }},'dataset')" style="float: right"/>
 					{% else %}
-					<input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset_info.0 }},'dataset')" style="float: right"/>
+					<input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset_info.id }},'dataset')" style="float: right"/>
 					{% endif %}
 				{% endif %}
-				<h1>{{ dataset_info.1 }}</h1>
+				<h1>{{ dataset_info.name }}</h1>
 				<hr>
-				<p>Created by: {{ dataset_info.6 }}</p>
-				<p>Approved by: {{ dataset_info.3 }} </p>
+				<p>Created by: {{ dataset_info.username }}</p>
+				<p>Approved by: {{ dataset_info.endorsed_by }} </p>
 				<p>Rating: 8/10</p>
 				<p>Followed by: 999</p>
 				<br>
-				<p>{{ dataset_info.4 }}</p>
+				<p>{{ dataset_info.genre }}</p>
 			</div>
 
 			<div id="comment">

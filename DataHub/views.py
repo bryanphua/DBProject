@@ -8,29 +8,32 @@ from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintEx
 
 # Create your views here.
 def index(request):    
-    popular_datasets_get = dataset_list.get_entries(
+    popular_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
         max_rows=None, 
-        row_numbers=False)[1]
+        row_numbers=False)
         
-    popular_datasets = []
-    for dataset in popular_datasets_get:
-        creator_name = auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset[1] }, row_numbers=False)[1][0][0]
-        
-        dataset = list(dataset)
-        dataset.append(creator_name)
-        popular_datasets.append(dataset)
+    for dataset in popular_datasets:
+        creator_name = auth_user.get_entries_dictionary(
+            column_list=['username'], max_rows=1, 
+            cond_dict={ 'id': dataset['creator_user_id'] }, 
+            row_numbers=False)
+        if request.user.is_authenticated:
+            following = user_dataset_following.check_exists(
+                { 'dataset_id': dataset['id'], 
+                'user_id': request.user.id })
+            dataset['following'] = following
+        dataset['creator_name'] = creator_name['username']
         
     context = { 
         'auth': False, 
         'popular_datasets': reversed(popular_datasets)
      }
+     
     if request.user.is_authenticated:
-        for dataset in popular_datasets:
-            following = user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset[0], 'user_id': request.user.id }, row_numbers=True)
-            dataset.append(following)
         context['auth'] = True
         context['user'] = request.user
+        
     return render(request, 'index.html', context)
 
 def profile(request):
@@ -38,22 +41,22 @@ def profile(request):
         messages.info(request, 'Please login to view your profile')
         return redirect('/')
     
-    created_datasets = dataset_list.get_entries(column_list=['id','name', 'description', 'genre'], cond_dict={'creator_user_id': request.user.id}, max_rows=None, row_numbers=False)[1]
+    created_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','name', 'description', 'genre'], 
+        cond_dict={'creator_user_id': request.user.id}, 
+        max_rows=None, row_numbers=False)
     
-    following_datasets_get = user_dataset_following.get_entries(column_list=['dataset_id'], cond_dict={'user_id':request.user.id}, max_rows=None, row_numbers=False)[1] 
+    following_datasets = user_dataset_following.get_entries_dictionary(
+    column_list=['dataset_id'], cond_dict={'user_id':request.user.id}, 
+    max_rows=None, row_numbers=False)
     
-    following_datasets = []
-    
-    for dataset in following_datasets_get:
-        dataset = list(dataset)
-        dataset_info = dataset_list.get_entries(
+    for dataset in following_datasets:
+        dataset_info = dataset_list.get_entries_dictionary(
         column_list=['name','description','creator_user_id','genre'],
-        cond_dict={'id':dataset[0]}, 
-        max_rows=None,
-        row_numbers=False)[1][0]
-        
-        dataset.extend(list(dataset_info))
-        following_datasets.append(dataset)
+        cond_dict={'id':dataset['dataset_id']}, 
+        max_rows=1,
+        row_numbers=False)
+        dataset.update(dataset_info)
     
     context = {
         'auth': True,
@@ -64,21 +67,31 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 def dataset(request, dataset):
-    dataset_info = dataset_list.get_entries(column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], cond_dict={'id': dataset }, max_rows=1, row_numbers=False)[1][0]
+    context = {}
     
-    dataset_info = list(dataset_info)
+    dataset_info = dataset_list.get_entries_dictionary(
+    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], 
+    cond_dict={'id': dataset }, max_rows=1, row_numbers=False)
+
+    user_info = auth_user.get_entries_dictionary(
+        column_list=['username'], 
+        max_rows=1,
+        cond_dict={ 'id': dataset_info['creator_user_id'] }, 
+        row_numbers=False)
+    dataset_info['username'] = user_info['username']
     
-    dataset_info.append(auth_user.get_entries(column_list=['username'], max_rows=1, cond_dict={ 'id': dataset_info[2] }, row_numbers=False)[1][0][0])
-    
-    context = { 'dataset_info': dataset_info }
     
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
     else:
-        dataset_info.append(user_dataset_following.get_entries(column_list=None, max_rows=1, cond_dict={ 'dataset_id': dataset_info[0], 'user_id': request.user.id }, row_numbers=True))
         context['auth'] = True
         context['user'] = request.user
-        context['dataset_info'] = dataset_info
+        following = user_dataset_following.check_exists(
+            { 'dataset_id': dataset_info['id'],
+            'user_id': request.user.id })
+        dataset_info['following'] = following
+        
+    context['dataset_info'] = dataset_info
     return render(request, 'dataset.html', context)
 
 def new_dataset(request):

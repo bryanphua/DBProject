@@ -27,18 +27,18 @@
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active show" id="following">
           {% for dataset in following_datasets %}
-          <div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
+          <div class="dataset" onclick="toDataset('{{ dataset.dataset_id }}')">
             <div class="dataset-title">
-              <h3>{{ dataset.1 }}</h3>
+              <h3>{{ dataset.name }}</h3>
             </div>
             <div class="dataset-menu hover" data-dropdown="#followingMenu">
               <i class="fa fa-ellipsis-v"></i>
             </div>
             <div class="dataset-description">
-              <p>{{ dataset.2 }}</p>
+              <p>{{ dataset.description }}</p>
             </div>
             <div class="dataset-category">
-              <p>{{ dataset.4 }}</p>
+              <p>{{ dataset.genre }}</p>
             </div>
           </div>
           {% endfor %}
@@ -49,16 +49,16 @@
           {% for dataset in created_datasets %}
           <div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
             <div class="dataset-title">
-              <h3>{{ dataset.1 }}</h3>
+              <h3>{{ dataset.name }}</h3>
             </div>
             <div class="dataset-menu hover" data-dropdown="#createdMenu">
               <i class="fa fa-ellipsis-v"></i>
             </div>
             <div class="dataset-description">
-              <p>{{ dataset.2 }}</p>
+              <p>{{ dataset.description }}</p>
             </div>
             <div class="dataset-category">
-              <p>{{ dataset.3 }}</p>
+              <p>{{ dataset.genre }}</p>
             </div>
           </div>
           {% endfor %}

@@ -170,6 +170,34 @@ class Model():
                 else:
                     return column_list, cursor.fetchmany(min(cursor.rowcount, max_rows))
 
+    @classmethod
+    def get_entries_dictionary(cls, column_list=None, cond_dict=None, max_rows=5, row_numbers=False):
+        """
+        :param column_list: list of column names to select in sql statement. If None, select all columns defined in class
+        :param cond_dict: dictionary that specifies the equals condition of the sql query (e.g key=value)
+        :param max_rows: maximum number of rows to be returned. Default max_rows=5. If None, return all rows
+        :param row_numbers: boolean
+        :return: list of dictionaries with column name as key if row_numbers is False
+        ,otherwise the row count of the query e.g 5
+        """
+        entries = cls.get_entries(column_list, cond_dict, max_rows, row_numbers)
+        output = []
+        
+        if row_numbers == True:
+            return cls.get_entries(column_list, cond_dict, max_rows, row_numbers)
+        
+        if max_rows == 1:
+            d = {}
+            for i in range(len(entries[0])):
+                d[entries[0][i]] = entries[1][0][i]
+            return d
+        
+        for rows in entries[1]:
+            d = {}
+            for i in range(len(entries[0])):
+                d[entries[0][i]] = rows[i]
+            output.append(d)
+        return output
 
     @classmethod
     def check_exists(cls,cond_dict):

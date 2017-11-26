@@ -15,22 +15,22 @@
 		<ul id="mostPopularList">
 			{% for dataset in popular_datasets %}
 			<li>
-				<div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
+				<div class="dataset" onclick="toDataset('{{ dataset.id }}')">
 					<div class="listUserPic">
 						<img src="{% static 'img/ProfilePic.png' %}"/>
 					</div>
 					<div class="listDetails">
-						<p><b>{{ dataset.5 }}</b> {{ dataset.2 }} </p>
+						<p><b>{{ dataset.creator_name }}</b> {{ dataset.name }} </p>
 						<p>Rating 8/10</p>
 						<p>&nbsp;</p>
-						<p>{{ dataset.4 }}</p>
+						<p>{{ dataset.genre }}</p>
 					</div>
 					{% if auth %}
 						<div class="listFollowStatus">
-						  {% if dataset.6 == 1 %}
-						  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.0 }},'index')" />
+						  {% if dataset.following == 1 %}
+						  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.id }},'index')" />
 						  {% else %}
-						  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.0 }},'index')" />
+						  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.id }},'index')" />
 						  {% endif %}
 						</div>
 					{% endif %}

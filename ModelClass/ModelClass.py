@@ -197,8 +197,7 @@ class Model():
                     return column_list,tuple()
                 else:
                     return column_list, cursor.fetchmany(min(cursor.rowcount, max_rows))
-
-
+    
     @classmethod
     def check_exists(cls,cond_dict):
         """
