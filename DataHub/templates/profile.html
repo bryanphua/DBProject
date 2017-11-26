@@ -111,7 +111,7 @@
                 </div>
                 {% if user_info.username == user.username %}
                 <div class="comment-vote-status">
-                  <a href="#">delete</a>
+                  <a href="/comment/delete/{{ comment.id }}/">delete</a>
                 </div>
                 {% endif %}
               </div>
