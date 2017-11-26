@@ -219,6 +219,9 @@ def comment(request, dataset):
     return redirect('/')
     
 def user(request, username):
+    if request.user.username == username:
+        return redirect('/profile/')
+    
     user_info = auth_user.get_entries_dictionary(
         column_list=['id','email','first_name','last_name'], 
         max_rows=1,
