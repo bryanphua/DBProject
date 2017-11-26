@@ -25,6 +25,8 @@
 				<p>Rating: 8/10</p>
 				<p>Followed by: {{ followers }}</p>
 				<br>
+				<p>{{ dataset_info.description }}</p>
+				<br>
 				<p>{{ dataset_info.genre }}</p>
 			</div>
 
@@ -49,7 +51,7 @@
 									<img src="{% static 'img/ProfilePic.png' %}"/>
 								</div>
 								<div class="comment-content">
-									<p><b>{{ comment.user_id }}</b></p>
+									<p><b>{{ comment.username }}</b></p>
 									<p>{{ comment.content }}</p>
 								</div>
 								<div class="comment-vote-status">

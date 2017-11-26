@@ -108,6 +108,14 @@ def dataset(request, dataset):
         row_numbers=False)
     context['comments'] = dataset_comments
     
+    for comment in dataset_comments:
+        commenter_name = auth_user.get_entries_dictionary(
+            column_list=['username'], 
+            max_rows=1,
+            cond_dict={ 'id': comment['user_id'] }, 
+            row_numbers=False)
+        comment['username'] = commenter_name['username']
+    
     followers = user_dataset_following.get_entries(
         column_list=None,
         max_rows=None,
@@ -240,11 +248,14 @@ def unfollow(request, id, origin):
     
 def comment(request, dataset):
     content = request.POST['content'].strip()
-    comments.insert_new_entry({
-        'user_id': request.user.id, 
-        'content': content,
-        'dataset_id': dataset
-    })
+    try:
+        comments.insert_new_entry({
+            'user_id': request.user.id, 
+            'content': content,
+            'dataset_id': dataset
+        })
+    except ProgrammingError:
+        messages.info(request, 'Invalid characters used.')
     return redirect('/dataset/' + dataset)
     
 def user(request, username):
