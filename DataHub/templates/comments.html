@@ -13,7 +13,7 @@
     <div class="comment-vote-status">
       <a href="/comment/delete/{{ comment.id }}/">delete</a>
     </div>
-    {% else %}
+    {% elif auth %}
     <div class="comment-vote-status">
       <div class="thumbs-up">
         <i class="fa fa-thumbs-up"></i>
