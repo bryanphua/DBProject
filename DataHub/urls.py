@@ -30,4 +30,5 @@ urlpatterns = [
     url(r'^follow/(?P<id>[0-9]{1,11})/(?P<origin>.*)/$', views.follow, name = 'follow'),
     url(r'^unfollow/(?P<id>[0-9]{1,11})/(?P<origin>.*)/$', views.unfollow, name = 'unfollow'),
     url(r'^comment/(?P<dataset>[0-9]{1,11})/$', views.comment, name = 'comment'),
+    url(r'^user/(?P<username>.{1,50})/$', views.user, name = 'user'),
 ]

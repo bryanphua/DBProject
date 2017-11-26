@@ -11,10 +11,10 @@
   <div class="container" id="everything">
     <div id="user-details">
       <img src="{% static 'img/ProfilePicBig.png' %}"/>
-      <h3>{{ user.first_name }} {{ user.last_name }}</h3>
-      <p>{{ user.username }}</p>
+      <h3>{{ user_info.first_name }} {{ user_info.last_name }}</h3>
+      <p>{{ user_info.username }}</p>
       <hr/>
-      <i class="fa fa-envelope-o">&nbsp;{{ user.email }}</i>
+      <i class="fa fa-envelope-o">&nbsp;{{ user_info.email }}</i>
     </div>
 
     <div class="container-fluid" id="user-content">
@@ -53,11 +53,13 @@
         </div>
 
         <div role="tabpanel" class="tab-pane fade" id="created">
+          {% if user.username == user_info.username %}
           <div class="dataset" onclick="location.href='/new/'">
             <div class="dataset-title">
               <h3>Create new dataset</h3>
             </div>
           </div>
+          {% endif %}
           {% for dataset in created_datasets %}
           <div class="dataset" onclick="toDataset('{{ dataset.0 }}')">
             <div class="dataset-title">

@@ -6,7 +6,7 @@ class auth_user(Model):
     password = Column('password','char',not_null=True)
     email = Column('email','char',unique=True,not_null=True)
     first_name = Column('first_name','char', not_null=True)
-    last_name = Column('first_name','char', not_null=False)
+    last_name = Column('last_name','char', not_null=False)
     is_staff = Column('is_staff','int', not_null=True)
 
 class dataset_list(Model):

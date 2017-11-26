@@ -61,6 +61,7 @@ def profile(request):
     context = {
         'auth': True,
         'user': request.user,
+        'user_info': request.user,
         'created_datasets': created_datasets, 
         'following_datasets': following_datasets,
     }
@@ -211,3 +212,39 @@ def comment(request, dataset):
     # comments.insert_new_entry()
     return redirect('/')
     
+def user(request, username):
+    user_info = auth_user.get_entries_dictionary(
+        column_list=['id','email','first_name','last_name'], 
+        max_rows=1,
+        cond_dict={ 'username': username }, 
+        row_numbers=False
+    )
+    user_info['username'] = username
+    
+    created_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','name', 'description', 'genre'], 
+        cond_dict={'creator_user_id': user_info['id'] }, 
+        max_rows=None, row_numbers=False)
+    
+    following_datasets = user_dataset_following.get_entries_dictionary(
+    column_list=['dataset_id'], cond_dict={'user_id':user_info['id']}, 
+    max_rows=None, row_numbers=False)
+    
+    for dataset in following_datasets:
+        dataset_info = dataset_list.get_entries_dictionary(
+        column_list=['name','description','creator_user_id','genre'],
+        cond_dict={'id':dataset['dataset_id']}, 
+        max_rows=1,
+        row_numbers=False)
+        dataset.update(dataset_info)
+    
+    context = {
+        'auth': False,
+        'user_info': user_info,
+        'created_datasets': created_datasets, 
+        'following_datasets': following_datasets,
+    }
+    
+    if request.user.is_authenticated:
+        context['auth'] = True
+    return render(request, 'profile.html', context)
