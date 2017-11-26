@@ -27,6 +27,14 @@
       <div class="tab-content">
         <div role="tabpanel" class="tab-pane fade in active show" id="following">
           {% for dataset in following_datasets %}
+          <div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="followingMenu">
+            <ul>
+              <li><a href="javascript:void(0);">View User</a></li>
+              <li>{{ dataset.name }}</li>
+              <li class="divider"></li>
+              <li><a href="javascript:void(0);" class="action-unfollow">Unfollow</a></li>
+            </ul>
+          </div>
           <div class="dataset" onclick="toDataset('{{ dataset.dataset_id }}')">
             <div class="dataset-title">
               <h3>{{ dataset.name }}</h3>
