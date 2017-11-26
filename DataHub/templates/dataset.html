@@ -31,6 +31,11 @@
 			<div id="comment">
 				<h4>Comments</h4>
 				<div id="commentListContainer">
+					<form class="" action="/comment/" method="post">
+						{% csrf_token %}
+						<textarea class="form-control" rows="4" name="description"></textarea>
+						<input type="submit" class="btn btn-success" value="Comment">
+					</form>
 					<ul id="commentList">
 						<li>
 							<div class="comment-container">

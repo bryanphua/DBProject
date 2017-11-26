@@ -202,3 +202,7 @@ def unfollow(request, id, origin):
     elif origin == 'dataset':
         return redirect('/dataset/' + id)
     
+def comment(request):
+    params = request.POST
+    return redirect('/')
+    
