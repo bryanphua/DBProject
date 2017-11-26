@@ -56,6 +56,12 @@ def profile(request):
         cond_dict={'id':dataset['dataset_id']}, 
         max_rows=1,
         row_numbers=False)
+        creator_name = auth_user.get_entries_dictionary(
+        column_list=['username'],
+        cond_dict={'id':dataset_info['creator_user_id']},
+        max_rows=1,
+        row_numbers=False)
+        dataset['creator_name'] = creator_name['username']
         dataset.update(dataset_info)
     
     context = {
@@ -236,6 +242,12 @@ def user(request, username):
         cond_dict={'id':dataset['dataset_id']}, 
         max_rows=1,
         row_numbers=False)
+        creator_name = auth_user.get_entries_dictionary(
+        column_list=['username'],
+        cond_dict={'id':dataset_info['creator_user_id']},
+        max_rows=1,
+        row_numbers=False)
+        dataset['creator_name'] = creator_name['username']
         dataset.update(dataset_info)
     
     context = {

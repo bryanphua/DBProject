@@ -30,7 +30,7 @@
           {% for dataset in following_datasets %}
           <div class="dropdown-menu dropdown-anchor-top-right dropdown-has-anchor" id="followingMenu-{{ dataset.dataset_id }}">
             <ul>
-              <li><a href="javascript:void(0);">View User</a></li>
+              <li><a href="/user/{{ dataset.creator_name }}/">View User</a></li>
               <li class="divider"></li>
               <li><a href="/unfollow/{{ dataset.dataset_id }}/profile" class="action-unfollow">Unfollow</a></li>
             </ul>
