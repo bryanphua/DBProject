@@ -7,7 +7,40 @@ from DataHub.models import auth_user, dataset_list, user_dataset_following, comm
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
-def index(request):    
+
+def search(request, keyword):
+    context = { 'auth': False, 'keyword':keyword }
+    if request.user.is_authenticated:
+        context['auth'] = True
+    keyword = '%' + keyword + '%'
+    with connection.cursor() as cursor:
+        statement = "SELECT L.id, name, description, username, genre FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
+        cursor.execute(statement, [keyword, keyword])
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    for dataset in values:
+        if request.user.is_authenticated:
+            following = user_dataset_following.check_exists(
+                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
+            dataset['following'] = following
+        dataset['rating'] = avg_rating(dataset['id'])
+    context['datasets'] = values
+    
+    with connection.cursor() as cursor:
+        statement = "SELECT username FROM auth_user WHERE username LIKE %s"
+        cursor.execute(statement, [keyword])
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    context['users'] = values
+    print(context)
+    return render(request, 'search_results.html', context)
+
+    
+def index(request):
+    keyword = request.GET.get('search')
+    if keyword:
+        return search(request, keyword)
+        
     new_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
         max_rows=None, row_numbers=False)

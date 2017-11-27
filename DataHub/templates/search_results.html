@@ -1,0 +1,86 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/index.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+	<div class="container" id="everything">
+		<h1>Search results</h1>
+		<p>for "{{ keyword }}"</p>
+		<hr>
+		{% include "messages.html" %}
+		<h2>Datasets</h2>
+		<br/>
+		<ul id="mostPopularList">
+			{% if not datasets %}
+			<li><p>No datasets found</p></li>
+			{% endif %}
+			{% for dataset in datasets %}
+			<li>
+				<div class="dataset" onclick="toDataset('{{ dataset.id }}')">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><b><a href="/user/{{ dataset.username }}/">{{ dataset.username }}</a></b> {{ dataset.name }} </p>
+						<p>Ratings:
+							{% for i in "12345" %}
+								{% if forloop.counter0 < dataset.rating %}
+									<i class="fa fa-star"></i>
+								{% else %}
+									<i class="fa fa-star-o"></i>
+								{% endif %}
+							{% endfor %}
+							{% if rating == 0 %}
+							&nbsp;(No ratings yet)
+							{% endif %}
+						</p>
+						<p>&nbsp;</p>
+						<p>{{ dataset.genre }}</p>
+					</div>
+					{% if auth %}
+						<div class="listFollowStatus">
+						  {% if dataset.following == 1 %}
+						  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.id }},'index')" />
+							{% elif dataset.username == user.username %}
+							<input class="btn btn-follow disabled" type="button" value="Follow" disabled />
+						  {% else %}
+						  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.id }},'index')" />
+						  {% endif %}
+						</div>
+					{% endif %}
+				</div>
+				<hr/>
+			</li>
+			{% endfor %}
+		</ul>
+		<h2>Users</h2>
+		<br/>
+		<ul id="mostPopularList">
+			{% if not users %}
+			<li><p>No users found</p></li>
+			{% endif %}
+			{% for u in users %}
+			<li>
+				<div class="dataset">
+					<div class="listUserPic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="listDetails">
+						<p><a href="/user/{{ u.username }}/"><b>{{ u.username }}</b></a></p>
+						</p>
+					</div>
+				</div>
+				<hr/>
+			</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+	{% include "foot.html" %}
+
+</body>
+</html>
