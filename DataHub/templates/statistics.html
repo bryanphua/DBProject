@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/statistics.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+
+	<div class="container" id="everything" align="center">
+		<h1>Statistics</h1>
+		<br/>
+		<div id="innerContainer">
+			<div id="popularDatasets">
+				<img src="{% static 'img/PopularDatasetsButton.png' %}">
+				<h2>Popular Datasets</h2>
+			</div>
+			<div id="popularUsers">
+				<img src="{% static 'img/PopularUsersButton.png' %}">
+				<h2>Popular Users</h2>
+			</div>
+			<div id="popularGenres">
+				<img src="{% static 'img/PopularGenresButton.png' %}">
+				<h2>Popular Genres</h2>
+			</div>
+		</div>
+	</div>
+
+	{% include "foot.html" %}
+
+</body>
+</html>

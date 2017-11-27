@@ -1,0 +1,45 @@
+#everything {
+	padding-top: 200px;
+}
+
+#popularDatasets {
+	grid-area: popularDatasets;
+}
+
+/*.list-user-pic img {
+	width: 100%;
+}*/
+
+#popularUsers {
+	grid-area: popularUsers;
+}
+
+#popularGenres {
+	grid-area: popularGenres;
+}
+
+
+#innerContainer {
+	margin-top: 50px;
+	display: grid;
+	grid-template-columns: 33% 33% 33%;
+	grid-template-rows: auto;
+	grid-template-areas: 
+		"popularDatasets popularUsers popularGenres";
+	padding: 5px 5px 5px 5px;
+	justify-content: space-between;
+}
+
+#innerContainer div {
+	border-radius: 10px;
+	padding: 10px 10px 10px 10px;
+}
+
+#innerContainer div:hover {
+	background-color: #e0e0e2;
+}
+
+#innerContainer h2 {
+	margin-top: 20px;
+	word-spacing: 999999999999px;
+}

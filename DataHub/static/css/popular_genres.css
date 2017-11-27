@@ -1,0 +1,37 @@
+#everything {
+	padding-top: 150px;
+}
+
+.list-genre-name {
+	grid-area: genreName;
+	align-self: center;
+	padding-left: 100px;
+}
+
+.list-no-datasets {
+	grid-area: noDatasets;
+	align-self: center;
+}
+
+
+.popular-genre {
+	display: grid;
+	grid-template-columns: 80% 20%;
+	grid-template-rows: auto;
+	grid-template-areas: 
+		"genreName noDatasets";
+	padding: 5px 5px 5px 5px;
+}
+
+#mostPopularList {
+	/*list-style-type: "1";*/
+	padding: 0 0 0 0;
+}
+
+#mostPopularList li {
+	border-radius: 10px;
+}
+
+#mostPopularList li:hover {
+	background-color: #e0e0e2;
+}

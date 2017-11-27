@@ -324,6 +324,7 @@ def delete_dataset(request, dataset):
     messages.success(request, 'Dataset deleted')
     return redirect('/profile/')
 
+<<<<<<< HEAD
 def delete_comment(request, comment):
     comments.delete_entries({'id':comment})
     messages.success(request, 'Comment deleted')
@@ -356,3 +357,116 @@ def avg_rating(dataset):
     if row[0]:
         return row[0]
     return 0
+=======
+def popular_datasets(request):
+    popular_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','creator_user_id','name', 'description', 'genre'], 
+        max_rows=None, 
+        row_numbers=False)
+        
+    for dataset in popular_datasets:
+        creator_name = auth_user.get_entries_dictionary(
+            column_list=['username'], max_rows=1, 
+            cond_dict={ 'id': dataset['creator_user_id'] }, 
+            row_numbers=False)
+        # if request.user.is_authenticated:
+        #     following = user_dataset_following.check_exists(
+        #         { 'dataset_id': dataset['id'], 
+        #         'user_id': request.user.id })
+        #     dataset['following'] = following
+        dataset['creator_name'] = creator_name['username']
+        
+    context = { 
+        'auth': False, 
+        'popular_datasets': reversed(popular_datasets)
+     }
+     
+    if request.user.is_authenticated:
+        context['auth'] = True
+        context['user'] = request.user
+    return render(request, 'popular_datasets.html', context)
+
+def popular_users(request):
+    popular_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','creator_user_id','name', 'description', 'genre'], 
+        max_rows=None, 
+        row_numbers=False)
+        
+    for dataset in popular_datasets:
+        creator_name = auth_user.get_entries_dictionary(
+            column_list=['username'], max_rows=1, 
+            cond_dict={ 'id': dataset['creator_user_id'] }, 
+            row_numbers=False)
+        # if request.user.is_authenticated:
+        #     following = user_dataset_following.check_exists(
+        #         { 'dataset_id': dataset['id'], 
+        #         'user_id': request.user.id })
+        #     dataset['following'] = following
+        dataset['creator_name'] = creator_name['username']
+        
+    context = { 
+        'auth': False, 
+        'popular_datasets': reversed(popular_datasets)
+     }
+     
+    if request.user.is_authenticated:
+        context['auth'] = True
+        context['user'] = request.user
+    return render(request, 'popular_users.html') #removed context returned
+
+def popular_genres(request):
+    popular_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','creator_user_id','name', 'description', 'genre'], 
+        max_rows=None, 
+        row_numbers=False)
+        
+    for dataset in popular_datasets:
+        creator_name = auth_user.get_entries_dictionary(
+            column_list=['username'], max_rows=1, 
+            cond_dict={ 'id': dataset['creator_user_id'] }, 
+            row_numbers=False)
+        # if request.user.is_authenticated:
+        #     following = user_dataset_following.check_exists(
+        #         { 'dataset_id': dataset['id'], 
+        #         'user_id': request.user.id })
+        #     dataset['following'] = following
+        dataset['creator_name'] = creator_name['username']
+        
+    context = { 
+        'auth': False, 
+        'popular_datasets': reversed(popular_datasets)
+     }
+     
+    if request.user.is_authenticated:
+        context['auth'] = True
+        context['user'] = request.user
+    return render(request, 'popular_genres.html') #removed context returned
+
+def statistics(request):
+    popular_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','creator_user_id','name', 'description', 'genre'], 
+        max_rows=None, 
+        row_numbers=False)
+        
+    for dataset in popular_datasets:
+        creator_name = auth_user.get_entries_dictionary(
+            column_list=['username'], max_rows=1, 
+            cond_dict={ 'id': dataset['creator_user_id'] }, 
+            row_numbers=False)
+        # if request.user.is_authenticated:
+        #     following = user_dataset_following.check_exists(
+        #         { 'dataset_id': dataset['id'], 
+        #         'user_id': request.user.id })
+        #     dataset['following'] = following
+        dataset['creator_name'] = creator_name['username']
+        
+    context = { 
+        'auth': False, 
+        'popular_datasets': reversed(popular_datasets)
+     }
+     
+    if request.user.is_authenticated:
+        context['auth'] = True
+        context['user'] = request.user
+    return render(request, 'statistics.html') #removed context returned
+>>>>>>> frontend

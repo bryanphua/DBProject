@@ -2,6 +2,10 @@
 $(function(){
 	var index;
 
+	// $(document).ready(function() {
+	// 	$('.selectpicker').selectpicker('render');
+	// });
+
 	$(document).on('click', '.thumbs-up', function() {
 		$(this).toggleClass("thumbs-up-on");
 		$(this).next(".thumbs-down-on").click();
@@ -53,6 +57,18 @@ $(function(){
 
 	$('.action-delete').click(function() {
 		$('.dataset:eq('+index+')').remove();
+	});
+
+	$('#popularDatasets').click(function() {
+		window.location = "/populardatasets";
+	});
+
+	$('#popularUsers').click(function() {
+		window.location = "/popularusers";
+	});
+
+	$('#popularGenres').click(function() {
+		window.location = "/populargenres";
 	});
 
 });

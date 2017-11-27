@@ -34,4 +34,8 @@ urlpatterns = [
     url(r'^dataset/delete/(?P<dataset>[0-9]{1,11})/$', views.delete_dataset, name = 'delete_dataset'),
     url(r'^dataset/rate/(?P<dataset>[0-9]{1,11})/$', views.rate_dataset, name = 'rate_dataset'),
     url(r'^comment/delete/(?P<comment>[0-9]{1,11})/$', views.delete_comment, name = 'delete_comment'),
+    url(r'^populardatasets/$', views.popular_datasets, name = 'popular_datasets'),
+    url(r'^popularusers/$', views.popular_users, name = 'popular_users'),
+    url(r'^populargenres/$', views.popular_genres, name = 'popular_genres'),
+    url(r'^statistics/$', views.statistics, name = 'statistics'),
 ]
