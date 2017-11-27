@@ -86,3 +86,11 @@ function unfollow(id, origin) {
 	event.stopPropagation();
 	window.location = "/unfollow/" + id + "/" + origin 
 }
+
+function comment_rate(id, up, dataset) {
+	if (up) {
+		window.location = "/comment/rate/"+ id +"/1/" + dataset + "/"
+	} else {
+		window.location = "/comment/rate/"+ id +"/-1/" + dataset + "/"
+	}
+}

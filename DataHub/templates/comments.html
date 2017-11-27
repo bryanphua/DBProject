@@ -6,26 +6,27 @@
       <img src="{% static 'img/ProfilePic.png' %}"/>
     </div>
     <div class="comment-content">
-      <p><b>{{ comment.username }}{{ comment.dataset_name }}</b></p>
+      <p><b><a href="/user/{{ comment.username }}">{{ comment.username }}</a><a href="/dataset/{{ comment.dataset_id }}">{{ comment.dataset_name }}</a></b></p>
       <p>{{ comment.content }}</p>
     </div>
     {% if user_info.username == user.username %}
     <div class="comment-vote-status">
       <a href="/comment/delete/{{ comment.id }}/">delete</a>
     </div>
-    {% elif auth %}
+    {% endif %}
     <div class="comment-vote-status">
-      <div class="thumbs-up">
+      {% if auth and comment.username != user.username and user_info.username != user.username %}
+      <div class="thumbs-up" onclick="comment_rate({{ comment.id }}, true,{{ comment.dataset_id }})">
         <i class="fa fa-thumbs-up"></i>
       </div>
-      <div class="thumbs-down">
+      <div class="thumbs-down" onclick="comment_rate({{ comment.id }}, false,{{ comment.dataset_id }})">
         <i class="fa fa-thumbs-down"></i>
       </div>
+      {% endif %}
       <div class="total-votes">
-        <p>+1 votes</p>
+        <p>{{ comment.ratings }} votes</p>
       </div>
     </div>
-    {% endif %}
   </div>
   <hr/>
 </li>

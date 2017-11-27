@@ -3,7 +3,7 @@ from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating
+from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Create your views here.
@@ -67,6 +67,7 @@ def profile(request):
         column_list=['name'],max_rows=1,row_numbers=False,
         cond_dict={'id': comment['dataset_id']})
         comment['dataset_name'] = dataset['name']
+        comment['ratings'] = total_rating_comments(comment['id'])
     
     context = {
         'auth': True,
@@ -91,7 +92,7 @@ def dataset(request, dataset):
     dataset_info['username'] = user_info['username']
     
     dataset_comments = comments.get_entries_dictionary(
-        column_list=['user_id','content'],max_rows=None,
+        column_list=['id','user_id','dataset_id','content'],max_rows=None,
         cond_dict={ 'dataset_id':dataset })
     context['comments'] = dataset_comments
     
@@ -100,6 +101,7 @@ def dataset(request, dataset):
             column_list=['username'],max_rows=1,
             cond_dict={ 'id': comment['user_id'] })
         comment['username'] = commenter_name['username']
+        comment['ratings'] = total_rating_comments(comment['id'])
     
     followers = user_dataset_following.get_entries(
         cond_dict={ 'dataset_id':dataset },
@@ -278,6 +280,7 @@ def user(request, username):
         dataset = dataset_list.get_entries_dictionary(
         column_list=['name'],max_rows=1,cond_dict={'id': comment['dataset_id']})
         comment['dataset_name'] = dataset['name']
+        comment['ratings'] = total_rating_comments(comment['id'])
     
     context = {
         'auth': False,
@@ -325,6 +328,32 @@ def rate_dataset(request, dataset):
 def avg_rating(dataset):
     with connection.cursor() as cursor:
         cursor.execute("SELECT avg(rating) FROM dataset_rating WHERE dataset_id = %s", [dataset])
+        row = cursor.fetchone()
+    if row[0]:
+        return row[0]
+    return 0
+
+def rate_comment(request, comment, rate, origin):
+    try:
+        comments_vote.insert_new_entry({
+            'user_id': request.user.id,
+            'comment_id': comment,
+            'vote': rate
+        })
+    except IntegrityError:
+        comments_vote.update_entries({
+            'user_id': request.user.id,
+            'comment_id': comment,
+            'vote': rate
+        }, {
+            'user_id': request.user.id,
+            'comment_id': comment
+        })
+    return redirect('/dataset/' + origin)
+
+def total_rating_comments(comment):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT sum(vote) FROM comments_vote WHERE comment_id = %s", [comment])
         row = cursor.fetchone()
     if row[0]:
         return row[0]

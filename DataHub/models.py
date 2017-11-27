@@ -34,3 +34,9 @@ class dataset_rating(Model):
     user_id = Column('user_id', 'int', not_null=True)
     dataset_id = Column('dataset_id', 'int', not_null=True)
     rating = Column('rating', 'int', not_null=True)
+    
+class comments_vote(Model):
+    user_id = Column('user_id', 'int', not_null=True)
+    comment_id = Column('comment_id', 'int', not_null=True)
+    vote = Column('vote', 'int', not_null=True)
+    last_modified = Column('last_modified', 'datetime')
