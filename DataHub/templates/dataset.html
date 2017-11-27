@@ -20,7 +20,7 @@
 				{% endif %}
 				<h1>{{ dataset_info.name }}</h1>
 				<hr>
-				<p>Created by: {{ dataset_info.username }}</p>
+				<p>Created by: <a href="/user/{{ dataset_info.username }}/">{{ dataset_info.username }}</a></p>
 				<p>Approved by: {{ dataset_info.endorsed_by }} </p>
 				<form class="" action="/dataset/rate/{{ dataset_info.id }}/" method="post">
 					{% csrf_token %}
