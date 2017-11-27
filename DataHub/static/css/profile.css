@@ -28,7 +28,7 @@
 	margin-top: 30px;
 	padding: 10px 10px 10px 10px;
 	grid-template-columns: 90% 10%;
-	grid-template-rows: 25% 55% 20%;
+	grid-template-rows: auto auto 15%;
 	grid-template-areas: 
 		"datasetTitle menuButton"
 		"datasetDescription ."
@@ -53,11 +53,12 @@
   	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical; 
+	-webkit-box-orient: vertical;
+	font-size: 18px;
 }
 
 .dataset-category {
-	grid-area: datasetCategory;	
+	grid-area: datasetCategory;
 }
 
 #commentList {
