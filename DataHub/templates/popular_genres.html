@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/popular_genres.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+
+	<div class="container" id="everything">
+		<h1>Most Popular Genres</h1>
+		<br/>
+		<ol id="mostPopularList">
+			<li>
+				<div class="popular-genre">
+					<div class="list-genre-name">
+						<p><b>genre</b></p>
+					</div>
+					<div class="list-no-datasets">
+						<p>999 Datasets</p>
+					</div>
+				</div>
+				<hr/>
+			</li>
+		</ol>
+	</div>
+
+	{% include "foot.html" %}
+
+</body>
+</html>

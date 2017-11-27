@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/popular_users.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+
+	<div class="container" id="everything">
+		<h1>Most Popular Users</h1>
+		<br/>
+		<ol id="mostPopularList">
+			<li>
+				<div class="popular-user">
+					<div class="list-user-pic">
+						<img src="{% static 'img/ProfilePic.png' %}"/>
+					</div>
+					<div class="list-user-name">
+						<p><b>username</b></p>
+					</div>
+					<div class="list-no-datasets">
+						<p>999 Datasets</p>
+					</div>
+					<div class="list-no-follows">
+						<p>999 Datasets Follows</p>
+					</div>
+				</div>
+				<hr/>
+			</li>
+		</ol>
+	</div>
+
+	{% include "foot.html" %}
+
+</body>
+</html>
