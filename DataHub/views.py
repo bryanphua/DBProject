@@ -308,6 +308,9 @@ def delete_comment(request, comment):
 
 def rate_dataset(request, dataset):
     rating = request.POST['rating']
+    if not request.user.is_authenticated:
+        messages.info(request, "Please login to rate!")
+        return redirect('/dataset/' + dataset)
     try:
         dataset_rating.insert_new_entry({
             'user_id':request.user.id,
@@ -323,6 +326,7 @@ def rate_dataset(request, dataset):
             'user_id':request.user.id,
             'dataset_id':dataset
         })
+    messages.success(request, "You have rated!")
     return redirect('/dataset/' + dataset)
 
 def avg_rating(dataset):
@@ -349,6 +353,7 @@ def rate_comment(request, comment, rate, origin):
             'user_id': request.user.id,
             'comment_id': comment
         })
+    messages.success(request, "You have voted!")
     return redirect('/dataset/' + origin)
 
 def total_rating_comments(comment):
