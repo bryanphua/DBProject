@@ -354,4 +354,6 @@ def avg_rating(dataset):
     with connection.cursor() as cursor:
         cursor.execute("SELECT avg(rating) FROM dataset_rating WHERE dataset_id = %s", [dataset])
         row = cursor.fetchone()
-    return int(round(row[0], 0))
+    if row[0]:
+        return int(round(row[0], 0))
+    return 0
