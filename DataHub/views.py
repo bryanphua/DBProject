@@ -141,7 +141,7 @@ def new_dataset(request):
             dataset_list.insert_new_entry({
                 'name':params['title'],
                 'creator_user_id':request.user.id,
-                'endorsed_by':'placeholder',
+                'endorsed_by':params['endorsed_by'],
                 'description':params['description'],
                 'genre':params['genre']
             })
