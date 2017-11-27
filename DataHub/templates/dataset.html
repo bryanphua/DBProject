@@ -34,6 +34,9 @@
 								{# style as an empty star #}
 							{% endif %}
 						{% endfor %}
+						{% if rating == 0 %}
+						&nbsp;(No ratings yet)
+						{% endif %}
 					</p>
 				</form>
 				<p>Followed by: {{ followers }}</p>

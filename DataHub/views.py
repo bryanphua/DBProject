@@ -8,26 +8,24 @@ from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintEx
 
 # Create your views here.
 def index(request):    
-    popular_datasets = dataset_list.get_entries_dictionary(
+    new_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
-        max_rows=None, 
-        row_numbers=False)
+        max_rows=None, row_numbers=False)
         
-    for dataset in popular_datasets:
+    for dataset in new_datasets:
         creator_name = auth_user.get_entries_dictionary(
             column_list=['username'], max_rows=1, 
             cond_dict={ 'id': dataset['creator_user_id'] }, 
             row_numbers=False)
         if request.user.is_authenticated:
             following = user_dataset_following.check_exists(
-                { 'dataset_id': dataset['id'], 
-                'user_id': request.user.id })
+                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
         dataset['creator_name'] = creator_name['username']
         
     context = { 
         'auth': False, 
-        'popular_datasets': reversed(popular_datasets)
+        'popular_datasets': reversed(new_datasets)
      }
      
     if request.user.is_authenticated:
@@ -53,28 +51,21 @@ def profile(request):
     for dataset in following_datasets:
         dataset_info = dataset_list.get_entries_dictionary(
         column_list=['name','description','creator_user_id','genre'],
-        cond_dict={'id':dataset['dataset_id']}, 
-        max_rows=1,
-        row_numbers=False)
+        cond_dict={'id':dataset['dataset_id']}, max_rows=1,row_numbers=False)
         creator_name = auth_user.get_entries_dictionary(
-        column_list=['username'],
-        cond_dict={'id':dataset_info['creator_user_id']},
-        max_rows=1,
-        row_numbers=False)
+        column_list=['username'],max_rows=1,row_numbers=False,
+        cond_dict={'id':dataset_info['creator_user_id']})
         dataset['creator_name'] = creator_name['username']
         dataset.update(dataset_info)
         
     user_comments = comments.get_entries_dictionary(
     column_list=['id','dataset_id','content'],
-    cond_dict={'user_id':request.user.id},
-    max_rows=None, row_numbers=False)
+    cond_dict={'user_id':request.user.id},max_rows=None, row_numbers=False)
     
     for comment in user_comments:
         dataset = dataset_list.get_entries_dictionary(
-        column_list=['name'],
-        cond_dict={'id': comment['dataset_id']},
-        max_rows=1,
-        row_numbers=False)
+        column_list=['name'],max_rows=1,row_numbers=False,
+        cond_dict={'id': comment['dataset_id']})
         comment['dataset_name'] = dataset['name']
     
     context = {
@@ -95,33 +86,29 @@ def dataset(request, dataset):
     cond_dict={'id': dataset }, max_rows=1, row_numbers=False)
 
     user_info = auth_user.get_entries_dictionary(
-        column_list=['username'], 
-        max_rows=1,
-        cond_dict={ 'id': dataset_info['creator_user_id'] }, 
-        row_numbers=False)
+        column_list=['username'],max_rows=1,row_numbers=False,
+        cond_dict={ 'id': dataset_info['creator_user_id'] })
     dataset_info['username'] = user_info['username']
     
     dataset_comments = comments.get_entries_dictionary(
-        column_list=['user_id','content'],
-        max_rows=None,
-        cond_dict={ 'dataset_id':dataset },
-        row_numbers=False)
+        column_list=['user_id','content'],max_rows=None,row_numbers=False,
+        cond_dict={ 'dataset_id':dataset })
     context['comments'] = dataset_comments
     
     for comment in dataset_comments:
         commenter_name = auth_user.get_entries_dictionary(
-            column_list=['username'], 
-            max_rows=1,
-            cond_dict={ 'id': comment['user_id'] }, 
-            row_numbers=False)
+            column_list=['username'],max_rows=1,row_numbers=False,
+            cond_dict={ 'id': comment['user_id'] })
         comment['username'] = commenter_name['username']
     
     followers = user_dataset_following.get_entries(
-        column_list=None,
-        max_rows=None,
         cond_dict={ 'dataset_id':dataset },
-        row_numbers=True)
+        column_list=None,max_rows=None,row_numbers=True)
     context['followers'] = followers
+    
+    recommended = dataset_list.get_entries_dictionary(
+        column_list=['id','name','genre'],max_rows=None,row_numbers=False,
+        cond_dict={'genre':dataset_info['genre']})
     
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
@@ -178,8 +165,7 @@ def sign_up(request):
             user = User.objects.create_user(
                 username=params['username'],
                 email=params['email'],
-                password=params['password']
-            )
+                password=params['password'])
             user.first_name = params['first_name']
             user.last_name = params['last_name']
             user.save()
@@ -281,28 +267,21 @@ def user(request, username):
     for dataset in following_datasets:
         dataset_info = dataset_list.get_entries_dictionary(
         column_list=['name','description','creator_user_id','genre'],
-        cond_dict={'id':dataset['dataset_id']}, 
-        max_rows=1,
-        row_numbers=False)
+        cond_dict={'id':dataset['dataset_id']},max_rows=1,row_numbers=False)
         creator_name = auth_user.get_entries_dictionary(
-        column_list=['username'],
-        cond_dict={'id':dataset_info['creator_user_id']},
-        max_rows=1,
-        row_numbers=False)
+        column_list=['username'],max_rows=1,row_numbers=False,
+        cond_dict={'id':dataset_info['creator_user_id']})
         dataset['creator_name'] = creator_name['username']
         dataset.update(dataset_info)
     
     user_comments = comments.get_entries_dictionary(
     column_list=['id','dataset_id','content'],
-    cond_dict={'user_id':user_info['id']},
-    max_rows=None, row_numbers=False)
+    cond_dict={'user_id':user_info['id']},max_rows=None, row_numbers=False)
     
     for comment in user_comments:
         dataset = dataset_list.get_entries_dictionary(
-        column_list=['name'],
-        cond_dict={'id': comment['dataset_id']},
-        max_rows=1,
-        row_numbers=False)
+        column_list=['name'],max_rows=1,row_numbers=False,
+        cond_dict={'id': comment['dataset_id']})
         comment['dataset_name'] = dataset['name']
     
     context = {
@@ -360,14 +339,12 @@ def avg_rating(dataset):
 def popular_datasets(request):
     popular_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
-        max_rows=None, 
-        row_numbers=False)
+        max_rows=None, row_numbers=False)
         
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, 
-            cond_dict={ 'id': dataset['creator_user_id'] }, 
-            row_numbers=False)
+            column_list=['username'], max_rows=1, row_numbers=False
+            cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
         
     context = { 
@@ -383,14 +360,12 @@ def popular_datasets(request):
 def popular_users(request):
     popular_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
-        max_rows=None, 
-        row_numbers=False)
+        max_rows=None, row_numbers=False)
         
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, 
-            cond_dict={ 'id': dataset['creator_user_id'] }, 
-            row_numbers=False)
+            column_list=['username'], max_rows=1, row_numbers=False,
+            cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
         
     context = { 
@@ -406,14 +381,12 @@ def popular_users(request):
 def popular_genres(request):
     popular_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
-        max_rows=None, 
-        row_numbers=False)
+        max_rows=None, row_numbers=False)
         
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, 
-            cond_dict={ 'id': dataset['creator_user_id'] }, 
-            row_numbers=False)
+            column_list=['username'], max_rows=1, row_numbers=False,
+            cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
         
     context = { 
@@ -429,14 +402,12 @@ def popular_genres(request):
 def statistics(request):
     popular_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'], 
-        max_rows=None, 
-        row_numbers=False)
+        max_rows=None, row_numbers=False)
         
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, 
-            cond_dict={ 'id': dataset['creator_user_id'] }, 
-            row_numbers=False)
+            column_list=['username'], max_rows=1, row_numbers=False,
+            cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
         
     context = { 
