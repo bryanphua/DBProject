@@ -25,19 +25,15 @@
 				<form class="" action="/dataset/rate/{{ dataset_info.id }}/" method="post">
 					{% csrf_token %}
 					<p>Rating:
-						{% if rating == 0 %}
-						No ratings yet
-						{% else %}
-							{% for i in "12345" %}
-								{% if forloop.counter0 < rating %}
-									<input type="submit" name="rating" value="{{i}}" style="background: yellow">
-									{# style as a filled star #}
-								{% else %}
-									<input type="submit" name="rating" value="{{i}}" style="background: white">
-									{# style as an empty star #}
-								{% endif %}
-							{% endfor %}
-						{% endif %}
+						{% for i in "12345" %}
+							{% if forloop.counter0 < rating %}
+								<input type="submit" name="rating" value="{{i}}" style="background: yellow">
+								{# style as a filled star #}
+							{% else %}
+								<input type="submit" name="rating" value="{{i}}" style="background: white">
+								{# style as an empty star #}
+							{% endif %}
+						{% endfor %}
 					</p>
 				</form>
 				<p>Followed by: {{ followers }}</p>
