@@ -25,11 +25,9 @@
 				<form class="" action="/dataset/rate/{{ dataset_info.id }}/" method="post">
 					{% csrf_token %}
 					<p>Rating:
-						<input type="submit" name="rating" value="1">
-						<input type="submit" name="rating" value="2">
-						<input type="submit" name="rating" value="3">
-						<input type="submit" name="rating" value="4">
-						<input type="submit" name="rating" value="5">
+						{% for i in "12345" %}
+							<input type="submit" name="rating" value="{{i}}">
+						{% endfor %}
 					</p>
 				</form>
 				<p>Followed by: {{ followers }}</p>
