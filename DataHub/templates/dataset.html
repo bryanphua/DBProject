@@ -25,8 +25,15 @@
 				<form class="" action="/dataset/rate/{{ dataset_info.id }}/" method="post">
 					{% csrf_token %}
 					<p>Rating:
+						{{ rating }}
 						{% for i in "12345" %}
+						{% if i <= rating %}
 							<input type="submit" name="rating" value="{{i}}">
+							{# style as a filled star #}
+						{% else %}
+							<input type="submit" name="rating" value="{{i}}">
+							{# style as an empty star #}
+						{% endif %}
 						{% endfor %}
 					</p>
 				</form>

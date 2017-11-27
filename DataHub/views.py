@@ -88,7 +88,7 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 def dataset(request, dataset):
-    context = {}
+    context = {'rating':avg_rating(dataset)}
     
     dataset_info = dataset_list.get_entries_dictionary(
     column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], 
@@ -349,3 +349,9 @@ def rate_dataset(request, dataset):
             'rating':rating
         })
     return redirect('/dataset/' + dataset)
+
+def avg_rating(dataset):
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT avg(rating) FROM dataset_rating WHERE dataset_id = %s", [dataset])
+        row = cursor.fetchone()
+    return int(round(row[0], 0))
