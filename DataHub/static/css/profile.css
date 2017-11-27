@@ -3,7 +3,7 @@
 	display: grid;
 	grid-template-columns: 25% 70%;
 	grid-template-rows: auto;
-	grid-template-areas: 
+	grid-template-areas:
 		"userDetails userContent";
 	justify-content: space-between;
 }
@@ -28,8 +28,8 @@
 	margin-top: 30px;
 	padding: 10px 10px 10px 10px;
 	grid-template-columns: 90% 10%;
-	grid-template-rows: 25% 55% 20%;
-	grid-template-areas: 
+	grid-template-rows: 24% 50% 16%;
+	grid-template-areas:
 		"datasetTitle menuButton"
 		"datasetDescription ."
 		"datasetCategory .";
@@ -41,7 +41,18 @@
 
 .dataset-title {
 	grid-area: datasetTitle;
+	position:relative;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
+
+.dataset-title h3{
+	font-size:18px;
+}
+
 
 .dataset-menu {
 	grid-area: menuButton;
@@ -50,14 +61,16 @@
 
 .dataset-description {
 	grid-area: datasetDescription;
-  	overflow: hidden;
+  overflow: scroll;
+	position: relative;
 	display: -webkit-box;
 	-webkit-line-clamp: 3;
-	-webkit-box-orient: vertical; 
+	-webkit-box-orient: vertical;
 }
 
 .dataset-category {
-	grid-area: datasetCategory;	
+	grid-area: datasetCategory;
+	padding: 15px 0px;
 }
 
 #commentList {
@@ -78,7 +91,7 @@
 	display: grid;
 	grid-template-columns: 15% 75% 10%;
 	grid-template-rows: auto;
-	grid-template-areas: 
+	grid-template-areas:
 		"userPic details voteStatus";
 	padding: 5px 5px 5px 5px;
 }
@@ -99,8 +112,8 @@
 	grid-area: voteStatus;
 	display: grid;
 	grid-template-columns: 50% 50%;
-	grid-template-rows: auto; 
-	grid-template-areas: 
+	grid-template-rows: auto;
+	grid-template-areas:
 		"thumbsUp thumbsDown"
 		"totalVotes totalVotes";
 }

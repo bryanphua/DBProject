@@ -24,7 +24,7 @@
     -webkit-transform: translateX(20px) scale(0.93);
     transform: translateX(20px) scale(0.93); }
   .dropdown-menu .dropdown-anchor {
-    border: 7px solid #000; /*anchor border color*/} 
+    border: 7px solid #000; /*anchor border color*/}
     .dropdown-menu .dropdown-anchor, .dropdown-menu .dropdown-anchor::after {
       position: absolute;
       content: '';
