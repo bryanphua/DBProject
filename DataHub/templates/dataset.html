@@ -24,13 +24,13 @@
 				<p>Approved by: {{ dataset_info.endorsed_by }} </p>
 				<form class="" action="/dataset/rate/{{ dataset_info.id }}/" method="post">
 					{% csrf_token %}
-					<p>Rating:
+					<p>Ratings:
 						{% for i in "12345" %}
 							{% if forloop.counter0 < rating %}
-								<input type="submit" name="rating" value="{{i}}" style="background: yellow">
+								<button type="submit" name="rating" value="{{i}}" style="border: none;"><i class="fa fa-star"></i></button>
 								{# style as a filled star #}
 							{% else %}
-								<input type="submit" name="rating" value="{{i}}" style="background: white">
+								<button type="submit" name="rating" value="{{i}}" style="border: none;"><i class="fa fa-star-o"></i></button>
 								{# style as an empty star #}
 							{% endif %}
 						{% endfor %}
