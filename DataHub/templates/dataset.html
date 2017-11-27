@@ -72,15 +72,16 @@
 		<div id="recommendation">
 			<h5>Recommendations</h5>
 			<ul id="recommendationList">
-				<li>
-					<div class="recommended-item">Dataset-2</div>
-				</li>
-				<li>
-					<div class="recommended-item">Dataset-2</div>
-				</li>
-				<li>
-					<div class="recommended-item">Dataset-2</div>
-				</li>
+				{% for dataset in recommended %}
+					{% if dataset.id != dataset_info.id %}
+					<li>
+						<div class="recommended-item" onclick="toDataset({{dataset.id}})">
+							<p><b>{{ dataset.name }}</b><br>
+								{{ dataset.genre }}</p>
+						</div>
+					</li>
+					{% endif %}
+				{% endfor %}
 			</ul>
 		</div>
 	</div>

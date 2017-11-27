@@ -109,6 +109,7 @@ def dataset(request, dataset):
     recommended = dataset_list.get_entries_dictionary(
         column_list=['id','name','genre'],
         cond_dict={'genre':dataset_info['genre']})
+    context['recommended'] = recommended
     
     if not request.user.is_authenticated or not dataset:
         context['auth'] = False
