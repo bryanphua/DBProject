@@ -269,7 +269,13 @@ def unfollow(request, id, origin):
         return redirect('/profile/')
     
 def comment(request, dataset):
+    if not request.user.is_authenticated:
+        messages.info(request, 'Please login to comment!')
+        return redirect('/dataset/' + dataset)
     content = request.POST['content'].strip()
+    if len(content) == 0:
+        messages.info(request, 'Comment field cannot be blank!')
+        return redirect('/dataset/' + dataset)
     try:
         comments.insert_new_entry({
             'user_id': request.user.id, 
