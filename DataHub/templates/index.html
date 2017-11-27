@@ -21,7 +21,18 @@
 					</div>
 					<div class="listDetails">
 						<p><b>{{ dataset.creator_name }}</b> {{ dataset.name }} </p>
-						<p>Rating 8/10</p>
+						<p>Ratings:
+							{% for i in "12345" %}
+								{% if forloop.counter0 < dataset.rating %}
+									<i class="fa fa-star"></i>
+								{% else %}
+									<i class="fa fa-star-o"></i>
+								{% endif %}
+							{% endfor %}
+							{% if rating == 0 %}
+							&nbsp;(No ratings yet)
+							{% endif %}
+						</p>
 						<p>&nbsp;</p>
 						<p>{{ dataset.genre }}</p>
 					</div>

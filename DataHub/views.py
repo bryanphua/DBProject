@@ -17,11 +17,12 @@ def index(request):
             column_list=['username'], max_rows=1, 
             cond_dict={ 'id': dataset['creator_user_id'] }, 
             row_numbers=False)
+        dataset['creator_name'] = creator_name['username']
         if request.user.is_authenticated:
             following = user_dataset_following.check_exists(
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
-        dataset['creator_name'] = creator_name['username']
+        dataset['rating'] = avg_rating(dataset['id'])
         
     context = { 
         'auth': False, 

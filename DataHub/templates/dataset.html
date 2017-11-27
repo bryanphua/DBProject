@@ -28,10 +28,8 @@
 						{% for i in "12345" %}
 							{% if forloop.counter0 < rating %}
 								<button type="submit" name="rating" value="{{i}}" style="border: none;"><i class="fa fa-star"></i></button>
-								{# style as a filled star #}
 							{% else %}
 								<button type="submit" name="rating" value="{{i}}" style="border: none;"><i class="fa fa-star-o"></i></button>
-								{# style as an empty star #}
 							{% endif %}
 						{% endfor %}
 						{% if rating == 0 %}
@@ -51,7 +49,7 @@
 				<div id="commentListContainer">
 					<form class="" action="/comment/{{ dataset_info.id }}/" method="post">
 						{% csrf_token %}
-						<textarea class="form-control" rows="4" name="content"></textarea>
+						<textarea class="form-control" rows="4" name="content" maxlength="230"></textarea>
 						<input type="submit" class="btn btn-success" value="Comment">
 					</form>
 					<ul id="commentList">
