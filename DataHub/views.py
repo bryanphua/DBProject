@@ -148,7 +148,6 @@ def new_dataset(request):
         params = request.POST
         if (not params['title']) or (not params['genre']):
             messages.info(request, 'Did you forget to fill in any fields?')
-            # context['name'] = params['title']
             return render(request, 'create_dataset.html', context)
         try:
             dataset_list.insert_new_entry({
