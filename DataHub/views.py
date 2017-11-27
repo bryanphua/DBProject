@@ -317,14 +317,13 @@ def rate_dataset(request, dataset):
             'rating':rating
         })
     except IntegrityError:
-        dataset_rating.delete_entries({
-            'user_id':request.user.id,
-            'dataset_id':dataset
-        })
-        dataset_rating.insert_new_entry({
+        dataset_rating.update_entries({
             'user_id':request.user.id,
             'dataset_id':dataset,
             'rating':rating
+        }, {
+            'user_id':request.user.id,
+            'dataset_id':dataset
         })
     return redirect('/dataset/' + dataset)
 
@@ -343,7 +342,7 @@ def popular_datasets(request):
         
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, row_numbers=False
+            column_list=['username'], max_rows=1, row_numbers=False,
             cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
         
