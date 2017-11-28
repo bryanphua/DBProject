@@ -335,9 +335,7 @@ def user(request, username):
     return render(request, 'profile.html', context)
 
 def delete_dataset(request, dataset):
-    user_dataset_following.delete_entries({'dataset_id':dataset})
     dataset_list.delete_entries({'id':dataset})
-
     messages.success(request, 'Dataset deleted')
     return redirect('/profile/')
 
