@@ -20,7 +20,7 @@
 				</div>
 			</form>
 
-			<ul class="navbar-nav ml-auto">
+			<ul class="navbar-nav ml-auto nav-bar-desktop">
 				{% if auth %}
 					<li>
 						<img src="{% static 'img/ProfilePic.png' %}" id="navProfilePic" data-dropdown="#userMenu" data-add-anchor-x="-10">
@@ -34,6 +34,28 @@
 					</li>
 				{% endif %}
 			</ul>
+			
+			<ul class="navbar-nav ml-auto nav-bar-mobile">
+				{% if auth %}
+				<li class="nav-item">
+					<p>Signed in as:</p>
+					<p><b>{{ user.username }}</b></p>
+				</li>
+				<li class="divider"></li>
+				<li class="nav-item"><a href="/profile" class="nav-link js-scroll-trigger">Your Profile</a></li>
+				<li class="divider"></li>
+				<li class="nav-item"><a href="/statistics" class="nav-link js-scroll-trigger">Statistics</a></li>
+				<li class="nav-item"><a href="/signout" class="nav-link js-scroll-trigger">Sign Out</a></li>
+				{% else %}
+					<li class="nav-item">
+						<a href="/signin" class="nav-link js-scroll-trigger" id="navSignIn">Sign In</a>
+					</li>
+					<li class="nav-item">
+						<a href="/signup" class="nav-link js-scroll-trigger" id="navSignUp">Sign Up</a>
+					</li>
+				{% endif %}
+			</ul>
+			
 		</div>
 	</div>
 </nav>
