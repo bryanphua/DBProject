@@ -14,7 +14,7 @@ def search(request, keyword):
         context['auth'] = True
     keyword = '%' + keyword + '%'
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
         cursor.execute(statement, [keyword, keyword])
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
@@ -23,7 +23,6 @@ def search(request, keyword):
             following = user_dataset_following.check_exists(
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
-        dataset['rating'] = avg_rating(dataset['id'])
     context['datasets'] = values
     
     with connection.cursor() as cursor:
@@ -42,7 +41,7 @@ def index(request):
         return search(request, keyword)
         
     new_datasets = dataset_list.get_entries_dictionary(
-        column_list=['id','creator_user_id','name', 'description', 'genre'], 
+        column_list=['id','creator_user_id','name', 'description', 'genre', 'rating'], 
         max_rows=None, row_numbers=False)
         
     for dataset in new_datasets:
@@ -50,12 +49,12 @@ def index(request):
             column_list=['username'], max_rows=1, 
             cond_dict={ 'id': dataset['creator_user_id'] }, 
             row_numbers=False)
+        print('testing', dataset['rating'])
         dataset['creator_name'] = creator_name['username']
         if request.user.is_authenticated:
             following = user_dataset_following.check_exists(
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
-        dataset['rating'] = avg_rating(dataset['id'])
         
     context = { 
         'auth': False, 
@@ -114,10 +113,10 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 def dataset(request, dataset):
-    context = {'rating':avg_rating(dataset)}
+    context = {}
     
     dataset_info = dataset_list.get_entries_dictionary(
-    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], 
+    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre', 'rating'], 
     cond_dict={'id': dataset }, max_rows=1)
 
     user_info = auth_user.get_entries_dictionary(
@@ -366,14 +365,6 @@ def rate_dataset(request, dataset):
         })
     messages.success(request, "You have rated!")
     return redirect('/dataset/' + dataset)
-
-def avg_rating(dataset):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT avg(rating) FROM dataset_rating WHERE dataset_id = %s", [dataset])
-        row = cursor.fetchone()
-    if row[0]:
-        return row[0]
-    return 0
 
 def rate_comment(request, comment, rate, origin):
     try:

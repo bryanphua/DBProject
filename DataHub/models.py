@@ -16,6 +16,7 @@ class dataset_list(Model):
     endorsed_by = Column('endorsed_by','char',not_null=True)
     description = Column('description','char')
     genre = Column('genre','char',not_null=True)
+    rating = Column('rating', 'float')
 
 class user_dataset_following(Model):
     user_id = Column('user_id','int',not_null=True)
