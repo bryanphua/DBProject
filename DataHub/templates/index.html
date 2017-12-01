@@ -20,7 +20,7 @@
 						<img src="{% static 'img/ProfilePic.png' %}"/>
 					</div>
 					<div class="listDetails">
-						<p><b><a href="/user/{{ dataset.creator_name }}/">{{ dataset.creator_name }}</a></b> {{ dataset.name }} </p>
+						<p><b><a href="/user/{{ dataset.creator_name }}/">{{ dataset.username }}</a></b> {{ dataset.name }} </p>
 						<p>Ratings:
 							{% for i in "12345" %}
 								{% if forloop.counter0 < dataset.rating %}

@@ -6,56 +6,59 @@ from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
-# Create your views here.
-
+# Search function
 def search(request, keyword):
     context = { 'auth': False, 'keyword':keyword }
     if request.user.is_authenticated:
         context['auth'] = True
     keyword = '%' + keyword + '%'
+    
+    # Getting relevant datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
         cursor.execute(statement, [keyword, keyword])
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    
     for dataset in values:
         if request.user.is_authenticated:
+            # check if session user is following the dataset
             following = user_dataset_following.check_exists(
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
-        dataset['rating'] = avg_rating(dataset['id'])
+            
     context['datasets'] = values
     
+    # Getting relevant users
     with connection.cursor() as cursor:
         statement = "SELECT username FROM auth_user WHERE username LIKE %s"
         cursor.execute(statement, [keyword])
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     context['users'] = values
-    print(context)
+
     return render(request, 'search_results.html', context)
 
-    
+# Populating data for our index page
 def index(request):
     keyword = request.GET.get('search')
     if keyword:
         return search(request, keyword)
-        
-    new_datasets = dataset_list.get_entries_dictionary(
-        column_list=['id','creator_user_id','name', 'description', 'genre'], 
-        max_rows=None, row_numbers=False)
+    
+    # Retrieving information of new datasets
+    with connection.cursor() as cursor:
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id"
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    new_datasets = values
         
     for dataset in new_datasets:
-        creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, 
-            cond_dict={ 'id': dataset['creator_user_id'] }, 
-            row_numbers=False)
-        dataset['creator_name'] = creator_name['username']
         if request.user.is_authenticated:
+            # check if session user is following the dataset
             following = user_dataset_following.check_exists(
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
-        dataset['rating'] = avg_rating(dataset['id'])
         
     context = { 
         'auth': False, 
@@ -114,7 +117,7 @@ def profile(request):
     return render(request, 'profile.html', context)
 
 def dataset(request, dataset):
-    context = {'rating':avg_rating(dataset)}
+    context = {}
     
     dataset_info = dataset_list.get_entries_dictionary(
     column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], 
@@ -366,14 +369,6 @@ def rate_dataset(request, dataset):
         })
     messages.success(request, "You have rated!")
     return redirect('/dataset/' + dataset)
-
-def avg_rating(dataset):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT avg(rating) FROM dataset_rating WHERE dataset_id = %s", [dataset])
-        row = cursor.fetchone()
-    if row[0]:
-        return row[0]
-    return 0
 
 def rate_comment(request, comment, rate, origin):
     try:
