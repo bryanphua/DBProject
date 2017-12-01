@@ -7,7 +7,11 @@ from DataHub.models import auth_user, dataset_list, user_dataset_following, comm
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
 # Search function
-def search(request, keyword):
+def search(request):
+    keyword = request.GET.get('q')
+    if not keyword:
+        return index(request)
+    
     context = { 'auth': False, 'keyword':keyword }
     if request.user.is_authenticated:
         context['auth'] = True
@@ -41,10 +45,6 @@ def search(request, keyword):
 
 # Populating data for our index page
 def index(request):
-    keyword = request.GET.get('search')
-    if keyword:
-        return search(request, keyword)
-    
     # Retrieving information of new datasets
     with connection.cursor() as cursor:
         statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id"

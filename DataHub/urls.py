@@ -39,4 +39,5 @@ urlpatterns = [
     url(r'^popularusers/$', views.popular_users, name = 'popular_users'),
     url(r'^populargenres/$', views.popular_genres, name = 'popular_genres'),
     url(r'^statistics/$', views.statistics, name = 'statistics'),
+    url(r'^search/$', views.search, name = 'search'),
 ]
