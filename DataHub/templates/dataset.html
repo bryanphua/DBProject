@@ -27,9 +27,9 @@
 					<p>Ratings:
 						{% for i in "12345" %}
 							{% if forloop.counter0 < dataset_info.rating %}
-								<button type="submit" name="rating" value="{{i}}" style="border: none;"><i class="fa fa-star"></i></button>
+								<button type="submit" name="rating" value="{{i}}" style="border:none; background:none;"><i class="fa fa-star"></i></button>
 							{% else %}
-								<button type="submit" name="rating" value="{{i}}" style="border: none;"><i class="fa fa-star-o"></i></button>
+								<button type="submit" name="rating" value="{{i}}" style="border:none; background:none;"><i class="fa fa-star-o"></i></button>
 							{% endif %}
 						{% endfor %}
 						{% if rating == 0 %}
