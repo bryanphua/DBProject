@@ -24,7 +24,7 @@ class Column():
         self.unique = unique
 
     def wrap_value(self,value):
-        """return the value as a string to be palced into sql statement"""
+        """return the value as a string to be placed into sql statement"""
         if self.col_type == 'int':
             return str(int(value))
 
