@@ -12,23 +12,25 @@
 		<h1>Most Popular Users</h1>
 		<br/>
 		<ol id="mostPopularList">
+            {% for dataset in popular_datasets %}
 			<li>
 				<div class="popular-user">
 					<div class="list-user-pic">
 						<img src="{% static 'img/ProfilePic.png' %}"/>
 					</div>
 					<div class="list-user-name">
-						<p><b>username</b></p>
+						<p><b>{{ user.username }}</b></p>
 					</div>
 					<div class="list-no-datasets">
-						<p>999 Datasets</p>
+						<p>{{ user.num_of_datasets }} Datasets</p>
 					</div>
 					<div class="list-no-follows">
-						<p>999 Datasets Follows</p>
+						<p>{{ user.total_followers }} Datasets Follows</p>
 					</div>
 				</div>
 				<hr/>
 			</li>
+            {% endfor %}
 		</ol>
 	</div>
 
