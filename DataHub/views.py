@@ -45,6 +45,7 @@ def search(request):
 
 # Populating data for our index page
 def index(request):
+    context = { 'auth': False }
     # Retrieving information of new datasets
     with connection.cursor() as cursor:
         statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id"
@@ -52,23 +53,19 @@ def index(request):
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     new_datasets = values
-        
-    for dataset in new_datasets:
-        if request.user.is_authenticated:
-            # check if session user is following the dataset
-            following = user_dataset_following.check_exists(
-                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
-            dataset['following'] = following
-        
-    context = { 
-        'auth': False, 
-        'popular_datasets': reversed(new_datasets)
-     }
-     
+    
     if request.user.is_authenticated:
         context['auth'] = True
         context['user'] = request.user
         
+        for dataset in new_datasets:
+            # check if session user is following the dataset
+            following = user_dataset_following.check_exists(
+                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
+            dataset['following'] = following
+    
+    context['popular_datasets'] = reversed(new_datasets)
+     
     return render(request, 'index.html', context)
 
 def profile(request):
