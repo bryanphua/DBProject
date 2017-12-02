@@ -6,6 +6,11 @@
 	grid-area: userPic;
 }
 
+.listUserPic img {
+	width: 80%;
+	max-width: 100pt;
+}
+
 .listDetails {
 	grid-area: details;
 }

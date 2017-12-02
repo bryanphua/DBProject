@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	{% include "head.html" %}
+	<link href="{% static 'css/sign_in.css' %}" rel="stylesheet"/>
+</head>
+<body id="page-top">
+	{% include "nav_bar.html" %}
+	<div id="everything" class="container">
+		<div id="centerDiv">
+			<h1>Staff sign up</h1>
+			<br>
+			{% include "messages.html" %}
+			<div id="signInForm">
+				<!-- put the form here -->
+				<form class="" action="/staffme/" method="post">{% csrf_token %}
+					<label>First name*</label>
+				  <input type="text" class="form-control" name="first_name" value="" maxlength="30">
+				  <br>
+					<label>Last name</label>
+				  <input type="text" class="form-control" name="last_name" value="" maxlength="30">
+				  <br>
+				  <label>Username*</label>
+				  <input type="text" class="form-control" name="username" value="" maxlength="150">
+				  <br>
+				  <label>Password*</label>
+				  <input type="password" class="form-control" name="password" value="" maxlength="128">
+					<br>
+				  <label>Email*</label>
+				  <input type="email" class="form-control" name="email" value="" maxlength="254">
+					<br>
+					<label>Code*</label>
+				  <input type="text" class="form-control" name="code" value="" maxlength="30">
+					<br>
+				  <br>
+				  <input type="submit" value="Make me a staff!" class="btn btn-success form-control">
+				</form>
+			</div>
+		</div>
+
+	</div>
+
+	{% include "foot.html" %}
+
+</body>
+</html>
