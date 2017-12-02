@@ -12,17 +12,19 @@
 		<h1>Most Popular Genres</h1>
 		<br/>
 		<ol id="mostPopularList">
+            {% for genre in popular_genres %}
 			<li>
 				<div class="popular-genre">
 					<div class="list-genre-name">
-						<p><b>genre</b></p>
+						<p><b>{{ genre.genre }}</b></p>
 					</div>
 					<div class="list-no-datasets">
-						<p>999 Datasets</p>
+						<p>{{ genre.num_of_datasets }} Datasets</p>
 					</div>
 				</div>
 				<hr/>
 			</li>
+            {% endfor %}
 		</ol>
 	</div>
 

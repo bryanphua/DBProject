@@ -437,18 +437,13 @@ def popular_users(request):
     return render(request, 'popular_users.html') #removed context returned
 
 def popular_genres(request):
-    popular_datasets = dataset_list.get_entries_dictionary(
-        column_list=['id','creator_user_id','name', 'description', 'genre'],max_rows=None)
-        
-    for dataset in popular_datasets:
-        creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1,
-            cond_dict={ 'id': dataset['creator_user_id'] })
-        dataset['creator_name'] = creator_name['username']
-        
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT genre, COUNT(genre) num_of_datasets FROM dataset_list GROUP BY genre ORDER BY num_of_datasets DESC")
+        popular_genres = dictfetchall(cursor)
+
     context = { 
         'auth': False, 
-        'popular_datasets': reversed(popular_datasets)
+        'popular_genres': popular_genres
      }
      
     if request.user.is_authenticated:
