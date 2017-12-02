@@ -117,7 +117,7 @@ def dataset(request, dataset):
     context = {}
     
     dataset_info = dataset_list.get_entries_dictionary(
-    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre'], 
+    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre', 'rating'], 
     cond_dict={'id': dataset }, max_rows=1)
 
     user_info = auth_user.get_entries_dictionary(
