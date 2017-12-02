@@ -398,7 +398,7 @@ def popular_datasets(request):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM dataset_list ORDER BY follower_count DESC LIMIT 10")
         popular_datasets = dictfetchall(cursor)
-        
+
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
             column_list=['username'], max_rows=1,
@@ -417,18 +417,20 @@ def popular_datasets(request):
     return render(request, 'popular_datasets.html', context)
 
 def popular_users(request):
-    popular_datasets = dataset_list.get_entries_dictionary(
-        column_list=['id','creator_user_id','name', 'description', 'genre'],max_rows=None)
-        
-    for dataset in popular_datasets:
-        creator_name = auth_user.get_entries_dictionary(
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY total_followers DESC")
+        popular_users = dictfetchall(cursor)
+
+    print(popular_users)
+    for user in popular_users:
+        username = auth_user.get_entries_dictionary(
             column_list=['username'], max_rows=1,
-            cond_dict={ 'id': dataset['creator_user_id'] })
-        dataset['creator_name'] = creator_name['username']
+            cond_dict={ 'id': user['creator_user_id'] })
+        user['username'] = username['username']
         
     context = { 
         'auth': False, 
-        'popular_datasets': reversed(popular_datasets)
+        'popular_users': popular_users
      }
      
     if request.user.is_authenticated:
