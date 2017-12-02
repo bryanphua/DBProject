@@ -12,6 +12,10 @@
 	grid-area: userDetails;
 }
 
+#user-details img {
+	width: 100%
+}
+
 #user-content {
 	grid-area: userContent;
 }

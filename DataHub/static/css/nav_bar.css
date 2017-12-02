@@ -20,3 +20,23 @@ input:focus{
 #navProfilePic {
 	width: 50%;
 }
+
+.nav-bar-desktop {
+	display: none
+}
+.nav-bar-mobile {
+	display: flex
+}
+
+@media (min-width: 992px) {
+	.nav-bar-desktop {
+		display: flex
+	}
+	.nav-bar-mobile {
+		display: none
+	}
+}
+
+.nav-item p {
+	color: #FFFFFF
+}

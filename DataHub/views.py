@@ -1,70 +1,71 @@
 from django.shortcuts import render, redirect
 from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
-# Create your views here.
-
-def search(request, keyword):
+# Search function
+def search(request):
+    keyword = request.GET.get('q')
+    if not keyword:
+        return index(request)
+    
     context = { 'auth': False, 'keyword':keyword }
     if request.user.is_authenticated:
         context['auth'] = True
     keyword = '%' + keyword + '%'
+    
+    # Getting relevant datasets
     with connection.cursor() as cursor:
         statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
         cursor.execute(statement, [keyword, keyword])
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    
     for dataset in values:
         if request.user.is_authenticated:
+            # check if session user is following the dataset
             following = user_dataset_following.check_exists(
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
+            
     context['datasets'] = values
     
+    # Getting relevant users
     with connection.cursor() as cursor:
         statement = "SELECT username FROM auth_user WHERE username LIKE %s"
         cursor.execute(statement, [keyword])
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     context['users'] = values
-    print(context)
+
     return render(request, 'search_results.html', context)
 
-    
+# Populating data for our index page
 def index(request):
-    keyword = request.GET.get('search')
-    if keyword:
-        return search(request, keyword)
-        
-    new_datasets = dataset_list.get_entries_dictionary(
-        column_list=['id','creator_user_id','name', 'description', 'genre', 'rating'], 
-        max_rows=None, row_numbers=False)
-        
-    for dataset in new_datasets:
-        creator_name = auth_user.get_entries_dictionary(
-            column_list=['username'], max_rows=1, 
-            cond_dict={ 'id': dataset['creator_user_id'] }, 
-            row_numbers=False)
-        print('testing', dataset['rating'])
-        dataset['creator_name'] = creator_name['username']
-        if request.user.is_authenticated:
-            following = user_dataset_following.check_exists(
-                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
-            dataset['following'] = following
-        
-    context = { 
-        'auth': False, 
-        'popular_datasets': reversed(new_datasets)
-     }
-     
+    context = { 'auth': False }
+    # Retrieving information of new datasets
+    with connection.cursor() as cursor:
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id"
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    new_datasets = values
+    
     if request.user.is_authenticated:
         context['auth'] = True
         context['user'] = request.user
         
+        for dataset in new_datasets:
+            # check if session user is following the dataset
+            following = user_dataset_following.check_exists(
+                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
+            dataset['following'] = following
+    
+    context['popular_datasets'] = reversed(new_datasets)
+     
     return render(request, 'index.html', context)
 
 def profile(request):
@@ -472,3 +473,34 @@ def statistics(request):
         context['auth'] = True
         context['user'] = request.user
     return render(request, 'statistics.html') #removed context returned
+
+def staff_sign_up(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    elif request.method == 'GET':
+        return render(request, 'staff_sign_up.html')
+    elif request.method == 'POST':
+        params = request.POST
+        if (not params['username']) or (not params['email']) or (not params['password']) or (not params['first_name']):
+            messages.info(request, 'Required fields cannot be blank!')
+            return redirect('/staffme/')
+        
+        if params['code'] == "purplepandas":
+            try:
+                user = User.objects.create_user(
+                    username=params['username'],
+                    email=params['email'],
+                    password=params['password'])
+                user.first_name = params['first_name']
+                user.last_name = params['last_name']
+                user.is_staff = True
+                user.save()
+            except IntegrityError:
+                messages.info(request, 'Username already taken :(')
+                return redirect('/staffme/')
+            login(request, user)
+            messages.success(request, 'Staff account successfully created!')
+            return redirect('/')
+        else:
+            messages.info(request, "Wrong code :(")
+            return redirect('/staffme/')
