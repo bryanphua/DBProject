@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.db import connection, IntegrityError, ProgrammingError
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
@@ -473,3 +473,34 @@ def statistics(request):
         context['auth'] = True
         context['user'] = request.user
     return render(request, 'statistics.html') #removed context returned
+
+def staff_sign_up(request):
+    if request.user.is_authenticated:
+        return redirect('/')
+    elif request.method == 'GET':
+        return render(request, 'staff_sign_up.html')
+    elif request.method == 'POST':
+        params = request.POST
+        if (not params['username']) or (not params['email']) or (not params['password']) or (not params['first_name']):
+            messages.info(request, 'Required fields cannot be blank!')
+            return redirect('/staffme/')
+        
+        if params['code'] == "purplepandas":
+            try:
+                user = User.objects.create_user(
+                    username=params['username'],
+                    email=params['email'],
+                    password=params['password'])
+                user.first_name = params['first_name']
+                user.last_name = params['last_name']
+                user.is_staff = True
+                user.save()
+            except IntegrityError:
+                messages.info(request, 'Username already taken :(')
+                return redirect('/staffme/')
+            login(request, user)
+            messages.success(request, 'Staff account successfully created!')
+            return redirect('/')
+        else:
+            messages.info(request, "Wrong code :(")
+            return redirect('/staffme/')
