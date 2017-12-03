@@ -8,7 +8,9 @@ from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintEx
 
 def search_dataset(request, keyword, columns):
     # Takes in attributes we're interested in as a list 
-    
+    if len(columns) == 0:
+        columns = ['name', 'username', 'genre']
+        
     # Formulating our WHERE condition
     condition = ""
     for i in range(len(columns)):
@@ -19,7 +21,7 @@ def search_dataset(request, keyword, columns):
             
     with connection.cursor() as cursor:
         statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
-        cursor.execute(statement, [keyword,keyword,keyword])
+        cursor.execute(statement, [keyword]*len(columns))
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     
@@ -36,15 +38,26 @@ def search_dataset(request, keyword, columns):
 def search(request):
     keyword = request.GET.get('q')
     if not keyword:
-        return index(request)
-    
+        return redirect("/")
     context = { 'auth': False, 'keyword':keyword }
+    
+    filters = []
+    if request.GET.get('name') == 'true':
+        filters.append('name')
+        context['filter_name'] = True
+    if request.GET.get('username') == 'true':
+        filters.append('username')
+        context['filter_username'] = True
+    if request.GET.get('genre') == 'true':
+        filters.append('genre')
+        context['filter_genre'] = True
+    
     if request.user.is_authenticated:
         context['auth'] = True
     keyword = '%' + keyword + '%'
     
     # Getting relevant datasets (general)
-    context['datasets'] = search_dataset(request, keyword, ['name', 'username', 'genre'])
+    context['datasets'] = search_dataset(request, keyword, filters)
     
     # Getting relevant users
     with connection.cursor() as cursor:

@@ -9,11 +9,30 @@
 	{% include "nav_bar.html" %}
 	<div class="container" id="everything">
 		<h1>Search results</h1>
-		<p>for "{{ keyword }}"</p>
+		<p>{{ datasets|length }} results for "{{ keyword }}"</p>
 		<hr>
 		{% include "messages.html" %}
 		<h2>Datasets</h2>
-		<br/>
+		<form id="search_filter">
+			<p>Filter by: &nbsp;
+				{% if filter_name %}
+				<input type="checkbox" id="checkbox_name" name="name" value="name" checked> Name&nbsp;
+				{% else %}
+				<input type="checkbox" id="checkbox_name" name="name" value="name"> Name&nbsp;
+				{% endif %}
+				{% if filter_username %}
+				<input type="checkbox" id="checkbox_creator" name="creator" value="creator" checked> Creator&nbsp;
+				{% else %}
+				<input type="checkbox" id="checkbox_creator" name="creator" value="creator"> Creator&nbsp;
+				{% endif %}
+				{% if filter_genre %}
+				<input type="checkbox" id="checkbox_genre" name="genre" value="genre" checked> Genre&nbsp;
+				{% else %}
+				<input type="checkbox" id="checkbox_genre" name="genre" value="genre"> Genre&nbsp;
+				{% endif %}
+			</p>
+		</form>
+		<br>
 		<ul id="mostPopularList">
 			{% if not datasets %}
 			<li><p>No datasets found</p></li>

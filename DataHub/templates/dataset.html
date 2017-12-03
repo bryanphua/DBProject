@@ -49,9 +49,10 @@
 				<div id="commentListContainer">
 					<form class="form-container" action="/comment/{{ dataset_info.id }}/" method="post">
 						{% csrf_token %}
-						<textarea class="form-control textarea" rows="4" name="content" maxlength="230"></textarea>
+						<textarea class="form-control textarea" rows="3" name="content" maxlength="230"></textarea><br>
 						<input type="submit" class="btn btn-success button" value="Comment">
 					</form>
+					<br>
 					<ul id="commentList">
 						{% if not comments %}
 						<li>

@@ -79,6 +79,18 @@ $(function(){
 			$('#'+$(this).val()).fadeIn();
 		}
 	});
+	
+	$('#search_filter').change(function() {
+		var url = new URL(window.location.href);
+		var q = url.searchParams.get("q");
+
+		name = $('#checkbox_name').is(":checked")
+		creator = $('#checkbox_creator').is(":checked")
+		genre = $('#checkbox_genre').is(":checked")
+		
+		// filter = $('#dropdown_filter option:selected').val()
+		window.location = "/search/?q=" + q + "&name=" + name + "&username=" + creator + "&genre=" + genre
+	});
 
 });
 
