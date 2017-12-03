@@ -64,7 +64,7 @@ $(function(){
 	});
 
 	$('#popularUsers').click(function() {
-		window.location = "/statistics/rusers";
+		window.location = "/statistics/users";
 	});
 
 	$('#popularGenres').click(function() {
