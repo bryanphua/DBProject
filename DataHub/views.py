@@ -6,6 +6,32 @@ from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
+def search_dataset(request, keyword, columns):
+    # Takes in attributes we're interested in as a list 
+    
+    # Formulating our WHERE condition
+    condition = ""
+    for i in range(len(columns)):
+        if i == 0:
+            condition += str(columns[i]) + " LIKE %s"
+        else:
+            condition += " OR " + str(columns[i]) + " LIKE %s"
+            
+    with connection.cursor() as cursor:
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
+        cursor.execute(statement, [keyword,keyword,keyword])
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    
+    for dataset in values:
+        if request.user.is_authenticated:
+            # check if session user is following the dataset
+            following = user_dataset_following.check_exists(
+                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
+            dataset['following'] = following
+    
+    return values
+
 # Search function
 def search(request):
     keyword = request.GET.get('q')
@@ -17,21 +43,8 @@ def search(request):
         context['auth'] = True
     keyword = '%' + keyword + '%'
     
-    # Getting relevant datasets
-    with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE name LIKE %s OR username LIKE %s"
-        cursor.execute(statement, [keyword, keyword])
-        keys = [d[0] for d in cursor.description]
-        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
-    
-    for dataset in values:
-        if request.user.is_authenticated:
-            # check if session user is following the dataset
-            following = user_dataset_following.check_exists(
-                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
-            dataset['following'] = following
-            
-    context['datasets'] = values
+    # Getting relevant datasets (general)
+    context['datasets'] = search_dataset(request, keyword, ['name', 'username', 'genre'])
     
     # Getting relevant users
     with connection.cursor() as cursor:
