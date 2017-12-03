@@ -73,25 +73,20 @@ def profile(request):
         messages.info(request, 'Please login to view your profile')
         return redirect('/')
     
+    # Retrieving information of created datasets
     created_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','name', 'description', 'genre'], 
         cond_dict={'creator_user_id': request.user.id}, 
         max_rows=None, row_numbers=False)
-    
-    following_datasets = user_dataset_following.get_entries_dictionary(
-    column_list=['dataset_id'], cond_dict={'user_id':request.user.id}, 
-    max_rows=None, row_numbers=False)
-    
-    for dataset in following_datasets:
-        dataset_info = dataset_list.get_entries_dictionary(
-        column_list=['name','description','creator_user_id','genre'],
-        cond_dict={'id':dataset['dataset_id']}, max_rows=1,row_numbers=False)
-        creator_name = auth_user.get_entries_dictionary(
-        column_list=['username'],max_rows=1,row_numbers=False,
-        cond_dict={'id':dataset_info['creator_user_id']})
-        dataset['creator_name'] = creator_name['username']
-        dataset.update(dataset_info)
         
+    # Retrieving information of followed datasets
+    with connection.cursor() as cursor:
+        statement = "SELECT dataset_id, name, description, username, genre FROM user_dataset_following F JOIN dataset_list L ON F.dataset_id = L.id JOIN auth_user U ON L.creator_user_id=U.id WHERE F.user_id =" + str(request.user.id)
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    following_datasets = values
+    
     user_comments = comments.get_entries_dictionary(
     column_list=['id','dataset_id','content'],
     cond_dict={'user_id':request.user.id},max_rows=None, row_numbers=False)
