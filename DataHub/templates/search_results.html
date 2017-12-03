@@ -3,81 +3,124 @@
 <html lang="en">
 <head>
 	{% include "head.html" %}
-	<link href="{% static 'css/index.css' %}" rel="stylesheet"/>
+	<link href="{% static 'css/search_results.css' %}" rel="stylesheet"/>
 </head>
 <body id="page-top">
 	{% include "nav_bar.html" %}
 	<div class="container" id="everything">
 		<h1>Search results</h1>
 		<p>for "{{ keyword }}"</p>
+		
 		<hr>
+		<select class="form-control" id="selectResultGroup">
+			<option value="all">All</option>
+			<option value="datasetsResultGroup">Datasets</option>
+			<option value="usersResultGroup">Users</option>
+		</select>
+
+		
 		{% include "messages.html" %}
-		<h2>Datasets</h2>
-		<br/>
-		<ul id="mostPopularList">
-			{% if not datasets %}
-			<li><p>No datasets found</p></li>
-			{% endif %}
-			{% for dataset in datasets %}
-			<li>
-				<div class="dataset" onclick="toDataset('{{ dataset.id }}')">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><b><a href="/user/{{ dataset.username }}/">{{ dataset.username }}</a></b> {{ dataset.name }} </p>
-						<p>Ratings:
-							{% for i in "12345" %}
-								{% if forloop.counter0 < dataset.rating %}
-									<i class="fa fa-star"></i>
-								{% else %}
-									<i class="fa fa-star-o"></i>
+		<ul class="nav nav-pills" role="tablist">
+			<li class="nav-item"><a class="nav-link disabled" href="#">Sort By:</a></li>
+	        <li class="nav-item"><a class="nav-link active" role="tab" data-toggle="tab" href="#dateCreated">Date Created</a></li>
+	        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#commentsScore">Rating</a></li>
+	        <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#datasetsRating">Comments</a></li>
+	    </ul>
+
+
+	    <br>
+	    <div class="tab-content">
+			<div class="tab-pane active" id="dateCreated" role="tabpanel">
+				<div class="result-group" id="datasetsResultGroup">
+					<h2>Datasets</h2>
+					<br/>
+					<ul class="results-list">
+						{% if not datasets %}
+						<li><p>No datasets found</p></li>
+						{% endif %}
+						{% for dataset in datasets %}
+						<li>
+							<div class="dataset" onclick="toDataset('{{ dataset.id }}')">
+								<div class="listUserPic">
+									<img src="{% static 'img/ProfilePic.png' %}"/>
+								</div>
+								<div class="listDetails">
+									<p><b><a href="/user/{{ dataset.username }}/">{{ dataset.username }}</a></b> {{ dataset.name }} </p>
+									<p>Ratings:
+										{% for i in "12345" %}
+											{% if forloop.counter0 < dataset.rating %}
+												<i class="fa fa-star"></i>
+											{% else %}
+												<i class="fa fa-star-o"></i>
+											{% endif %}
+										{% endfor %}
+										{% if dataset.rating == 0 %}
+										&nbsp;(No ratings yet)
+										{% endif %}
+									</p>
+									<p>&nbsp;</p>
+									<p>&nbsp;<i>#{{ dataset.genre }}</i></p>
+								</div>
+								{% if auth %}
+									<div class="listFollowStatus">
+									  {% if dataset.following == 1 %}
+									  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.id }},'index')" />
+										{% elif dataset.username == user.username %}
+										<input class="btn btn-follow disabled" type="button" value="Follow" disabled />
+									  {% else %}
+									  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.id }},'index')" />
+									  {% endif %}
+									</div>
 								{% endif %}
-							{% endfor %}
-							{% if dataset.rating == 0 %}
-							&nbsp;(No ratings yet)
-							{% endif %}
-						</p>
-						<p>&nbsp;</p>
-						<p>{{ dataset.genre }}</p>
-					</div>
-					{% if auth %}
-						<div class="listFollowStatus">
-						  {% if dataset.following == 1 %}
-						  <input class="btn btn-following" type="button" value="Following" onclick="unfollow({{ dataset.id }},'index')" />
-							{% elif dataset.username == user.username %}
-							<input class="btn btn-follow disabled" type="button" value="Follow" disabled />
-						  {% else %}
-						  <input class="btn btn-follow" type="button" value="Follow" onclick="follow({{ dataset.id }},'index')" />
-						  {% endif %}
-						</div>
-					{% endif %}
+							</div>
+							<hr/>
+						</li>
+						{% endfor %}
+					</ul>
 				</div>
-				<hr/>
-			</li>
-			{% endfor %}
-		</ul>
-		<h2>Users</h2>
-		<br/>
-		<ul id="mostPopularList">
-			{% if not users %}
-			<li><p>No users found</p></li>
-			{% endif %}
-			{% for u in users %}
-			<li>
-				<div class="dataset">
-					<div class="listUserPic">
-						<img src="{% static 'img/ProfilePic.png' %}"/>
-					</div>
-					<div class="listDetails">
-						<p><a href="/user/{{ u.username }}/"><b>{{ u.username }}</b></a></p>
-						</p>
-					</div>
+
+				<br>
+				
+				<div class="result-group" id="usersResultGroup">
+					<h2>Users</h2>
+					<br/>
+					<ul class="results-list">
+						{% if not users %}
+						<li><p>No users found</p></li>
+						{% endif %}
+						{% for u in users %}
+						<li>
+							<div class="dataset">
+								<div class="listUserPic">
+									<img src="{% static 'img/ProfilePic.png' %}"/>
+								</div>
+								<div class="listDetails">
+									<p><a href="/user/{{ u.username }}/"><b>{{ u.username }}</b></a></p>
+									</p>
+								</div>
+							</div>
+							<hr/>
+						</li>
+						{% endfor %}
+					</ul>	
 				</div>
-				<hr/>
-			</li>
-			{% endfor %}
-		</ul>
+				
+			</div>
+
+			<div class="tab-pane" id="commentsScore" role="tabpanel">
+				
+			</div>
+
+			<div class="tab-pane" id="datasetsRating" role="tabpanel">
+				
+			</div>
+		</div>
+
+
+
+
+
+		
 	</div>
 
 	{% include "foot.html" %}

@@ -71,6 +71,15 @@ $(function(){
 		window.location = "/populargenres";
 	});
 
+	$('#selectResultGroup').change(function() {
+		$('.result-group').hide();
+		if ($(this).val() == "all") {
+			$('.result-group').fadeIn();
+		} else {
+			$('#'+$(this).val()).fadeIn();
+		}
+	});
+
 });
 
 function toDataset(id) {

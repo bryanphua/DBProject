@@ -41,16 +41,16 @@
 				<br>
 				<p>{{ dataset_info.description }}</p>
 				<br>
-				<p>{{ dataset_info.genre }}</p>
+				<p>&nbsp;<i>#{{ dataset.genre }}</i></p>
 			</div>
 
 			<div id="comment">
 				<h4>Comments</h4>
 				<div id="commentListContainer">
-					<form class="" action="/comment/{{ dataset_info.id }}/" method="post">
+					<form class="form-container" action="/comment/{{ dataset_info.id }}/" method="post">
 						{% csrf_token %}
-						<textarea class="form-control" rows="4" name="content" maxlength="230"></textarea>
-						<input type="submit" class="btn btn-success" value="Comment">
+						<textarea class="form-control textarea" rows="4" name="content" maxlength="230"></textarea>
+						<input type="submit" class="btn btn-success button" value="Comment">
 					</form>
 					<ul id="commentList">
 						{% if not comments %}
@@ -75,7 +75,7 @@
 					<li>
 						<div class="recommended-item" onclick="toDataset({{dataset.id}})">
 							<p><b>{{ dataset.name }}</b><br>
-								{{ dataset.genre }}</p>
+							<p>&nbsp;<i>#{{ dataset.genre }}</i></p>
 						</div>
 					</li>
 					{% endif %}
