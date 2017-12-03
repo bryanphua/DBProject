@@ -60,15 +60,15 @@ $(function(){
 	});
 
 	$('#popularDatasets').click(function() {
-		window.location = "/populardatasets";
+		window.location = "/statistics/datasets";
 	});
 
 	$('#popularUsers').click(function() {
-		window.location = "/popularusers";
+		window.location = "/statistics/rusers";
 	});
 
 	$('#popularGenres').click(function() {
-		window.location = "/populargenres";
+		window.location = "/statistics/genres";
 	});
 
 });

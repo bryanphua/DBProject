@@ -385,6 +385,10 @@ def total_rating_comments(comment):
     return 0
 
 def popular_datasets(request):
+    if (not request.user.is_authenticated) or (not request.user.is_staff):
+        messages.info(request, "You do not have access to the page!")
+        return redirect("/")
+    
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM dataset_list ORDER BY follower_count DESC LIMIT 10")
         popular_datasets = dictfetchall(cursor)
@@ -395,23 +399,22 @@ def popular_datasets(request):
             cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
 
-        
     context = { 
-        'auth': False, 
-        'popular_datasets': popular_datasets
+        'popular_datasets': popular_datasets,
+        'auth': True, 
+        'user': request.user
      }
-     
-    if request.user.is_authenticated:
-        context['auth'] = True
-        context['user'] = request.user
     return render(request, 'popular_datasets.html', context)
 
 def popular_users(request):
+    if (not request.user.is_authenticated) or (not request.user.is_staff):
+        messages.info(request, "You do not have access to the page!")
+        return redirect("/")
+    
     with connection.cursor() as cursor:
         cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY total_followers DESC")
         popular_users = dictfetchall(cursor)
 
-    print(popular_users)
     for user in popular_users:
         username = auth_user.get_entries_dictionary(
             column_list=['username'], max_rows=1,
@@ -419,31 +422,35 @@ def popular_users(request):
         user['username'] = username['username']
         
     context = { 
-        'auth': False, 
-        'popular_users': popular_users
+        'popular_users': popular_users,
+        'auth': True, 
+        'user': request.user
      }
      
-    if request.user.is_authenticated:
-        context['auth'] = True
-        context['user'] = request.user
-    return render(request, 'popular_users.html') #removed context returned
+    return render(request, 'popular_users.html', context)
 
 def popular_genres(request):
+    if (not request.user.is_authenticated) or (not request.user.is_staff):
+        messages.info(request, "You do not have access to the page!")
+        return redirect("/")
+
     with connection.cursor() as cursor:
         cursor.execute("SELECT genre, COUNT(genre) num_of_datasets FROM dataset_list GROUP BY genre ORDER BY num_of_datasets DESC")
         popular_genres = dictfetchall(cursor)
 
     context = { 
-        'auth': False, 
-        'popular_genres': popular_genres
-     }
-     
-    if request.user.is_authenticated:
-        context['auth'] = True
-        context['user'] = request.user
-    return render(request, 'popular_genres.html') #removed context returned
+        'popular_genres': popular_genres,
+        'auth': True, 
+        'user': request.user
+    }
+
+    return render(request, 'popular_genres.html', context)
 
 def statistics(request):
+    if (not request.user.is_authenticated) or (not request.user.is_staff):
+        messages.info(request, "You do not have access to the page!")
+        return redirect("/")
+    
     popular_datasets = dataset_list.get_entries_dictionary(
         column_list=['id','creator_user_id','name', 'description', 'genre'],max_rows=None)
         
@@ -454,13 +461,11 @@ def statistics(request):
         dataset['creator_name'] = creator_name['username']
         
     context = { 
-        'auth': False, 
-        'popular_datasets': reversed(popular_datasets)
+        'popular_datasets': reversed(popular_datasets),
+        'auth': True, 
+        'user': request.user
      }
-     
-    if request.user.is_authenticated:
-        context['auth'] = True
-        context['user'] = request.user
+
     return render(request, 'statistics.html') #removed context returned
 
 def dictfetchall(cursor):
