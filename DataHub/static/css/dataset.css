@@ -37,6 +37,22 @@
 	background-color: #e0e0e2;
 }
 
+.form-container {
+	display: grid;
+	grid-template-columns: 85% 15%;
+	grid-template-areas: 
+		"textarea button";
+		padding-bottom: 20px;
+}
+
+.textarea {
+	grid-area: textarea;
+}
+
+.button {
+	grid-area: button;
+}
+
 #comment {
 	margin-top: 50px;
 }

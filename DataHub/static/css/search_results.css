@@ -1,0 +1,49 @@
+#everything {
+	padding-top: 150px;
+}
+
+.listUserPic {
+	grid-area: userPic;
+}
+
+.listDetails {
+	grid-area: details;
+}
+
+.listFollowStatus {
+	grid-area: followStatus;
+}
+
+.dataset {
+	display: grid;
+	grid-template-columns: 15% 75% 10%;
+	grid-template-rows: auto;
+	grid-template-areas: 
+		"userPic details followStatus";
+	padding: 5px 5px 5px 5px;
+}
+
+.results-list {
+	list-style-type: none;
+	padding: 0 0 0 0;
+}
+
+.results-list li {
+	border-radius: 10px;
+}
+
+.results-list li:hover {
+	background-color: #e0e0e2;
+}
+
+.nav-link .disabled {
+	cursor: none;
+}
+
+.nav-pills .nav-link.active {
+	background: #3E3D5A;
+}
+
+#selectResultGroup {
+	margin-bottom: 10px;
+}
