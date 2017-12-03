@@ -96,7 +96,7 @@ def profile(request):
         column_list=['name'],max_rows=1,row_numbers=False,
         cond_dict={'id': comment['dataset_id']})
         comment['dataset_name'] = dataset['name']
-        comment['ratings'] = total_rating_comments(comment['id'])
+        comment['ratings'] = comments_vote.get_entries(cond_dict={'comment_id': comment['id']}, row_numbers=True)
     
     context = {
         'auth': True,
@@ -130,7 +130,7 @@ def dataset(request, dataset):
             column_list=['username'],max_rows=1,
             cond_dict={ 'id': comment['user_id'] })
         comment['username'] = commenter_name['username']
-        comment['ratings'] = total_rating_comments(comment['id'])
+        comment['ratings'] = comments_vote.get_entries(cond_dict={'comment_id': comment['id']}, row_numbers=True)
     
     followers = user_dataset_following.get_entries(
         cond_dict={ 'dataset_id':dataset },
@@ -310,7 +310,7 @@ def user(request, username):
         dataset = dataset_list.get_entries_dictionary(
         column_list=['name'],max_rows=1,cond_dict={'id': comment['dataset_id']})
         comment['dataset_name'] = dataset['name']
-        comment['ratings'] = total_rating_comments(comment['id'])
+        comment['ratings'] = comments_vote.get_entries(cond_dict={'comment_id': comment['id']}, row_numbers=True)
     
     context = {
         'auth': False,
@@ -375,14 +375,6 @@ def rate_comment(request, comment, rate, origin):
         })
     messages.success(request, "You have voted!")
     return redirect('/dataset/' + origin)
-
-def total_rating_comments(comment):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT sum(vote) FROM comments_vote WHERE comment_id = %s", [comment])
-        row = cursor.fetchone()
-    if row[0]:
-        return row[0]
-    return 0
 
 def popular_datasets(request):
     with connection.cursor() as cursor:
