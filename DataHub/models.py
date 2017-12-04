@@ -17,6 +17,8 @@ class dataset_list(Model):
     description = Column('description','char')
     genre = Column('genre','char',not_null=True)
     rating = Column('rating','float')
+    follower_count = Column('follower_count','int')
+    datetime_created = Column('datetime_created','datetime')
 
 class user_dataset_following(Model):
     user_id = Column('user_id','int',not_null=True)
