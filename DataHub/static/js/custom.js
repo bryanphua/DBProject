@@ -83,13 +83,25 @@ $(function(){
 	$('#search_filter').change(function() {
 		var url = new URL(window.location.href);
 		var q = url.searchParams.get("q");
+		var sort = url.searchParams.get("sort");
 
 		name = $('#checkbox_name').is(":checked")
 		creator = $('#checkbox_creator').is(":checked")
 		genre = $('#checkbox_genre').is(":checked")
 		
-		// filter = $('#dropdown_filter option:selected').val()
-		window.location = "/search/?q=" + q + "&name=" + name + "&username=" + creator + "&genre=" + genre
+		window.location = "/search/?q=" + q + "&name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+	});
+	
+	$('#search_sorting').change(function() {
+		var url = new URL(window.location.href);
+		var q = url.searchParams.get("q");
+		var name = url.searchParams.get("name");
+		var creator = url.searchParams.get("username");
+		var genre = url.searchParams.get("genre");
+
+		sort = $('#search_sorting option:selected').val()
+		console.log(sort);
+		window.location = "/search/?q=" + q + "&name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
 	});
 
 });

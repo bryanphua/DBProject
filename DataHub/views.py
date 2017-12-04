@@ -6,7 +6,7 @@ from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
-def search_dataset(request, keyword, columns):
+def search_dataset(request, keyword, columns, sort):
     # Takes in attributes we're interested in as a list 
     if len(columns) == 0:
         columns = ['name', 'username', 'genre']
@@ -19,8 +19,14 @@ def search_dataset(request, keyword, columns):
         else:
             condition += " OR " + str(columns[i]) + " LIKE %s"
             
+    # Also takes in sorting method as a string
+    if sort != None and sort !='null':
+        sort = sort.split('-')
+        condition += " ORDER BY " + str(sort[0]) + " " + str(sort[1])
+        
     with connection.cursor() as cursor:
         statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
+        print(statement)
         cursor.execute(statement, [keyword]*len(columns))
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
@@ -51,13 +57,15 @@ def search(request):
     if request.GET.get('genre') == 'true':
         filters.append('genre')
         context['filter_genre'] = True
+    sort = request.GET.get('sort')
+    context['sort'] = sort
     
     if request.user.is_authenticated:
         context['auth'] = True
     keyword = '%' + keyword + '%'
     
     # Getting relevant datasets (general)
-    context['datasets'] = search_dataset(request, keyword, filters)
+    context['datasets'] = search_dataset(request, keyword, filters, sort)
     
     # Getting relevant users
     with connection.cursor() as cursor:
