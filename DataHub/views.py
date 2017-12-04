@@ -82,7 +82,7 @@ def index(request):
     context = { 'auth': False }
     # Retrieving information of new datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id"
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created ASC"
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
@@ -146,7 +146,7 @@ def dataset(request, dataset):
     context = {}
     
     dataset_info = dataset_list.get_entries_dictionary(
-    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre', 'rating'], 
+    column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre', 'rating', 'datetime_created', 'follower_count'], 
     cond_dict={'id': dataset }, max_rows=1)
 
     user_info = auth_user.get_entries_dictionary(
@@ -165,11 +165,6 @@ def dataset(request, dataset):
             cond_dict={ 'id': comment['user_id'] })
         comment['username'] = commenter_name['username']
         comment['ratings'] = total_rating_comments(comment['id'])
-    
-    followers = user_dataset_following.get_entries(
-        cond_dict={ 'dataset_id':dataset },
-        max_rows=None,row_numbers=True)
-    context['followers'] = followers
     
     recommended = dataset_list.get_entries_dictionary(
         column_list=['id','name','genre'],

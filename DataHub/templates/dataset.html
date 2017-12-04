@@ -21,6 +21,7 @@
 				<h1>{{ dataset_info.name }}</h1>
 				<hr>
 				<p>Created by: <a href="/user/{{ dataset_info.username }}/">{{ dataset_info.username }}</a></p>
+				<p>Created on: {{ dataset_info.datetime_created }}</p>
 				<p>Approved by: {{ dataset_info.endorsed_by }} </p>
 				<form class="" action="/dataset/rate/{{ dataset_info.id }}/" method="post">
 					{% csrf_token %}
@@ -37,7 +38,7 @@
 						{% endif %}
 					</p>
 				</form>
-				<p>Followed by: {{ followers }}</p>
+				<p>Followed by: {{ dataset_info.follower_count }}</p>
 				<br>
 				<p>{{ dataset_info.description }}</p>
 				<br>
