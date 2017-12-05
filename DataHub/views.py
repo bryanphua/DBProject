@@ -450,8 +450,18 @@ def popular_users(request):
         messages.info(request, "You do not have access to the page!")
         return redirect("/")
     
+    context = {}
+    sort = request.GET.get('sort')
+    context['sort'] = sort
+    
+    # Default sorting 
+    condition = "(follower_count+1)*(rating+1)"
+    if sort != None and sort !='null':
+        sort = sort.split('-')
+        condition = str(sort[0])
+    
     with connection.cursor() as cursor:
-        cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY total_followers DESC")
+        cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, CAST(SUM(rating) AS SIGNED) total_ratings, CAST(SUM(" + condition + ") AS SIGNED) orderingCriteria, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY orderingCriteria DESC")
         popular_users = dictfetchall(cursor)
 
     for user in popular_users:
@@ -460,11 +470,9 @@ def popular_users(request):
             cond_dict={ 'id': user['creator_user_id'] })
         user['username'] = username['username']
         
-    context = { 
-        'popular_users': popular_users,
-        'auth': True, 
-        'user': request.user
-     }
+    context['popular_users'] = popular_users
+    context['auth'] = True
+    context['user'] = request.user
      
     return render(request, 'popular_users.html', context)
 
