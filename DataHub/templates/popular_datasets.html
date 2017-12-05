@@ -12,24 +12,7 @@
 		{% include "messages.html" %}
 		<a href="/statistics/">Back</a>
 		<h1>Most Popular Datasets</h1>
-		<br/>
-		<p>
-			<form>
-				Sort by: &nbsp;
-					<select class="" name="sorting" id="stats_sorting">
-						{% if sort == 'null' %}<option value="null" selected="selected">Default</option>
-						{% else %}<option value="null">Default</option>{% endif %}
-						
-						{% if sort == 'follower_count-DESC'%}
-						<option value="follower_count-DESC" selected="selected">Followers</option>
-						{% else %}<option value="follower_count-DESC">Followers</option>{% endif %}
-						
-						{% if sort == 'rating-DESC'%}
-						<option value="rating-DESC" selected="selected">Ratings</option>
-						{% else %}<option value="rating-DESC">Ratings</option>{% endif %}
-					</select>
-			</form>
-		</p>
+		{% include "sorting.html" %}
 		<br>
 		<ol id="mostPopularList">
 			{% for dataset in popular_datasets %}

@@ -11,7 +11,8 @@
 	<div class="container" id="everything">
 		<a href="/statistics/">Back</a>
 		<h1>Most Popular Users</h1>
-		<br/>
+		{% include "sorting.html" %}
+		<br>
 		<ol id="mostPopularList">
       {% for user in popular_users %}
 			<li>
