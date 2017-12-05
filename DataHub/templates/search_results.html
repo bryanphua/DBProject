@@ -8,10 +8,10 @@
 <body id="page-top">
 	{% include "nav_bar.html" %}
 	<div class="container" id="everything">
+		{% include "messages.html" %}
 		<h1>Search results</h1>
 		<p>{{ datasets|length }} results for "{{ keyword }}"</p>
 		<hr>
-		{% include "messages.html" %}
 		<h2>Datasets</h2>
 		<p>
 			<form id="search_filter">

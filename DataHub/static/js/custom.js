@@ -103,6 +103,27 @@ $(function(){
 		console.log(sort);
 		window.location = "/search/?q=" + q + "&name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
 	});
+	
+	$('#stats_filter').change(function() {
+		var url = new URL(window.location.href);
+		var sort = url.searchParams.get("sort");
+
+		name = $('#checkbox_name').is(":checked")
+		creator = $('#checkbox_creator').is(":checked")
+		genre = $('#checkbox_genre').is(":checked")
+		
+		window.location = "/statistics/datasets/?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+	});
+	
+	$('#stats_sorting').change(function() {
+		var url = new URL(window.location.href);
+		var name = url.searchParams.get("name");
+		var creator = url.searchParams.get("username");
+		var genre = url.searchParams.get("genre");
+
+		sort = $('#stats_sorting option:selected').val()
+		window.location = "/statistics/datasets/?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+	});
 
 });
 
