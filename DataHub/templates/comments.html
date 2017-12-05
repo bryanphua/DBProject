@@ -19,19 +19,21 @@
       </div>
     </div>
     {% endif %}
-    {% if auth and comment.username != user.username and user_info.username != user.username %}
     <div class="comment-vote-status">
+      {% if auth and comment.username != user.username %}
       <div class="thumbs-up" onclick="comment_rate({{ comment.id }}, true,{{ comment.dataset_id }})">
         <i class="fa fa-thumbs-up"></i>
       </div>
       <div class="thumbs-down" onclick="comment_rate({{ comment.id }}, false,{{ comment.dataset_id }})">
         <i class="fa fa-thumbs-down"></i>
       </div>
+      {% endif %}
+      {% if user_info.username != user.username %}
       <div class="total-votes">
         <p>{{ comment.votes }} votes</p>
       </div>
+      {% endif %}
     </div>
-    {% endif %}
   </div>
   <hr/>
 </li>

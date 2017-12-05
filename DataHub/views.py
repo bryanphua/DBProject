@@ -140,26 +140,24 @@ def profile(request):
 def dataset(request, dataset):
     context = {}
     
+    # Retrieving information regarding dataset
     dataset_info = dataset_list.get_entries_dictionary(
     column_list=['id','name', 'creator_user_id', 'endorsed_by', 'description', 'genre', 'rating', 'datetime_created', 'follower_count'], 
     cond_dict={'id': dataset }, max_rows=1)
-
+    
+    # Getting username of dataset creator
     user_info = auth_user.get_entries_dictionary(
         column_list=['username'],max_rows=1,
         cond_dict={ 'id': dataset_info['creator_user_id'] })
     dataset_info['username'] = user_info['username']
     
-    dataset_comments = comments.get_entries_dictionary(
-        column_list=['id','user_id','dataset_id','content'],max_rows=None,
-        cond_dict={ 'dataset_id':dataset })
-    context['comments'] = dataset_comments
-    
-    for comment in dataset_comments:
-        commenter_name = auth_user.get_entries_dictionary(
-            column_list=['username'],max_rows=1,
-            cond_dict={ 'id': comment['user_id'] })
-        comment['username'] = commenter_name['username']
-        comment['ratings'] = total_rating_comments(comment['id'])
+    # Retrieving comments in dataset (CV is a view we created)
+    with connection.cursor() as cursor:
+        statement = "SELECT username, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset)
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    context['comments'] = values
     
     recommended = dataset_list.get_entries_dictionary(
         column_list=['id','name','genre'],
@@ -327,14 +325,13 @@ def user(request, username):
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     following_datasets = values
     
-    user_comments = comments.get_entries_dictionary(
-    column_list=['id','dataset_id','content'],cond_dict={'user_id':user_info['id']},max_rows=None)
-    
-    for comment in user_comments:
-        dataset = dataset_list.get_entries_dictionary(
-        column_list=['name'],max_rows=1,cond_dict={'id': comment['dataset_id']})
-        comment['dataset_name'] = dataset['name']
-        comment['ratings'] = total_rating_comments(comment['id'])
+    # Retrieving comments in dataset (CV is a view we created)
+    with connection.cursor() as cursor:
+        statement = "SELECT dataset_id, content, coalesce(CV.votes, 0) AS votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(user_info['id'])
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    user_comments = values
     
     context = {
         'auth': False,
@@ -399,14 +396,6 @@ def rate_comment(request, comment, rate, origin):
         })
     messages.success(request, "You have voted!")
     return redirect('/dataset/' + origin)
-
-def total_rating_comments(comment):
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT sum(vote) FROM comments_vote WHERE comment_id = %s", [comment])
-        row = cursor.fetchone()
-    if row[0]:
-        return row[0]
-    return 0
 
 def popular_datasets(request):
     if (not request.user.is_authenticated) or (not request.user.is_staff):
