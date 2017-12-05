@@ -25,9 +25,21 @@
 					</div>
 					<div class="list-no-datasets">
 						<p>{{ user.num_of_datasets }} Datasets</p>
+						<p> 
+							{% for i in "12345" %}
+								{% if forloop.counter0 < user.avg_ratings %}
+									<i class="fa fa-star"></i>
+								{% else %}
+									<i class="fa fa-star-o"></i>
+								{% endif %}
+							{% endfor %}
+							{% if user.avg_ratings == 0 %}
+							&nbsp;(No ratings yet)
+							{% endif %}
+						</p>
 					</div>
 					<div class="list-no-follows">
-						<p>{{ user.total_followers }} Datasets Follows</p>
+						<p>{{ user.total_followers }} Followwers</p>
 					</div>
 				</div>
 				<hr/>

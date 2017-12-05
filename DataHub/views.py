@@ -455,13 +455,18 @@ def popular_users(request):
     context['sort'] = sort
     
     # Default sorting 
-    condition = "(follower_count+1)*(rating+1)"
+    condition = " CAST(SUM((follower_count+1)*(rating+1)) AS SIGNED) default_order,"
+    criteria = "default_order"
     if sort != None and sort !='null':
+        condition = ""
         sort = sort.split('-')
-        condition = str(sort[0])
+        if str(sort[0]) == 'rating':
+            criteria = "avg_ratings"
+        elif str(sort[0]) == 'follower_count':
+            criteria = "total_followers"
     
     with connection.cursor() as cursor:
-        cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, CAST(AVG(rating) AS SIGNED) avg_ratings, CAST(SUM(" + condition + ") AS SIGNED) orderingCriteria, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY orderingCriteria DESC")
+        cursor.execute("SELECT creator_user_id,"+ condition +" CAST(SUM(follower_count) AS SIGNED) total_followers, CAST(AVG(rating) AS SIGNED) avg_ratings, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY "+ criteria +" DESC")
         popular_users = dictfetchall(cursor)
 
     for user in popular_users:
@@ -480,16 +485,27 @@ def popular_genres(request):
     if (not request.user.is_authenticated) or (not request.user.is_staff):
         messages.info(request, "You do not have access to the page!")
         return redirect("/")
-
+    
+    context = {}
+    sort = request.GET.get('sort')
+    context['sort'] = sort
+    
+    # Default sorting 
+    condition = 'num_of_datasets'
+    if sort != None and sort !='null':
+        sort = sort.split('-')
+        if str(sort[0]) == 'rating':
+            condition = 'avg_rating'
+        elif str(sort[0]) == 'follower_count':
+            condition = 'followers'
+            
     with connection.cursor() as cursor:
-        cursor.execute("SELECT genre, COUNT(genre) num_of_datasets FROM dataset_list GROUP BY genre ORDER BY num_of_datasets DESC")
+        cursor.execute("SELECT genre, COUNT(genre) num_of_datasets, AVG(rating) avg_rating, SUM(follower_count) followers FROM dataset_list GROUP BY genre ORDER BY "+ condition +" DESC")
         popular_genres = dictfetchall(cursor)
 
-    context = { 
-        'popular_genres': popular_genres,
-        'auth': True, 
-        'user': request.user
-    }
+    context['popular_genres'] = popular_genres
+    context['auth'] = True
+    context['user'] = request.user
 
     return render(request, 'popular_genres.html', context)
 

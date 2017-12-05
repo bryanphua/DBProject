@@ -14,7 +14,7 @@
 		{% include "sorting.html" %}
 		<br>
 		<ol id="mostPopularList">
-            {% for genre in popular_genres %}
+    {% for genre in popular_genres %}
 			<li>
 				<div class="popular-genre">
 					<div class="list-genre-name">
@@ -22,6 +22,22 @@
 					</div>
 					<div class="list-no-datasets">
 						<p>{{ genre.num_of_datasets }} Datasets</p>
+					</div>
+					<div class="list-no-followers">
+						<p>{{ genre.followers }} Followers</p>
+					</div>
+					<div class="list-avg-ratings">
+						<p>
+							{% for i in "12345" %}
+								{% if forloop.counter0 < genre.avg_rating %}
+									<i class="fa fa-star"></i>
+								{% else %}
+									<i class="fa fa-star-o"></i>
+								{% endif %}
+							{% endfor %}
+							{% if genre.avg_rating == 0 %}
+							&nbsp;(No ratings yet)
+							{% endif %}</p>
 					</div>
 				</div>
 				<hr/>

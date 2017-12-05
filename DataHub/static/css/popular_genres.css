@@ -13,13 +13,22 @@
 	align-self: center;
 }
 
+.list-avg-ratings {
+	grid-area: avgRatings;
+	align-self: center;
+}
+
+.list-no-followers {
+	grid-area: noFollowers;
+	align-self: center;
+}
 
 .popular-genre {
 	display: grid;
-	grid-template-columns: 80% 20%;
+	grid-template-columns: 50% 20% 20% 10%;
 	grid-template-rows: auto;
 	grid-template-areas: 
-		"genreName noDatasets";
+		"genreName noDatasets noFollowers avgRatings";
 	padding: 5px 5px 5px 5px;
 }
 
