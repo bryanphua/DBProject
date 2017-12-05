@@ -211,8 +211,7 @@ def dataset(request, dataset):
     context['comments'] = values
     
     recommended = dataset_list.get_entries_dictionary(
-        column_list=['id','name','genre'],
-        cond_dict={'genre':dataset_info['genre']})
+        column_list=['id','name','genre'],max_rows=5,cond_dict={'genre':dataset_info['genre']})
     context['recommended'] = recommended
     
     if not request.user.is_authenticated or not dataset:
