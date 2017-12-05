@@ -505,7 +505,7 @@ def statistics(request):
         'user': request.user
      }
 
-    return render(request, 'statistics.html') #removed context returned
+    return render(request, 'statistics.html', context)
 
 def dictfetchall(cursor):
     "Return all rows from a cursor as a dict"
