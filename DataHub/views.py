@@ -121,7 +121,7 @@ def profile(request):
     
     # Retrieving information of comments (CV is a view we created)
     with connection.cursor() as cursor:
-        statement = "SELECT C.id as id, dataset_id, content, COALESCE(CV.votes, 0) as votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(request.user.id)
+        statement = "SELECT C.id as id, dataset_id, content, user_id, COALESCE(CV.votes, 0) as votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(request.user.id)
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
@@ -153,7 +153,7 @@ def dataset(request, dataset):
     
     # Retrieving comments in dataset (CV is a view we created)
     with connection.cursor() as cursor:
-        statement = "SELECT username, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset)
+        statement = "SELECT C.id as id, user_id, username, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset)
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
@@ -327,7 +327,7 @@ def user(request, username):
     
     # Retrieving comments in dataset (CV is a view we created)
     with connection.cursor() as cursor:
-        statement = "SELECT dataset_id, content, coalesce(CV.votes, 0) AS votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(user_info['id'])
+        statement = "SELECT C.id as id, user_id, dataset_id, content, coalesce(CV.votes, 0) AS votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(user_info['id'])
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]

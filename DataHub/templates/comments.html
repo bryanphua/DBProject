@@ -20,7 +20,7 @@
     </div>
     {% endif %}
     <div class="comment-vote-status">
-      {% if auth and comment.username != user.username %}
+      {% if auth and comment.user_id != user.id %}
       <div class="thumbs-up" onclick="comment_rate({{ comment.id }}, true,{{ comment.dataset_id }})">
         <i class="fa fa-thumbs-up"></i>
       </div>
