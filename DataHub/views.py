@@ -507,6 +507,7 @@ def dictfetchall(cursor):
 
 def staff_sign_up(request):
     if request.user.is_authenticated:
+        messages.info(request, "Please sign out before trying to sign up!")
         return redirect('/')
     elif request.method == 'GET':
         return render(request, 'staff_sign_up.html')
