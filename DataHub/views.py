@@ -80,9 +80,9 @@ def search(request):
 # Populating data for our index page
 def index(request):
     context = { 'auth': False }
-    # Retrieving information of new datasets
+    # Retrieving information of top 10 newest datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created ASC"
+        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
@@ -98,7 +98,7 @@ def index(request):
                 { 'dataset_id': dataset['id'], 'user_id': request.user.id })
             dataset['following'] = following
     
-    context['popular_datasets'] = reversed(new_datasets)
+    context['popular_datasets'] = new_datasets
      
     return render(request, 'index.html', context)
 
