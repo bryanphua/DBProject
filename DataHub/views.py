@@ -6,39 +6,29 @@ from django.contrib.auth import authenticate, login, logout
 from DataHub.models import auth_user, dataset_list, user_dataset_following, comments, dataset_rating, comments_vote
 from ModelClass.ModelClass import InvalidColumnNameException, UniqueConstraintException, NotNullException
 
-def search_dataset(request, keyword, columns, sort):
-    # Takes in attributes we're interested in as a list 
-    if len(columns) == 0:
-        columns = ['name', 'username', 'genre']
-        
-    # Formulating our WHERE condition
-    condition = ""
-    for i in range(len(columns)):
-        if i == 0:
-            condition += str(columns[i]) + " LIKE %s"
-        else:
-            condition += " OR " + str(columns[i]) + " LIKE %s"
-            
-    # Also takes in sorting method as a string
-    if sort != None and sort !='null':
-        sort = sort.split('-')
-        condition += " ORDER BY " + str(sort[0]) + " " + str(sort[1])
+def index(request):
+    context = { 'auth': False }
     
     following = ""
     if request.user.is_authenticated:
+        context['auth'] = True
+        context['user'] = request.user
         # check if sessions user is following the dataset
         # isFollowing is a function created in our schema
         following = ", isFollowing(" + str(request.user.id) + ", L.id) AS following"
     
+    # Retrieving information of top 10 newest datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating"+ following +" FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
-        cursor.execute(statement, [keyword]*len(columns))
+        statement = "SELECT L.id, name, description, username, genre, rating" + following + " FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
+        cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    new_datasets = values
     
-    return values
+    context['popular_datasets'] = new_datasets
+     
+    return render(request, 'index.html', context)
 
-# Search function
 def search(request):
     keyword = request.GET.get('q')
     if not keyword:
@@ -75,29 +65,38 @@ def search(request):
 
     return render(request, 'search_results.html', context)
 
-# Populating data for our index page
-def index(request):
-    context = { 'auth': False }
+# A function called by search() with filters and sorting applied
+def search_dataset(request, keyword, columns, sort):
+    # Takes in attributes we're interested in as a list 
+    if len(columns) == 0:
+        columns = ['name', 'username', 'genre']
+        
+    # Formulating our WHERE condition
+    condition = ""
+    for i in range(len(columns)):
+        if i == 0:
+            condition += str(columns[i]) + " LIKE %s"
+        else:
+            condition += " OR " + str(columns[i]) + " LIKE %s"
+            
+    # Also takes in sorting method as a string
+    if sort != None and sort !='null':
+        sort = sort.split('-')
+        condition += " ORDER BY " + str(sort[0]) + " " + str(sort[1])
     
     following = ""
     if request.user.is_authenticated:
-        context['auth'] = True
-        context['user'] = request.user
         # check if sessions user is following the dataset
         # isFollowing is a function created in our schema
         following = ", isFollowing(" + str(request.user.id) + ", L.id) AS following"
     
-    # Retrieving information of top 10 newest datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating" + following + " FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
-        cursor.execute(statement)
+        statement = "SELECT L.id, name, description, username, genre, rating"+ following +" FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
+        cursor.execute(statement, [keyword]*len(columns))
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
-    new_datasets = values
     
-    context['popular_datasets'] = new_datasets
-     
-    return render(request, 'index.html', context)
+    return values
 
 def profile(request):
     if not request.user.is_authenticated:
@@ -135,6 +134,48 @@ def profile(request):
         'following_datasets': following_datasets,
         'comments': user_comments,
     }
+    return render(request, 'profile.html', context)
+
+def user(request, username):
+    if request.user.username == username:
+        return redirect('/profile/')
+    
+    user_info = auth_user.get_entries_dictionary(
+        column_list=['id','email','first_name','last_name'], 
+        max_rows=1,
+        cond_dict={ 'username': username })
+    user_info['username'] = username
+    
+    created_datasets = dataset_list.get_entries_dictionary(
+        column_list=['id','name', 'description', 'genre'], 
+        cond_dict={'creator_user_id': user_info['id'] }, max_rows=None)
+    
+    # Retrieving information of followed datasets
+    with connection.cursor() as cursor:
+        statement = "SELECT dataset_id, name, description, username, genre FROM user_dataset_following F JOIN dataset_list L ON F.dataset_id = L.id JOIN auth_user U ON L.creator_user_id=U.id WHERE F.user_id =" + str(user_info['id'])
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    following_datasets = values
+    
+    # Retrieving comments in dataset (CV is a view we created)
+    with connection.cursor() as cursor:
+        statement = "SELECT C.id as id, user_id, dataset_id, content, coalesce(CV.votes, 0) AS votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(user_info['id'])
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    user_comments = values
+    
+    context = {
+        'auth': False,
+        'user_info': user_info,
+        'created_datasets': created_datasets, 
+        'following_datasets': following_datasets,
+        'comments': user_comments,
+    }
+    
+    if request.user.is_authenticated:
+        context['auth'] = True
     return render(request, 'profile.html', context)
 
 def dataset(request, dataset):
@@ -253,6 +294,7 @@ def sign_out(request):
     messages.success(request, 'You have signed out successfully')
     return redirect('/')
 
+# called when user tries to follow a dataset
 def follow(request, id, origin):
     try:
         user_dataset_following.insert_new_entry({
@@ -268,6 +310,7 @@ def follow(request, id, origin):
     elif origin == 'dataset':
         return redirect('/dataset/' + id)
     
+# called when user tries to unfollow a dataset
 def unfollow(request, id, origin):
     try:
         user_dataset_following.delete_entries({
@@ -284,7 +327,8 @@ def unfollow(request, id, origin):
         return redirect('/dataset/' + id)
     elif origin == 'profile':
         return redirect('/profile/')
-    
+
+# called when user tries to comment 
 def comment(request, dataset):
     if not request.user.is_authenticated:
         messages.info(request, 'Please login to comment!')
@@ -302,59 +346,20 @@ def comment(request, dataset):
     except ProgrammingError:
         messages.info(request, 'Invalid characters used.')
     return redirect('/dataset/' + dataset)
-    
-def user(request, username):
-    if request.user.username == username:
-        return redirect('/profile/')
-    
-    user_info = auth_user.get_entries_dictionary(
-        column_list=['id','email','first_name','last_name'], 
-        max_rows=1,
-        cond_dict={ 'username': username })
-    user_info['username'] = username
-    
-    created_datasets = dataset_list.get_entries_dictionary(
-        column_list=['id','name', 'description', 'genre'], 
-        cond_dict={'creator_user_id': user_info['id'] }, max_rows=None)
-    
-    # Retrieving information of followed datasets
-    with connection.cursor() as cursor:
-        statement = "SELECT dataset_id, name, description, username, genre FROM user_dataset_following F JOIN dataset_list L ON F.dataset_id = L.id JOIN auth_user U ON L.creator_user_id=U.id WHERE F.user_id =" + str(user_info['id'])
-        cursor.execute(statement)
-        keys = [d[0] for d in cursor.description]
-        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
-    following_datasets = values
-    
-    # Retrieving comments in dataset (CV is a view we created)
-    with connection.cursor() as cursor:
-        statement = "SELECT C.id as id, user_id, dataset_id, content, coalesce(CV.votes, 0) AS votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(user_info['id'])
-        cursor.execute(statement)
-        keys = [d[0] for d in cursor.description]
-        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
-    user_comments = values
-    
-    context = {
-        'auth': False,
-        'user_info': user_info,
-        'created_datasets': created_datasets, 
-        'following_datasets': following_datasets,
-        'comments': user_comments,
-    }
-    
-    if request.user.is_authenticated:
-        context['auth'] = True
-    return render(request, 'profile.html', context)
 
+# called when user tries to delete a dataset
 def delete_dataset(request, dataset):
     dataset_list.delete_entries({'id':dataset})
     messages.success(request, 'Dataset deleted')
     return redirect('/profile/')
 
+# called when user tries to delete a comment
 def delete_comment(request, comment):
     comments.delete_entries({'id':comment})
     messages.success(request, 'Comment deleted')
     return redirect('/profile/')
 
+# called when user tries to rate a dataset
 def rate_dataset(request, dataset):
     rating = request.POST['rating']
     if not request.user.is_authenticated:
@@ -378,6 +383,7 @@ def rate_dataset(request, dataset):
     messages.success(request, "You have rated!")
     return redirect('/dataset/' + dataset)
 
+# called when user tries to rate a comment
 def rate_comment(request, comment, rate, origin):
     try:
         comments_vote.insert_new_entry({
