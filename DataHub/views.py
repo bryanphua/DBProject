@@ -23,20 +23,18 @@ def search_dataset(request, keyword, columns, sort):
     if sort != None and sort !='null':
         sort = sort.split('-')
         condition += " ORDER BY " + str(sort[0]) + " " + str(sort[1])
-        
+    
+    following = ""
+    if request.user.is_authenticated:
+        # check if sessions user is following the dataset
+        # isFollowing is a function created in our schema
+        following = ", isFollowing(" + str(request.user.id) + ", L.id) AS following"
+    
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
-        print(statement)
+        statement = "SELECT L.id, name, description, username, genre, rating"+ following +" FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
         cursor.execute(statement, [keyword]*len(columns))
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
-    
-    for dataset in values:
-        if request.user.is_authenticated:
-            # check if session user is following the dataset
-            following = user_dataset_following.check_exists(
-                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
-            dataset['following'] = following
     
     return values
 
@@ -80,23 +78,22 @@ def search(request):
 # Populating data for our index page
 def index(request):
     context = { 'auth': False }
+    
+    following = ""
+    if request.user.is_authenticated:
+        context['auth'] = True
+        context['user'] = request.user
+        # check if sessions user is following the dataset
+        # isFollowing is a function created in our schema
+        following = ", isFollowing(" + str(request.user.id) + ", L.id) AS following"
+    
     # Retrieving information of top 10 newest datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
+        statement = "SELECT L.id, name, description, username, genre, rating" + following + " FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     new_datasets = values
-    
-    if request.user.is_authenticated:
-        context['auth'] = True
-        context['user'] = request.user
-        
-        for dataset in new_datasets:
-            # check if session user is following the dataset
-            following = user_dataset_following.check_exists(
-                { 'dataset_id': dataset['id'], 'user_id': request.user.id })
-            dataset['following'] = following
     
     context['popular_datasets'] = new_datasets
      
@@ -120,17 +117,15 @@ def profile(request):
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     following_datasets = values
+    print(following_datasets)
     
-    user_comments = comments.get_entries_dictionary(
-    column_list=['id','dataset_id','content'],
-    cond_dict={'user_id':request.user.id},max_rows=None, row_numbers=False)
-    
-    for comment in user_comments:
-        dataset = dataset_list.get_entries_dictionary(
-        column_list=['name'],max_rows=1,row_numbers=False,
-        cond_dict={'id': comment['dataset_id']})
-        comment['dataset_name'] = dataset['name']
-        comment['ratings'] = total_rating_comments(comment['id'])
+    # Retrieving information of comments (CV is a view we created)
+    with connection.cursor() as cursor:
+        statement = "SELECT C.id as id, dataset_id, content, COALESCE(CV.votes, 0) as votes, name FROM comments C JOIN dataset_list L ON C.dataset_id = L.id LEFT JOIN CV ON C.id = CV.comment_id WHERE C.user_id = " + str(request.user.id)
+        cursor.execute(statement)
+        keys = [d[0] for d in cursor.description]
+        values = [dict(zip(keys, row)) for row in cursor.fetchall()]
+    user_comments = values
     
     context = {
         'auth': True,
