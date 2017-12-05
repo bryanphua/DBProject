@@ -461,7 +461,7 @@ def popular_users(request):
         condition = str(sort[0])
     
     with connection.cursor() as cursor:
-        cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, CAST(SUM(rating) AS SIGNED) total_ratings, CAST(SUM(" + condition + ") AS SIGNED) orderingCriteria, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY orderingCriteria DESC")
+        cursor.execute("SELECT creator_user_id, CAST(SUM(follower_count) AS SIGNED) total_followers, CAST(AVG(rating) AS SIGNED) avg_ratings, CAST(SUM(" + condition + ") AS SIGNED) orderingCriteria, COUNT(creator_user_id) num_of_datasets FROM dataset_list GROUP BY creator_user_id ORDER BY orderingCriteria DESC")
         popular_users = dictfetchall(cursor)
 
     for user in popular_users:
