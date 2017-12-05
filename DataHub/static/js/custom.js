@@ -112,7 +112,7 @@ $(function(){
 		creator = $('#checkbox_creator').is(":checked")
 		genre = $('#checkbox_genre').is(":checked")
 		
-		window.location = "/statistics/datasets/?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+		window.location = window.location.pathname + "?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
 	});
 	
 	$('#stats_sorting').change(function() {
@@ -122,7 +122,7 @@ $(function(){
 		var genre = url.searchParams.get("genre");
 
 		sort = $('#stats_sorting option:selected').val()
-		window.location = "/statistics/datasets/?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+		window.location = window.location.pathname + "?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
 	});
 
 });
