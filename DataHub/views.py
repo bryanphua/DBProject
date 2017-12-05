@@ -418,8 +418,19 @@ def popular_datasets(request):
         messages.info(request, "You do not have access to the page!")
         return redirect("/")
     
+    context = {}
+    sort = request.GET.get('sort')
+    context['sort'] = sort
+    
+    # Default sorting 
+    condition = " ORDER BY ((follower_count+1)*(rating+1)) DESC"
+    if sort != None and sort !='null':
+        sort = sort.split('-')
+        condition = "ORDER BY " + str(sort[0]) + " " + str(sort[1])
+    
+    
     with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM dataset_list ORDER BY follower_count DESC LIMIT 10")
+        cursor.execute("SELECT * FROM dataset_list " + condition + " LIMIT 10")
         popular_datasets = dictfetchall(cursor)
 
     for dataset in popular_datasets:
@@ -428,11 +439,10 @@ def popular_datasets(request):
             cond_dict={ 'id': dataset['creator_user_id'] })
         dataset['creator_name'] = creator_name['username']
 
-    context = { 
-        'popular_datasets': popular_datasets,
-        'auth': True, 
-        'user': request.user
-     }
+    context['popular_datasets'] = popular_datasets
+    context['auth'] = True
+    context['user'] = request.user
+
     return render(request, 'popular_datasets.html', context)
 
 def popular_users(request):
