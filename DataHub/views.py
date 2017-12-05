@@ -192,9 +192,19 @@ def dataset(request, dataset):
         cond_dict={ 'id': dataset_info['creator_user_id'] })
     dataset_info['username'] = user_info['username']
     
+    # Sorting method for comments
+    sort = request.GET.get('sort')
+    context['sort'] = sort
+    
+    # Default sorting 
+    condition = ""
+    if sort != None and sort !='null':
+        sort = sort.split('-')
+        condition = " ORDER BY " + str(sort[0]) + " " + str(sort[1])
+    
     # Retrieving comments in dataset (CV is a view we created)
     with connection.cursor() as cursor:
-        statement = "SELECT C.id as id, user_id, username, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset)
+        statement = "SELECT C.id as id, user_id, username, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset) + condition
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
