@@ -89,6 +89,10 @@
 	grid-area: details;
 }
 
+.comment-content span {
+	font-size: 0.8rem;
+}
+
 .comment-vote-status {
 	grid-area: voteStatus;
 	display: grid;

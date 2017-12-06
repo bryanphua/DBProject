@@ -6,7 +6,9 @@
       <img src="{% static 'img/ProfilePic.png' %}"/>
     </div>
     <div class="comment-content">
-      <p><b><a href="/user/{{ comment.username }}">{{ comment.username }}</a><a href="/dataset/{{ comment.dataset_id }}">{{ comment.name }}</a></b></p>
+      <p><b><a href="/user/{{ comment.username }}">{{ comment.username }}</a><a href="/dataset/{{ comment.dataset_id }}">{{ comment.name }}</a></b>
+        <span>{{ comment.created }}</span>
+      </p>
       <p>{{ comment.content }}</p>
     </div>
     {% if user_info.username == user.username %}

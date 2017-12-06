@@ -204,7 +204,7 @@ def dataset(request, dataset):
     
     # Retrieving comments in dataset (CV is a view we created)
     with connection.cursor() as cursor:
-        statement = "SELECT C.id as id, user_id, username, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset) + condition
+        statement = "SELECT C.id as id, user_id, username, created, dataset_id, content, COALESCE(CV.votes, 0) AS votes FROM comments C JOIN auth_user U ON C.user_id = U.id LEFT JOIN CV ON C.id = CV.comment_id WHERE dataset_id = " + str(dataset) + condition
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
