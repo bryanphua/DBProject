@@ -19,7 +19,7 @@ def index(request):
     
     # Retrieving information of top 10 newest datasets
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating" + following + " FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
+        statement = "SELECT L.id, name, description, username, genre, rating, datetime_created" + following + " FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id ORDER BY datetime_created DESC LIMIT 10"
         cursor.execute(statement)
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]

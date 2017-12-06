@@ -21,6 +21,7 @@
 					</div>
 					<div class="listDetails">
 						<p><b><a href="/user/{{ dataset.username }}/">{{ dataset.username }}</a></b> {{ dataset.name }} </p>
+						<span>{{ dataset.datetime_created }}</span>
 						<p>Ratings:
 							{% for i in "12345" %}
 								{% if forloop.counter0 < dataset.rating %}

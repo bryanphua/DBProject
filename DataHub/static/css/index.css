@@ -40,3 +40,11 @@
 #mostPopularList li:hover {
 	background-color: #e0e0e2;
 }
+
+.listDetails p {
+	margin-bottom: 0rem;
+}
+
+.listDetails span {
+	font-size: 0.8rem;
+}
