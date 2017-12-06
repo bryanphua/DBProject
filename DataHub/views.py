@@ -91,7 +91,7 @@ def search_dataset(request, keyword, columns, sort):
         following = ", isFollowing(" + str(request.user.id) + ", L.id) AS following"
     
     with connection.cursor() as cursor:
-        statement = "SELECT L.id, name, description, username, genre, rating"+ following +" FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
+        statement = "SELECT L.id, name, description, username, genre, datetime_created, rating"+ following +" FROM dataset_list L JOIN auth_user U ON L.creator_user_id=U.id WHERE " + condition
         cursor.execute(statement, [keyword]*len(columns))
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
