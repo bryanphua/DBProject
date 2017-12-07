@@ -56,13 +56,13 @@
 					<form>
 					  Sort by: &nbsp;
 					    <select class="" name="sorting" id="stats_sorting">
-								{% if sort == 'created-ASC'%}
-					      <option value="created-ASC" selected="selected">Date (Oldest first)</option>
-					      {% else %}<option value="created-ASC">Date (Oldest first)</option>{% endif %}
-								
 								{% if sort == 'created-DESC'%}
 					      <option value="created-DESC" selected="selected">Date (Latest first)</option>
 					      {% else %}<option value="created-DESC">Date (Latest first)</option>{% endif %}
+								
+								{% if sort == 'created-ASC'%}
+					      <option value="created-ASC" selected="selected">Date (Oldest first)</option>
+					      {% else %}<option value="created-ASC">Date (Oldest first)</option>{% endif %}
 					      
 					      {% if sort == 'votes-DESC'%}
 					      <option value="votes-DESC" selected="selected">Votes (High to Low)</option>

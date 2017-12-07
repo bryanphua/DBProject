@@ -196,7 +196,7 @@ def dataset(request, dataset):
     context['sort'] = sort
     
     # Default sorting 
-    condition = ""
+    condition = " ORDER BY created DESC"
     if sort != None and sort !='null':
         sort = sort.split('-')
         condition = " ORDER BY " + str(sort[0]) + " " + str(sort[1])
@@ -353,6 +353,7 @@ def comment(request, dataset):
         })
     except ProgrammingError:
         messages.info(request, 'Invalid characters used.')
+    messages.success(request, 'You have commented!')
     return redirect('/dataset/' + dataset)
 
 # called when user tries to delete a dataset
