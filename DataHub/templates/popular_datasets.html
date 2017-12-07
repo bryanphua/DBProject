@@ -32,17 +32,13 @@
 		<ol id="mostPopularList">
 			{% for dataset in popular_datasets %}
 			<li>
-				{% if filters == 'genre' %}
-				<p>{{ dataset.genre }}</p>
-				{% elif filters == 'endorsed_by' %}
-				<p>{{ dataset.endorsed_by }}</p>
-				{% endif %}
 				<div class="dataset" onclick="toDataset('{{ dataset.id }}')">
 					<div class="listUserPic">
 						<img src="{% static 'img/ProfilePic.png' %}"/>
 					</div>
 					<div class="listDetails">
 						<p><b><a href="/user/{{ dataset.creator_name }}/">{{ dataset.creator_name }}</a></b> {{ dataset.name }} </p>
+						<span>Endorsed by: {{ dataset.endorsed_by }}</span>
 						<p>Ratings:
 							{% for i in "12345" %}
 								{% if forloop.counter0 < dataset.rating %}
