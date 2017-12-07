@@ -107,22 +107,15 @@ $(function(){
 	$('#stats_filter').change(function() {
 		var url = new URL(window.location.href);
 		var sort = url.searchParams.get("sort");
-
-		name = $('#checkbox_name').is(":checked")
-		creator = $('#checkbox_creator').is(":checked")
-		genre = $('#checkbox_genre').is(":checked")
-		
-		window.location = window.location.pathname + "?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+		var filters = $('#stats_filter option:selected').val()
+		window.location = window.location.pathname + "?filters=" + filters + "&sort=" + sort
 	});
 	
 	$('#stats_sorting').change(function() {
 		var url = new URL(window.location.href);
-		var name = url.searchParams.get("name");
-		var creator = url.searchParams.get("username");
-		var genre = url.searchParams.get("genre");
-
-		sort = $('#stats_sorting option:selected').val()
-		window.location = window.location.pathname + "?name=" + name + "&username=" + creator + "&genre=" + genre + "&sort=" + sort
+		var filters = url.searchParams.get("filters");
+		var sort = $('#stats_sorting option:selected').val()
+		window.location = window.location.pathname + "?filters=" + filters + "&sort=" + sort
 	});
 
 });

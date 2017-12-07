@@ -420,6 +420,9 @@ def popular_datasets(request):
     context = {}
     sort = request.GET.get('sort')
     context['sort'] = sort
+    filters = request.GET.get('filters')
+    context['filters'] = filters
+    print (filters)
     
     # Default sorting 
     condition = " ORDER BY ((follower_count+1)*(rating+1)) DESC"

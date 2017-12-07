@@ -12,6 +12,21 @@
 		{% include "messages.html" %}
 		<a href="/statistics/">Back</a>
 		<h1>Most Popular Datasets</h1>
+		<form>
+		  Filter by: &nbsp;
+		    <select class="" name="filtering" id="stats_filter">
+		      {% if filters == 'null' %}<option value="null" selected="selected">Default</option>
+		      {% else %}<option value="filters">Default</option>{% endif %}
+		      
+		      {% if filters == 'genre'%}
+		      <option value="genre" selected="selected">Genre</option>
+		      {% else %}<option value="genre">Genre</option>{% endif %}
+		      
+		      {% if filters == 'endorsed_by'%}
+		      <option value="endorsed_by" selected="selected">Endorser</option>
+		      {% else %}<option value="endorsed_by">Endorser</option>{% endif %}
+		    </select>
+		</form><br>
 		{% include "sorting.html" %}
 		<br>
 		<ol id="mostPopularList">
