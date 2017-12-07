@@ -16,7 +16,7 @@
 		  Filter by: &nbsp;
 		    <select class="" name="filtering" id="stats_filter">
 		      {% if filters == 'null' %}<option value="null" selected="selected">Default</option>
-		      {% else %}<option value="filters">Default</option>{% endif %}
+		      {% else %}<option value="null">Default</option>{% endif %}
 		      
 		      {% if filters == 'genre'%}
 		      <option value="genre" selected="selected">Genre</option>
@@ -32,6 +32,11 @@
 		<ol id="mostPopularList">
 			{% for dataset in popular_datasets %}
 			<li>
+				{% if filters == 'genre' %}
+				<p>{{ dataset.genre }}</p>
+				{% elif filters == 'endorsed_by' %}
+				<p>{{ dataset.endorsed_by }}</p>
+				{% endif %}
 				<div class="dataset" onclick="toDataset('{{ dataset.id }}')">
 					<div class="listUserPic">
 						<img src="{% static 'img/ProfilePic.png' %}"/>

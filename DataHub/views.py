@@ -428,7 +428,7 @@ def popular_datasets(request):
             sort = sort.split('-')
             condition = str(sort[0])
         with connection.cursor() as cursor:
-            cursor.execute("SELECT *, "+condition+" AS popularity FROM dataset_list L WHERE "+condition+">=(SELECT MAX("+condition+") FROM dataset_list L1 GROUP BY L1.genre HAVING L1.genre = L.genre)")
+            cursor.execute("SELECT *, "+condition+" AS popularity FROM dataset_list L WHERE "+condition+">=(SELECT MAX("+condition+") FROM dataset_list L1 GROUP BY L1."+filters+" HAVING L1."+filters+" = L."+filters+")")
             popular_datasets = dictfetchall(cursor)
     else:
         # Default sorting 
