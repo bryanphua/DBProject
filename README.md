@@ -23,27 +23,26 @@ First navigate to the root of the project in your terminal, then run:
 # Site Functionality
 
 ## Registration:
-a new user has to provide necessary information; he/she can pick a login-name and a password. The login name should be checked for uniqueness. Use Django’s auth mode and session DB module for this.
+a new user has to provide necessary information; he/she can pick a login-name and a password. The login name will be checked for uniqueness. We made us of Django’s auth mode and session DB module for this.
 
 ## Following:
 After registration, a user can choose to follow a dataset that he or she likes. (For our database, there’s no multiple copies of dataset, its either 1 or 0) But our datasets have a follow list that will increment when a new user follows it.
 
 ## User records:
-Upon user demand, you should print the full record of a user:  
+Upon user demand, you will be navigated to a user's profile page, which displays:  
 - his/her account information  
 - his/her full history of followed datasets (dataset name, number of responders, date etc.)  
 - his/his list of created datasets  
 - his/her full history of comments  
-- the list of all the comments he/she ranked with respect to usefulness
 
 ## New Dataset:
 The creator of the dataset records the details of a new dataset, such as genre and description. For the purposes of this project, datasets will merely serve as placeholders.
 
 ## Comment recordings:
-Users can record their comments for a dataset. You should record the date, and an optional short text. No changes are allowed; only one comment per user per dataset is allowed.
+Users can record their comments for a dataset. The date, and an optional short text will be recorded and displayed. No changes are allowed; only one comment per user per dataset is allowed. You can only delete comments that you make.
 
 ## Usefulness ratings:
-Users can assess other uses comments, give an upvote (+1) or downvote (-1)). A user is not allowed to rate his/her own comment.
+Users can assess other users comments, give an upvote (+1) or downvote (-1)). A user is not allowed to rate his/her own comment.
 
 ## Dataset Browsing:
 Users may search for Datasets, by asking conjunctive queries on the creator of database, and/or ratings, and/or title, and/or labels. The system will allow the user to specify that the results are to be sorted:
