@@ -20,6 +20,9 @@ Ruth Wong Nam Ying
 First navigate to the root of the project in your terminal, then run:  
 `>> python manage.py runserver`
 
+
+Open [localhost:8000/](localhost:800/) in your favorite browser to view the web application. 
+
 # Site Functionality
 
 ## Registration:
