@@ -116,7 +116,6 @@ def profile(request):
         keys = [d[0] for d in cursor.description]
         values = [dict(zip(keys, row)) for row in cursor.fetchall()]
     following_datasets = values
-    print(following_datasets)
     
     # Retrieving information of comments (CV is a view we created)
     with connection.cursor() as cursor:
@@ -422,18 +421,25 @@ def popular_datasets(request):
     context['sort'] = sort
     filters = request.GET.get('filters')
     context['filters'] = filters
-    print (filters)
     
-    # Default sorting 
-    condition = " ORDER BY ((follower_count+1)*(rating+1)) DESC"
-    if sort != None and sort !='null':
-        sort = sort.split('-')
-        condition = "ORDER BY " + str(sort[0]) + " " + str(sort[1])
-    
-    
-    with connection.cursor() as cursor:
-        cursor.execute("SELECT * FROM dataset_list " + condition + " LIMIT 10")
-        popular_datasets = dictfetchall(cursor)
+    if filters != None and filters !='null':
+        condition = "((follower_count+1)*(rating+1))"
+        if sort != None and sort !='null':
+            sort = sort.split('-')
+            condition = str(sort[0])
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT *, "+condition+" AS popularity FROM dataset_list L WHERE "+condition+">=(SELECT MAX("+condition+") FROM dataset_list L1 GROUP BY L1.genre HAVING L1.genre = L.genre)")
+            popular_datasets = dictfetchall(cursor)
+    else:
+        # Default sorting 
+        condition = " ORDER BY ((follower_count+1)*(rating+1)) DESC"
+        if sort != None and sort !='null':
+            sort = sort.split('-')
+            condition = "ORDER BY " + str(sort[0]) + " " + str(sort[1])
+        
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM dataset_list " + condition + " LIMIT 10")
+            popular_datasets = dictfetchall(cursor)
 
     for dataset in popular_datasets:
         creator_name = auth_user.get_entries_dictionary(
