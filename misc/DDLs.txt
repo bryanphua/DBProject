@@ -178,5 +178,21 @@ BEGIN
     id = OLD.dataset_id;
 END;
 
+FUNCTIONS (1)-------------------------------------------------------------------------
 
+delimiter #
+create function isFollowing(u int, d int) returns bool
+begin
+	DECLARE following bool;
+	set following = exists (select * from user_dataset_following where u = user_id and d = dataset_id);
+	return (following);
+end#
+delimiter ;
 
+VIEWS (1)------------------------------------------------------------------------------
+
+create view CV as (
+	select sum(vote) as votes, comment_id
+	from comments_vote
+	group by comment_id
+);
