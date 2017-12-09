@@ -1,0 +1,188 @@
+
+TABLES ---------------------------------------------------------------------------
+
+create table users
+(
+	id int not null auto_increment
+		primary key,
+	password varchar(50) not null,
+	email varchar(50) not null,
+	display_name varchar(50) not null,
+	admin tinyint(1) not null,
+	constraint unique_email
+		unique (email)
+)
+;
+
+create table user_dataset_following
+(
+	user_id int default '0' not null,
+	dataset_id int default '0' not null,
+	datetime_followed datetime default CURRENT_TIMESTAMP not null,
+	primary key (user_id, dataset_id),
+	constraint user_dataset_following_ibfk_3
+		foreign key (user_id) references db.auth_user (id),
+	constraint user_dataset_following_ibfk_4
+		foreign key (dataset_id) references db.dataset_list (id)
+			on delete cascade
+)
+;
+
+create table dataset_rating
+(
+	user_id int default '0' not null,
+	dataset_id int default '0' not null,
+	rating int not null,
+	primary key (user_id, dataset_id),
+	constraint dataset_rating_ibfk_3
+		foreign key (user_id) references db.auth_user (id),
+	constraint cascading
+		foreign key (dataset_id) references db.dataset_list (id)
+			on delete cascade,
+	constraint dataset_rating_ibfk_4
+		foreign key (dataset_id) references db.dataset_list (id)
+			on delete cascade
+)
+;
+
+
+
+create table dataset_list
+(
+	id int not null auto_increment
+		primary key,
+	name varchar(50) not null,
+	creator_user_id int null,
+	endorsed_by varchar(50) null,
+	description varchar(255) null,
+	genre varchar(255) null,
+	rating float default '0' not null,
+	follower_count int default '0' null,
+	constraint dataset_list_ibfk_1
+		foreign key (creator_user_id) references db.auth_user (id)
+			on delete cascade
+)
+;
+
+create table comments_vote
+(
+	user_id int default '0' not null,
+	comment_id int default '0' not null,
+	vote int(2) not null,
+	last_modified datetime default CURRENT_TIMESTAMP not null,
+	primary key (user_id, comment_id),
+	constraint comments_vote_ibfk_3
+		foreign key (user_id) references db.auth_user (id),
+	constraint comments_vote_ibfk_4
+		foreign key (comment_id) references db.comments (id)
+			on delete cascade
+)
+;
+
+create table comments
+(
+	id int not null auto_increment
+		primary key,
+	user_id int null,
+	content varchar(250) null,
+	dataset_id int null,
+	created datetime default CURRENT_TIMESTAMP not null,
+	last_modified datetime default CURRENT_TIMESTAMP not null,
+	constraint comments_ibfk_3
+		foreign key (user_id) references db.auth_user (id),
+	constraint comments_ibfk_4
+		foreign key (dataset_id) references db.dataset_list (id)
+			on delete cascade
+)
+;
+
+TRIGGERS ---------------------------------------------------------------------------
+
+create trigger update_rating_on_insert
+             after INSERT on dataset_rating
+             for each row
+CREATE TRIGGER update_rating_on_insert
+AFTER INSERT ON dataset_rating
+FOR EACH ROW
+  BEGIN
+    UPDATE dataset_list
+      SET rating =
+      (
+      SELECT AVG(rating) FROM dataset_rating
+      WHERE dataset_id = NEW.dataset_id
+      GROUP BY dataset_id
+      )
+        WHERE dataset_list.id = NEW.dataset_id;
+END;
+;
+
+create trigger update_rating_on_update
+             after UPDATE on dataset_rating
+             for each row
+CREATE TRIGGER update_rating_on_update
+AFTER UPDATE ON dataset_rating
+FOR EACH ROW
+  BEGIN
+    UPDATE dataset_list
+      SET rating =
+      (
+      SELECT AVG(rating) FROM dataset_rating
+      WHERE dataset_id = NEW.dataset_id
+      GROUP BY dataset_id
+      )
+        WHERE dataset_list.id = NEW.dataset_id;
+  UPDATE dataset_list
+      SET rating =
+      (
+      SELECT AVG(rating) FROM dataset_rating
+      WHERE dataset_id = OLD.dataset_id
+      GROUP BY dataset_id
+      )
+        WHERE dataset_list.id = OLD.dataset_id;
+END;
+;
+
+create trigger update_rating_on_delete
+             after DELETE on dataset_rating
+             for each row
+CREATE TRIGGER update_rating_on_delete
+AFTER DELETE ON dataset_rating
+FOR EACH ROW
+  BEGIN
+
+  UPDATE dataset_list
+      SET rating =
+      (
+      SELECT AVG(rating) FROM dataset_rating
+      WHERE dataset_id = OLD.dataset_id
+      GROUP BY dataset_id
+      )
+        WHERE dataset_list.id = OLD.dataset_id;
+END;
+;
+
+create trigger inc_follower
+             after INSERT on user_dataset_following
+             for each row
+BEGIN
+	UPDATE dataset_list
+	SET 
+    follower_count = follower_count + 1
+    WHERE 
+    id = NEW.dataset_id;
+END;
+
+
+create trigger del_follower
+             before DELETE on user_dataset_following
+             for each row
+BEGIN
+	UPDATE dataset_list
+    SET
+	follower_count = follower_count - 1
+    WHERE
+    id = OLD.dataset_id;
+END;
+
+
+
