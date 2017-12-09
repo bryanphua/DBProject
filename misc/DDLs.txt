@@ -1,5 +1,5 @@
 
-TABLES ---------------------------------------------------------------------------
+TABLES (6)---------------------------------------------------------------------------
 
 create table users
 (
@@ -96,11 +96,8 @@ create table comments
 )
 ;
 
-TRIGGERS ---------------------------------------------------------------------------
+TRIGGERS (5)---------------------------------------------------------------------------
 
-create trigger update_rating_on_insert
-             after INSERT on dataset_rating
-             for each row
 CREATE TRIGGER update_rating_on_insert
 AFTER INSERT ON dataset_rating
 FOR EACH ROW
@@ -116,9 +113,7 @@ FOR EACH ROW
 END;
 ;
 
-create trigger update_rating_on_update
-             after UPDATE on dataset_rating
-             for each row
+
 CREATE TRIGGER update_rating_on_update
 AFTER UPDATE ON dataset_rating
 FOR EACH ROW
@@ -142,9 +137,7 @@ FOR EACH ROW
 END;
 ;
 
-create trigger update_rating_on_delete
-             after DELETE on dataset_rating
-             for each row
+
 CREATE TRIGGER update_rating_on_delete
 AFTER DELETE ON dataset_rating
 FOR EACH ROW
@@ -160,6 +153,7 @@ FOR EACH ROW
         WHERE dataset_list.id = OLD.dataset_id;
 END;
 ;
+
 
 create trigger inc_follower
              after INSERT on user_dataset_following
