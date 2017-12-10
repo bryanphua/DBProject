@@ -10,18 +10,18 @@ Ooi Kai Lue
 Ruth Wong Nam Ying  
 
 # Entity Relationship Diagram
-![alt text](https://github.com/woshibiantai/DBProject/blob/master/ExtraResources/ERD.png "Logo Title Text 1")
+![alt text](https://github.com/woshibiantai/DBProject/blob/master/misc/ERD.png "ERD Diagram")
 
 # Database Schema
 
-`To be added`
+The DDL for our Database Schema can be found : [here](https://github.com/woshibiantai/DBProject/blob/master/misc/DDLs.txt)
 
 # How to run the program
 First navigate to the root of the project in your terminal, then run:  
 `>> python manage.py runserver`
 
 
-Open [localhost:8000/](localhost:800/) in your favorite browser to view the web application. 
+Open [localhost:8000/](localhost:800/) in your favorite browser to view the web application.
 ![alt text](https://github.com/woshibiantai/DBProject/blob/master/ExtraResources/home.png "Home page")
 
 # Site Functionality
