@@ -27,7 +27,7 @@ Open [localhost:8000/](localhost:800/) in your favorite browser to view the web 
 # Site Functionality
 
 ## Registration:
-a new user has to provide necessary information; he/she can pick a login-name and a password. The login name will be checked for uniqueness. We made us of Django’s auth mode and session DB module for this.
+a new user has to provide necessary information; he/she can pick a login-name and a password. The login name will be checked for uniqueness. We made us of Django’s auth mode and session DB module for this. To create a staff account, go to /staffme/ to sign up. The special code is "purplepandas". You can login as per normal using this staff account to view the statistics.
 
 ## Following:
 After registration, a user can choose to follow a dataset that he or she likes. (For our database, there’s no multiple copies of dataset, its either 1 or 0) But our datasets have a follow list that will increment when a new user follows it.
