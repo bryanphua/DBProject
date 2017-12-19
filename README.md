@@ -4,10 +4,10 @@ Development of database-based system on Django. Our database project aims to cre
 
 # Team Members
 Bryan Phua  
-Jonathan Bei Qi Yang  
+Jonathan Bei Qi Yang  1001619
 Loh Wei Quan  
 Ooi Kai Lue  
-Ruth Wong Nam Ying  
+Ruth Wong Nam Ying  1001795
 
 # Entity Relationship Diagram
 ![alt text](https://github.com/woshibiantai/DBProject/blob/master/misc/ERD.png "ERD Diagram")
@@ -39,7 +39,6 @@ Upon user demand, you will be navigated to a user's profile page, which displays
 - his/her full history of followed datasets (dataset name, number of responders, date etc.)  
 - his/his list of created datasets  
 - his/her full history of comments  
-- the list of all the comments he/she ranked with respect to usefulness
 ![alt text](https://github.com/woshibiantai/DBProject/blob/master/misc/profile.gif "User Profile")
 
 ## New Dataset:
@@ -60,6 +59,9 @@ Users may search for Datasets, by asking conjunctive queries on the creator of d
 - rating of the dataset itself   
 - name of dataset  
 ![alt text](https://github.com/woshibiantai/DBProject/blob/master/misc/search.png "Search results")
+
+## Useful Comments:
+For each dataset, the user can sort the comments according to it's usefulness according to the number of votes, or the recency. 
 
 ## Dataset recommendation:
 When a user follows a particular dataset, the system will suggest a list of other datasets that the user may be interested in. Recommendation is done by displaying other datasets in the same genre.
