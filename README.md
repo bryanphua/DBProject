@@ -4,9 +4,13 @@ Development of database-based system on Django. Our database project aims to cre
 
 # Team Members
 Bryan Phua  1001550
+
 Jonathan Bei Qi Yang  1001619
+
 Loh Wei Quan  1001505
+
 Ooi Kai Lue  1001779
+
 Ruth Wong Nam Ying  1001795
 
 # Entity Relationship Diagram
